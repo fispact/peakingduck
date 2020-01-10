@@ -56,5 +56,53 @@ NAMESPACE_START(unittests)
         }        
     }
 
+    SCENARIO( "Get window - int" ) {
+        std::vector<int> values = {45, 2, 78, 23, 23, 89, 27, 23, 67};
+        
+        int nouter = 1;
+        int ninner = 0;
+        THEN( "check nouter=1, ninner=0" ) {
+            REQUIRE( std::vector<int>{45, 78} ==  util::get_window(values, 1, nouter, ninner, false));
+            REQUIRE( std::vector<int>{45, 2, 78} ==  util::get_window(values, 1, nouter, ninner, true));
+            REQUIRE( std::vector<int>{2} ==  util::get_window(values, 0, nouter, ninner, false));
+            REQUIRE( std::vector<int>{45, 2} ==  util::get_window(values, 0, nouter, ninner, true));
+            REQUIRE( std::vector<int>{23} ==  util::get_window(values, 8, nouter, ninner, false));
+            REQUIRE( std::vector<int>{23, 67} ==  util::get_window(values, 8, nouter, ninner, true));
+        }      
+        
+        nouter = 0;
+        ninner = 0;
+        THEN( "check nouter=0, ninner=0" ) {
+            REQUIRE( std::vector<int>{} ==  util::get_window(values, 1, nouter, ninner, false));
+            REQUIRE( std::vector<int>{2} ==  util::get_window(values, 1, nouter, ninner, true));
+            REQUIRE( std::vector<int>{} ==  util::get_window(values, 0, nouter, ninner, false));
+            REQUIRE( std::vector<int>{45} ==  util::get_window(values, 0, nouter, ninner, true));
+            REQUIRE( std::vector<int>{} ==  util::get_window(values, 8, nouter, ninner, false));
+            REQUIRE( std::vector<int>{67} ==  util::get_window(values, 8, nouter, ninner, true));
+        }    
+        
+        nouter = 4;
+        ninner = 0;
+        THEN( "check nouter=4, ninner=0" ) {
+            REQUIRE( std::vector<int>{45, 78, 23, 23, 89} ==  util::get_window(values, 1, nouter, ninner, false));
+            REQUIRE( std::vector<int>{45, 2, 78, 23, 23, 89} ==  util::get_window(values, 1, nouter, ninner, true));
+            REQUIRE( std::vector<int>{2, 78, 23, 23} ==  util::get_window(values, 0, nouter, ninner, false));
+            REQUIRE( std::vector<int>{45, 2, 78, 23, 23} ==  util::get_window(values, 0, nouter, ninner, true));
+            REQUIRE( std::vector<int>{23, 89, 27, 23} ==  util::get_window(values, 8, nouter, ninner, false));
+            REQUIRE( std::vector<int>{23, 89, 27, 23, 67} ==  util::get_window(values, 8, nouter, ninner, true));
+        }      
+        
+        nouter = 4;
+        ninner = 2;
+        THEN( "check nouter=4, ninner=2" ) {
+            REQUIRE( std::vector<int>{45, 2, 23, 67} ==  util::get_window(values, 4, nouter, ninner, false));
+            REQUIRE( std::vector<int>{45, 2, 23, 23, 67} ==  util::get_window(values, 4, nouter, ninner, true));
+            REQUIRE( std::vector<int>{23, 23} ==  util::get_window(values, 0, nouter, ninner, false));
+            REQUIRE( std::vector<int>{45, 23, 23} ==  util::get_window(values, 0, nouter, ninner, true));
+            REQUIRE( std::vector<int>{23, 89} ==  util::get_window(values, 8, nouter, ninner, false));
+            REQUIRE( std::vector<int>{23, 89, 67} ==  util::get_window(values, 8, nouter, ninner, true));
+        }          
+    }
+
+NAMESPACE_END // unittests
 NAMESPACE_END // peakingduck
-NAMESPACE_END // inputtests
