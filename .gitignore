@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# cmake build dirs
+build*/**
+
+# IDEs
+.vscode
+
+# Mac rubbish
+.DS_Store

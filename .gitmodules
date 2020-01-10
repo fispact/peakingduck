@@ -1,0 +1,9 @@
+[submodule "thirdparty/units"]
+	path = thirdparty/units
+	url = https://github.com/nholthaus/units
+[submodule "thirdparty/Catch2"]
+	path = thirdparty/Catch2
+	url = https://github.com/catchorg/Catch2
+[submodule "thirdparty/pybind11"]
+	path = thirdparty/pybind11
+	url = https://github.com/pybind/pybind11
