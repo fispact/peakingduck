@@ -13,6 +13,8 @@
 #ifndef UTIL_HPP
 #define UTIL_HPP
 
+#include "util/file.hpp"
+#include "util/stream.hpp"
 #include "util/string.hpp"
 
 #endif //UTIL_HPP

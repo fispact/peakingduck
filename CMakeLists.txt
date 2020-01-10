@@ -4,9 +4,11 @@ PROJECT(peakingduck LANGUAGES CXX)
 
 # cmake options
 OPTION(BUILD_TESTS "Build unit tests" ON)
+OPTION(BUILD_PY_BINDINGS "Build python bindings" ON)
 OPTION(BUILD_DOCS "Build the documentation" OFF)
 
 set (PROJECT_DIR_BASE ${CMAKE_CURRENT_LIST_DIR}/include)
+set (PYTHON_PROJECT_DIR_BASE ${CMAKE_CURRENT_LIST_DIR}/py)
 set (TESTS_DIR_BASE ${CMAKE_CURRENT_LIST_DIR}/tests)
 set (THIRD_PARTY_DIR ${CMAKE_CURRENT_LIST_DIR}/thirdparty)
 set (PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
@@ -21,8 +23,9 @@ set (PYBIND_INCLUDES ${THIRD_PARTY_DIR}/pybind11/include)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
+set(PY_OUTPUT_DIR ${CMAKE_BINARY_DIR}/py)
 
-# Get the fispact version, set in .VERSION file
+# Get the version, set in .VERSION file
 file ( STRINGS "${CMAKE_SOURCE_DIR}/.VERSION" VERSION )
 string( REPLACE "." ";" VERSION_LIST ${VERSION} )
 list(GET VERSION_LIST 0 VERSION_MAJOR)
@@ -55,6 +58,11 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	# Increase warning levels
 	add_compile_options(-Wall -Wextra -pedantic)
 endif()
+
+# python bindings
+if(BUILD_PY_BINDINGS)
+	add_subdirectory(${PYTHON_PROJECT_DIR_BASE})
+endif(BUILD_PY_BINDINGS)
 
 # unit tests
 if(BUILD_TESTS)

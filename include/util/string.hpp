@@ -4,7 +4,6 @@
 //                                                                //
 ////////////////////////////////////////////////////////////////////
 
-
 /*!
     @file
     Defines the string only utilities of the library.
@@ -13,6 +12,10 @@
 */
 #ifndef UTIL_STRING_HPP
 #define UTIL_STRING_HPP
+
+#include <string>
+#include <sstream>
+#include <iostream>
 
 #include "common.hpp"
 
