@@ -1,0 +1,59 @@
+language: cpp
+sudo: false
+dist: trusty
+
+# Handle git submodules yourself
+git:
+  submodules: false
+
+# Use sed to replace the SSH URL with the public URL, then initialize submodules
+before_install:
+  - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+  - git submodule update --init --recursive
+
+compiler:
+  - gcc
+  - clang
+
+os:
+  - linux
+  - osx
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.8
+    packages:
+      - lcov
+      - g++-6
+      - clang-3.8
+
+branches:
+  only:
+  - master
+
+install:
+  - "[ $CXX = g++ ] && export CXX=g++-6 || true"
+  - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
+
+script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON ..
+  - make -j4
+  - ./bin/peakingduckcpptests
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build_coverage
+  - cd build_coverage
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON ..
+  - make -j4
+
+after_success:
+  - cd ${TRAVIS_BUILD_DIR}/build_coverage
+  - lcov --directory . --capture --output-file coverage.info # capture coverage info
+  - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
+  - lcov --list coverage.info #debug info
+  # Uploading report to CodeCov
+  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"

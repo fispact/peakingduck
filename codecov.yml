@@ -1,0 +1,7 @@
+coverage:
+    precision: 2
+    round: down
+  
+  ignore:
+    - "tests/"  # ignore folders and all its contents
+    - "test_*"       # wildcards accepted
