@@ -4,18 +4,26 @@
 //                                                                //
 ////////////////////////////////////////////////////////////////////
 
+
 /*!
     @file
-    Defines all utilities (string manip, file IO, etc) of the library.
+    Defines the constants (mathematical and physical) of the library.
 
     @copyright UK Atomic Energy Authority (UKAEA) - 2019-20
 */
-#ifndef UTIL_HPP
-#define UTIL_HPP
+#ifndef UTIL_CONSTANTS_HPP
+#define UTIL_CONSTANTS_HPP
 
-#include "util/file.hpp"
-#include "util/stream.hpp"
-#include "util/string.hpp"
-#include "util/window.hpp"
+#include <units.h>
 
-#endif //UTIL_HPP
+#include "common.hpp"
+
+NAMESPACE_START(peakingduck)
+NAMESPACE_START(constants)
+
+static constexpr const double PI = units::constants::pi;
+
+NAMESPACE_END //constants
+NAMESPACE_END //peakingduck
+
+#endif // UTIL_CONSTANTS_HPP

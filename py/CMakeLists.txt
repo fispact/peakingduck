@@ -7,7 +7,7 @@ set(PEAKINGDUCK_PY_NAME pykingduck)
 
 message(STATUS "Using PyBind")
 set(PYBIND_INC_DIR ${PYBIND_INCLUDES})
-include_directories(${PROJECT_DIR_BASE} ${PYBIND_INC_DIR} ${PYTHON_INCLUDE_DIRS})
+include_directories(${PROJECT_DIR_BASE} ${PYBIND_INC_DIR} ${PYTHON_INCLUDE_DIRS} ${UNITS_INCLUDES})
 
 set(PY_SOURCES peakingduck.cpp)
 

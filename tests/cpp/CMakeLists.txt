@@ -8,6 +8,7 @@ set(CPP_UNIT_TESTS_SOURCES
 
 # Include directories
 include_directories (${CATCH2_INCLUDES}
+                     ${UNITS_INCLUDES}
                      ${PROJECT_DIR_BASE})
 
 add_executable (${CPP_UNIT_TESTS_NAME} ${CPP_UNIT_TESTS_SOURCES})

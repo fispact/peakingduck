@@ -14,6 +14,7 @@
 #ifndef PEAKINGDUCK_HPP
 #define PEAKINGDUCK_HPP
 
+#include "constants.hpp"
 #include "exceptions.hpp"
 #include "util.hpp"
 

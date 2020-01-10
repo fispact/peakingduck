@@ -19,6 +19,9 @@ set (CATCH2_INCLUDES ${THIRD_PARTY_DIR}/Catch2/single_include/catch2)
 # pybind11 is header only
 set (PYBIND_INCLUDES ${THIRD_PARTY_DIR}/pybind11/include)
 
+# units is header only
+set (UNITS_INCLUDES ${THIRD_PARTY_DIR}/units/include)
+
 # set the output directories
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY lib)

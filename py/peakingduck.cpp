@@ -36,6 +36,16 @@ PYBIND11_MODULE(pykingduck, m) {
 
     )pbdoc"; // optional module docstring
 
+    // version
     m.attr("__version__") = "0.0.1";
 
+    // util module for helpers like zai_from_name
+    py::module m_util = m.def_submodule("util");
+
+    m_util.def("get_window", &util::get_window<double>,
+            py::arg("values"),
+            py::arg("centerindex"),
+            py::arg("nouter") = 5,
+            py::arg("ninner") = 0,
+            py::arg("includeindex") = true);
 }
