@@ -3,7 +3,7 @@
 
 ### A peak finding library leveraging AI written in C++14 with python bindings
 
-[![Build Status](https://travis-ci.org/thomasms/peakingduck.svg?branch=master)](https://travis-ci.org/thomasms/peakingduck)
+[![Build Status](https://api.travis-ci.org/thomasms/peakingduck.svg?branch=master)](https://travis-ci.org/thomasms/peakingduck)
 [![codecov](https://codecov.io/gh/thomasms/peakingduck/branch/master/graph/badge.svg)](https://codecov.io/gh/thomasms/peakingduck)
 
 - [About](#about)
