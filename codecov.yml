@@ -1,7 +1,10 @@
 coverage:
-    precision: 2
-    round: down
+  precision: 2
+  round: down
   
   ignore:
     - "tests/"  # ignore folders and all its contents
     - "test_*"       # wildcards accepted
+
+codecov:
+  token: 924f9e75-5768-420a-88d3-c48457a4cdba

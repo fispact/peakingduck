@@ -37,9 +37,6 @@ install:
   - "[ $CXX = g++ ] && export CXX=g++-6 || true"
   - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
   
-env:
-  - CODECOV_TOKEN="924f9e75-5768-420a-88d3-c48457a4cdba"
-
 script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir build
