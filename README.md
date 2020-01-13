@@ -23,7 +23,7 @@ Building
 ------
 It is header only c++ so nothing to buld if using it in c++. If you want python bindings enabled then it needs building, as below.
 ```bash
-git clone https://github.com/thomasms/peakingduck
+git clone --recursive -j8 https://github.com/thomasms/peakingduck
 cd peakingduck
 mkdir build
 cd build
