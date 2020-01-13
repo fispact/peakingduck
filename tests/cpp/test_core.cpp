@@ -33,7 +33,28 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[2] == 24);
                 REQUIRE( data[3] == 40);
             }
-        }        
+        } 
+
+        THEN( "check all operations" ) {
+            REQUIRE( (data > 0).all() == 1);
+            REQUIRE( (data < 5).all() == 1);
+            REQUIRE( (data < 3).all() == 0);
+            REQUIRE( (data == 1).all() == 0);
+
+            data << 1,1,1,1;
+            REQUIRE( (data > 0).all() == 1);
+            REQUIRE( (data < 5).all() == 1);
+            REQUIRE( (data < 3).all() == 1);
+            REQUIRE( (data == 1).all() == 1);
+        }          
+
+        THEN( "check any operations" ) {
+            REQUIRE( (data > 0).any() == 1);
+            REQUIRE( (data < 5).any() == 1);
+            REQUIRE( (data < 3).any() == 1);
+            REQUIRE( (data == 1).any() == 1);
+            REQUIRE( (data == 5).any() == 0);
+        }     
     }
 
 PEAKINGDUCK_NAMESPACE_END // unittests

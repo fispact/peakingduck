@@ -31,6 +31,9 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
         Eigen array is pretty good, it has things like sqrt, exp on array coefficients, but 
         we need to extend this to other functions, so we use CRTP.
+
+        Array is used instead of vector/matrix because array is well suited for coefficient
+        operations which is likely needed for most operations.
     */
     template<typename Scalar, int Size=Eigen::Dynamic>
     using Array1D = Eigen::Array<Scalar, Size, 1>;
@@ -70,9 +73,25 @@ PEAKINGDUCK_NAMESPACE_START(core)
     {
         public:
             using Array1Dd::Array1Dd;
+
+            // operations such as (x > 0).all()
+            using Array1Dd::Base;
+            using Array1Dd::Base::all;
+            using Array1Dd::Base::any;
+            using Array1Dd::Base::count;
+
+            // essential operations on arrays
+            using Array1Dd::operator>;
+            using Array1Dd::operator<;
             using Array1Dd::operator<<;
             using Array1Dd::operator=;
+            using Array1Dd::operator==;
             using Array1Dd::operator*;
+            using Array1Dd::operator+;
+            using Array1Dd::operator-;
+            using Array1Dd::operator/;
+
+            // entry access operations
             using Array1Dd::operator[];
             using Array1Dd::operator();
 
@@ -80,8 +99,10 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using Array1Dd::sqrt;
             using Array1Dd::square;
             using Array1Dd::mean;
-            using Array1Dd::max;
-            using Array1Dd::min;
+            using Array1Dd::sum;
+            using Array1Dd::prod;
+            using Array1Dd::maxCoeff;
+            using Array1Dd::minCoeff;
     };
 
 PEAKINGDUCK_NAMESPACE_END
