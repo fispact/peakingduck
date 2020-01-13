@@ -21,7 +21,8 @@ Very much a work in progress, but is expected to have the first version (0.0.1) 
 
 Building
 ------
-It is header only c++ so nothing to buld if using it in c++. If you want python bindings enabled then it needs building, as below.
+It is header only C++ so nothing to build (only unit tests) if using it in C++. 
+If you want python bindings enabled then it needs building (default will build them), as below.
 ```bash
 git clone --recursive -j8 https://github.com/thomasms/peakingduck
 cd peakingduck
