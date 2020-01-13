@@ -27,7 +27,7 @@ PEAKINGDUCK_NAMESPACE_START(util)
      *  per line
      */
     template <char delimiter, class Container>
-    void split(std::istream& stream, Container& cont)
+    static void split(std::istream& stream, Container& cont)
     {
         // get the line from the stream
         std::string line, token;

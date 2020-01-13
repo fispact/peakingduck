@@ -28,7 +28,7 @@ PEAKINGDUCK_NAMESPACE_START(util)
     * @param instream the istream buffer
     * @return A string containing the whole buffer
     */
-    std::string read_stream_into_string(std::istream& instream){
+    inline std::string read_stream_into_string(std::istream& instream){
         auto ss = std::ostringstream{};
         
         if(!(ss << instream.rdbuf()))

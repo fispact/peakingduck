@@ -6,17 +6,14 @@
 
 /*!
     @file
-    Defines the full library.
-    A single header file for whole library
+    Defines all core parts of the library (algorithms, data structures).
 
     @copyright UK Atomic Energy Authority (UKAEA) - 2019-20
 */
-#ifndef PEAKINGDUCK_HPP
-#define PEAKINGDUCK_HPP
+#ifndef CORE_HPP
+#define CORE_HPP
 
-#include "exceptions.hpp"
-#include "constants.hpp"
-#include "util.hpp"
-#include "core.hpp"
+#include "core/crtp.hpp"
+#include "core/numerical.hpp"
 
-#endif //PEAKINGDUCK_HPP
+#endif //CORE_HPP

@@ -57,7 +57,7 @@ PEAKINGDUCK_NAMESPACE_START(util)
         @param filename the name of the file.
         @return A string containing the file content
     */
-    std::string file_dump(const std::string& filename) {
+    static std::string file_dump(const std::string& filename) {
         std::string s = "";
         if(file_exists(filename)){
             std::ifstream ifs(filename, std::ifstream::in);

@@ -16,7 +16,6 @@
 #include <vector>
 
 #include "common.hpp"
-#include "constants.hpp"
 
 PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(util)
@@ -70,7 +69,7 @@ PEAKINGDUCK_NAMESPACE_START(util)
 
     */
     template<typename T>
-    std::vector<T> get_window(const std::vector<T>& values, 
+    static std::vector<T> get_window(const std::vector<T>& values, 
         int centerindex, int nouter=5, int ninner=0, bool includeindex=true){
 
         // no funny business
