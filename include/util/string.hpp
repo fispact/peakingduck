@@ -19,8 +19,8 @@
 
 #include "common.hpp"
 
-NAMESPACE_START(peakingduck)
-NAMESPACE_START(util)
+PEAKINGDUCK_NAMESPACE_START(peakingduck)
+PEAKINGDUCK_NAMESPACE_START(util)
 
     /*!
      *  Split from a stream using single delimiter
@@ -74,7 +74,7 @@ NAMESPACE_START(util)
         rtrim(s);
     }
 
-NAMESPACE_END //util
-NAMESPACE_END //peakingduck
+PEAKINGDUCK_NAMESPACE_END //util
+PEAKINGDUCK_NAMESPACE_END //peakingduck
 
 #endif //UTIL_STRING_HPP

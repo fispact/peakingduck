@@ -18,8 +18,8 @@
 
 #include "common.hpp"
 
-NAMESPACE_START(peakingduck)
-NAMESPACE_START(util)
+PEAKINGDUCK_NAMESPACE_START(peakingduck)
+PEAKINGDUCK_NAMESPACE_START(util)
     
     /*!
     * A function to read a istream as a string
@@ -37,7 +37,7 @@ NAMESPACE_START(util)
         return ss.str();
     }
     
-NAMESPACE_END //util
-NAMESPACE_END //peakingduck
+PEAKINGDUCK_NAMESPACE_END //util
+PEAKINGDUCK_NAMESPACE_END //peakingduck
 
 #endif //UTIL_STREAM_HPP

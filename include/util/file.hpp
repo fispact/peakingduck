@@ -22,8 +22,8 @@
 #include "common.hpp"
 #include "util/stream.hpp"
 
-NAMESPACE_START(peakingduck)
-NAMESPACE_START(util)
+PEAKINGDUCK_NAMESPACE_START(peakingduck)
+PEAKINGDUCK_NAMESPACE_START(util)
     
     /*!
         a function to check if a file exists on disk (fast approach)
@@ -66,7 +66,7 @@ NAMESPACE_START(util)
         return s;
     }    
 
-NAMESPACE_END //util
-NAMESPACE_END //peakingduck
+PEAKINGDUCK_NAMESPACE_END //util
+PEAKINGDUCK_NAMESPACE_END //peakingduck
 
 #endif //UTIL_FILE_HPP

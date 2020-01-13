@@ -18,7 +18,7 @@
 
 #include "common.hpp"
 
-NAMESPACE_START(peakingduck)
+PEAKINGDUCK_NAMESPACE_START(peakingduck)
 
     /*!
         @brief  Base level exception PeakingDuckException
@@ -110,6 +110,6 @@ NAMESPACE_START(peakingduck)
         std::string _what;
     };
 
-NAMESPACE_END //peakingduck
+PEAKINGDUCK_NAMESPACE_END //peakingduck
 
 #endif // EXCEPTIONS_HPP

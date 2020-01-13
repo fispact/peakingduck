@@ -13,20 +13,20 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
-#ifdef NAMESPACE_START
-    #undef NAMESPACE_START
+#ifdef PEAKINGDUCK_NAMESPACE_START
+    #undef PEAKINGDUCK_NAMESPACE_START
 #endif
-#define NAMESPACE_START(name) namespace name {
+#define PEAKINGDUCK_NAMESPACE_START(name) namespace name {
 
-#ifdef NAMESPACE_END
-    #undef NAMESPACE_END
+#ifdef PEAKINGDUCK_NAMESPACE_END
+    #undef PEAKINGDUCK_NAMESPACE_END
 #endif
-#define NAMESPACE_END }
+#define PEAKINGDUCK_NAMESPACE_END }
 
-#ifdef NAMESPACE_USING
-    #undef NAMESPACE_USING
+#ifdef PEAKINGDUCK_NAMESPACE_USING
+    #undef PEAKINGDUCK_NAMESPACE_USING
 #endif
-#define NAMESPACE_USING(name) using namespace name;
+#define PEAKINGDUCK_NAMESPACE_USING(name) using namespace name;
 
 constexpr char NEWLINE = '\n';
 

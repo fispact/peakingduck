@@ -18,12 +18,12 @@
 
 #include "common.hpp"
 
-NAMESPACE_START(peakingduck)
-NAMESPACE_START(constants)
+PEAKINGDUCK_NAMESPACE_START(peakingduck)
+PEAKINGDUCK_NAMESPACE_START(constants)
 
 static constexpr const double PI = units::constants::pi;
 
-NAMESPACE_END //constants
-NAMESPACE_END //peakingduck
+PEAKINGDUCK_NAMESPACE_END //constants
+PEAKINGDUCK_NAMESPACE_END //peakingduck
 
 #endif // UTIL_CONSTANTS_HPP

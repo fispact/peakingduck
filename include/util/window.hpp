@@ -18,8 +18,8 @@
 #include "common.hpp"
 #include "constants.hpp"
 
-NAMESPACE_START(peakingduck)
-NAMESPACE_START(util)
+PEAKINGDUCK_NAMESPACE_START(peakingduck)
+PEAKINGDUCK_NAMESPACE_START(util)
 
     /*!
        @brief Given a list of values take nouter points either side of 
@@ -92,7 +92,7 @@ NAMESPACE_START(util)
         return resultvec;
     }
 
-NAMESPACE_END
-NAMESPACE_END
+PEAKINGDUCK_NAMESPACE_END
+PEAKINGDUCK_NAMESPACE_END
 
 #endif // UTIL_WINDOW_HPP

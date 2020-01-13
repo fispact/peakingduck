@@ -14,8 +14,8 @@
 
 #include "peakingduck.hpp"
 
-NAMESPACE_START(peakingduck)
-NAMESPACE_START(unittests)
+PEAKINGDUCK_NAMESPACE_START(peakingduck)
+PEAKINGDUCK_NAMESPACE_START(unittests)
 
     SCENARIO( "Split a string by space" ) {
         // create a string for splitting
@@ -104,5 +104,5 @@ NAMESPACE_START(unittests)
         }          
     }
 
-NAMESPACE_END // unittests
-NAMESPACE_END // peakingduck
+PEAKINGDUCK_NAMESPACE_END // unittests
+PEAKINGDUCK_NAMESPACE_END // peakingduck

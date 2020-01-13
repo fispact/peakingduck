@@ -16,7 +16,7 @@
 
 namespace py = pybind11;
 
-NAMESPACE_USING(peakingduck)
+PEAKINGDUCK_NAMESPACE_USING(peakingduck)
 
 PYBIND11_MODULE(pykingduck, m) {
     
