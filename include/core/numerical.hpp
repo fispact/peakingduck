@@ -13,6 +13,7 @@
 #ifndef CORE_NUMERICAL_HPP
 #define CORE_NUMERICAL_HPP
 
+#include <Eigen/Core>
 #include <Eigen/Dense>
 
 #include "common.hpp"
@@ -21,20 +22,6 @@
 PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(core)
 
-    /*!
-       @brief Represents a 1-dimensional data structure (basically a 1D Eigen array)
-        Dynamic array - most use cases will be determined at runtime (I am assuming)
-
-        It would be better to wrap this (composition or private inheritance) but there
-        are a lot of methods to expose. For now we simply alias the type but long term we
-        need to wrap it.
-
-        Eigen array is pretty good, it has things like sqrt, exp on array coefficients, but 
-        we need to extend this to other functions, so we use CRTP.
-
-        Array is used instead of vector/matrix because array is well suited for coefficient
-        operations which is likely needed for most operations.
-    */
     template<typename Scalar, int Size=Eigen::Dynamic>
     using Array1D = Eigen::Array<Scalar, Size, 1>;
 
@@ -53,6 +40,14 @@ PEAKINGDUCK_NAMESPACE_START(core)
         void scale(double multiplicator)
         {
             this->underlying() = this->underlying() * multiplicator;
+        }
+
+        void ramp(double threshold)
+        {
+            std::function<double(double)> imp = [&](double x){
+                return (x >= threshold) ? x : 0;
+            };
+            this->underlying() = this->underlying().unaryExpr(imp);
         }
     };
 
@@ -103,6 +98,9 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using Array1Dd::prod;
             using Array1Dd::maxCoeff;
             using Array1Dd::minCoeff;
+
+            // custom unary operations
+            using Array1Dd::unaryExpr;
     };
 
 PEAKINGDUCK_NAMESPACE_END

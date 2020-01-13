@@ -55,6 +55,14 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             REQUIRE( (data == 1).any() == 1);
             REQUIRE( (data == 5).any() == 0);
         }     
+           
+        THEN( "check custom ramp method" ) {
+            data.ramp(3);
+            REQUIRE( data[0] == 0);
+            REQUIRE( data[1] == 0);
+            REQUIRE( data[2] == 3);
+            REQUIRE( data[3] == 4);
+        }    
     }
 
 PEAKINGDUCK_NAMESPACE_END // unittests
