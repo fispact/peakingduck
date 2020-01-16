@@ -55,7 +55,11 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
     /*!
        @brief Represents a 1-dimensional data structure (basically a 1D Eigen array)
-        Dynamic array - most use cases will be determined at runtime (I am assuming)
+        Dynamic array - most use cases will be determined at runtime (I am assuming).
+        We don't want anyone to know we are using Eigen beyond this file, since (in theory)
+        it should make it easier to change library if need be. We only really need the array
+        datastructure from Eigen and not much else and instead of reinventing the wheel,
+        we wrap Eigen array.
 
         We wrap this with private inheritance on the Eigen type but there
         are a lot of methods to expose, easy to add when/if we need them. 
