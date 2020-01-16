@@ -35,7 +35,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             }
         } 
 
-        THEN( "check basic operations" ) {
+        THEN( "check + operations" ) {
             THEN( "check += scalar" ) {
                 data += 3.0;
                 REQUIRE( data[0] == 4);
@@ -70,6 +70,79 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( coeffSum[1] == 4);
                 REQUIRE( coeffSum[2] == 6);
                 REQUIRE( coeffSum[3] == 8);
+            }
+            THEN( "check sum of two vectors and scaled" ) {
+                auto coeffSum = data + data*2.0;
+                REQUIRE( coeffSum[0] == 3);
+                REQUIRE( coeffSum[1] == 6);
+                REQUIRE( coeffSum[2] == 9);
+                REQUIRE( coeffSum[3] == 12);
+            }
+            THEN( "check sum of two vectors and scaled lhs" ) {
+                auto coeffSum = data + 2.0*data;
+                REQUIRE( coeffSum[0] == 3);
+                REQUIRE( coeffSum[1] == 6);
+                REQUIRE( coeffSum[2] == 9);
+                REQUIRE( coeffSum[3] == 12);
+            }
+        }  
+
+        THEN( "check - operations" ) {
+            THEN( "check -= scalar" ) {
+                data -= 1.0;
+                REQUIRE( data[0] == 0);
+                REQUIRE( data[1] == 1);
+                REQUIRE( data[2] == 2);
+                REQUIRE( data[3] == 3);
+            }
+            THEN( "check -= array" ) {
+                data -= core::NumericalData<double, 4>({1, 2, 3, 5});
+                REQUIRE( data[0] == 0);
+                REQUIRE( data[1] == 0);
+                REQUIRE( data[2] == 0);
+                REQUIRE( data[3] == -1);
+            }
+            THEN( "check -= array dynamic" ) {
+                data -= (core::NumericalData<double>(4) << -4, 2, 1, 5).finished();
+                REQUIRE( data[0] == 5);
+                REQUIRE( data[1] == 0);
+                REQUIRE( data[2] == 2);
+                REQUIRE( data[3] == -1);
+            }
+            THEN( "check array - scalar" ) {
+                auto coeffSum = data - 6.0;
+                REQUIRE( coeffSum[0] == -5);
+                REQUIRE( coeffSum[1] == -4);
+                REQUIRE( coeffSum[2] == -3);
+                REQUIRE( coeffSum[3] == -2);
+            }
+            THEN( "check scalar - array" ) {
+                auto coeffSum = 10.0 - data;
+                REQUIRE( coeffSum[0] == 9);
+                REQUIRE( coeffSum[1] == 8);
+                REQUIRE( coeffSum[2] == 7);
+                REQUIRE( coeffSum[3] == 6);
+            }
+            THEN( "check difference of two arrays" ) {
+                auto coeffSum = data - data;
+                REQUIRE( coeffSum[0] == 0);
+                REQUIRE( coeffSum[1] == 0);
+                REQUIRE( coeffSum[2] == 0);
+                REQUIRE( coeffSum[3] == 0);
+            }
+            THEN( "check difference of two vectors and scaled" ) {
+                auto coeffSum = data - data*2.0;
+                REQUIRE( coeffSum[0] == -1);
+                REQUIRE( coeffSum[1] == -2);
+                REQUIRE( coeffSum[2] == -3);
+                REQUIRE( coeffSum[3] == -4);
+            }
+            THEN( "check difference of two vectors and scaled lhs" ) {
+                auto coeffSum = data - 2.0*data;
+                REQUIRE( coeffSum[0] == -1);
+                REQUIRE( coeffSum[1] == -2);
+                REQUIRE( coeffSum[2] == -3);
+                REQUIRE( coeffSum[3] == -4);
             }
         }  
 

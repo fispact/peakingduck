@@ -19,6 +19,8 @@
 #include "common.hpp"
 #include "crtp.hpp"
 
+#include "numericalmacros.h"
+
 PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(core)
 
@@ -79,7 +81,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
             // clang does not like this, but gcc does,
             // not sure why, but maybe not needed?
-            // using BaseEigenArray::Base;
+            using BaseEigenArray::Base;
+            using BaseEigenArray::Base::col;
 
             // operations such as (x > 0).all()
             using BaseEigenArray::Base::all;
@@ -100,24 +103,10 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using BaseEigenArray::operator-=;
             using BaseEigenArray::operator/;
 
-            // addition of a scalar returns a new array not a reference
-            NumericalData operator+(const T& scalar) const
-            {
-                return this->BaseEigenArray::operator+(scalar);
-            }
-
-            // addition of an another array returns a new array not a reference
-            NumericalData operator+(const NumericalData& rhs) const
-            {
-                return static_cast<const BaseEigenArray&>(*this) + static_cast<const BaseEigenArray&>(rhs);
-            }
-
-            // addition in place (+=) with another returns a reference
-            const NumericalData& operator+=(const NumericalData& rhs)
-            {
-                this->BaseEigenArray::operator+=(static_cast<const BaseEigenArray&>(rhs));
-                return *this;
-            }
+            PEAKINGDUCK_NUMERICAL_OPERATOR_IMP_MACRO(NumericalData,BaseEigenArray,+)
+            PEAKINGDUCK_NUMERICAL_OPERATOR_IMP_MACRO(NumericalData,BaseEigenArray,-)
+            PEAKINGDUCK_NUMERICAL_OPERATOR_IMP_MACRO(NumericalData,BaseEigenArray,*)
+            PEAKINGDUCK_NUMERICAL_OPERATOR_IMP_MACRO(NumericalData,BaseEigenArray,/)
 
             // entry access operations
             using BaseEigenArray::operator[];
