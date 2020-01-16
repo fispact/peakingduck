@@ -13,6 +13,8 @@ set (TESTS_DIR_BASE ${CMAKE_CURRENT_LIST_DIR}/tests)
 set (THIRD_PARTY_DIR ${CMAKE_CURRENT_LIST_DIR}/thirdparty)
 set (PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
 
+find_package( PythonInterp 3.7 REQUIRED )
+find_package( PythonLibs 3.7 REQUIRED )
 #find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 # Eigen3 is header only
