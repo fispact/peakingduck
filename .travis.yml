@@ -24,6 +24,7 @@ os:
 addons:
   apt:
     sources:
+      - deadsnakes
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.8
     packages:
@@ -41,9 +42,9 @@ install:
   - "[ $CXX = g++ ] && export CXX=g++-6 || true"
   - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
   - $PY_CMD -m pip install --user --upgrade pytest
-env:
-  - PYTHON=3.6
-  - PYTHONPATH=${TRAVIS_BUILD_DIR}/build/py
+
+env: PYTHON=3.6 PYTHONPATH=${TRAVIS_BUILD_DIR}/build/py
+
 script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir build
