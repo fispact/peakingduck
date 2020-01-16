@@ -59,7 +59,6 @@ PYBIND11_MODULE(pykingduck, m) {
     py::class_<NumericalDataPyType>(m_core, "NumericalData")
         .def(py::init<>())
         .def(py::init<const std::vector<NumericalDataCoreType>&>())
-        // .def(py::init<const Eigen::Ref<core::Array1Dd>&>())
         .def(py::init<const Eigen::Ref<core::Array1Dd>&>())
         .def(py::self + py::self)
         .def(py::self + NumericalDataCoreType())
@@ -80,6 +79,15 @@ PYBIND11_MODULE(pykingduck, m) {
         .def(NumericalDataCoreType() * py::self)
         .def(NumericalDataCoreType() / py::self)
         .def(-py::self)
+        .def("__len__",
+             [](const NumericalDataPyType& data) {
+                 return data.size();
+             })
+        .def("__getitem__",
+             [](const NumericalDataPyType& data, size_t index) {
+                 return data[index];
+             })
+        .def("from_list", &NumericalDataPyType::from_vector)
         .def("to_list", &NumericalDataPyType::to_vector)
         .def("ramp", &NumericalDataPyType::ramp);
 }
