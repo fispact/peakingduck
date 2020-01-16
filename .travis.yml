@@ -29,7 +29,6 @@ addons:
       - llvm-toolchain-precise-3.8
     packages:
       - python3.6-dev
-      - python3.6-venv
       - python3-pip
       - lcov
       - g++-6
@@ -42,7 +41,8 @@ branches:
 install:
   - "[ $CXX = g++ ] && export CXX=g++-6 || true"
   - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
-  - $PY_CMD -m pip install --user --upgrade pytest
+  - $PY_CMD -m pip install --user -r requirements.dev.txt
+  - $PY_CMD -m pip install --user -r requirements.txt
 
 env: PYTHON=3.6 PYTHONPATH=${TRAVIS_BUILD_DIR}/build/py
 
