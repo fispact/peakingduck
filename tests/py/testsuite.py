@@ -1,6 +1,6 @@
 import unittest
 
-from tests.py.coretests import NumericalDataUnitTest
+from .coretests import NumericalDataUnitTest
 
 
 def main():

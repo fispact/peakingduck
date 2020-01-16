@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# py cache
+**/__pycache__/**
+
 # cmake build dirs
 build*/**
 
