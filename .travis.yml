@@ -10,7 +10,7 @@ git:
 before_install:
   - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
-  - PY_CMD=python3
+  - PY_CMD=python3.7
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
 compiler:
@@ -44,7 +44,7 @@ install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
 
-env: PYTHON=3.6 PYTHONPATH=${TRAVIS_BUILD_DIR}/build/py
+env: PYTHON=3.7 PYTHONPATH=${TRAVIS_BUILD_DIR}/build/py
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
