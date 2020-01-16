@@ -222,6 +222,65 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             }
         }
 
+        THEN( "check / operations" ) {
+            THEN( "check /= scalar" ) {
+                data /= 2.0;
+                REQUIRE( data[0] == 0.5);
+                REQUIRE( data[1] == 1.0);
+                REQUIRE( data[2] == 1.5);
+                REQUIRE( data[3] == 2.);
+            }
+            THEN( "check /= array" ) {
+                data /= core::NumericalData<double, 4>({1, 2, 3, 2});
+                REQUIRE( data[0] == 1.);
+                REQUIRE( data[1] == 1.);
+                REQUIRE( data[2] == 1.);
+                REQUIRE( data[3] == 2.);
+            }
+            THEN( "check /= array dynamic" ) {
+                data /= (core::NumericalData<double>(4) << -4, 2, 1, 5).finished();
+                REQUIRE( data[0] == -0.25);
+                REQUIRE( data[1] == 1.);
+                REQUIRE( data[2] == 3.);
+                REQUIRE( data[3] == 0.8);
+            }
+            THEN( "check array / scalar" ) {
+                auto coeffSum = data/5.0;
+                REQUIRE( coeffSum[0] == 0.2);
+                REQUIRE( coeffSum[1] == 0.4);
+                REQUIRE( coeffSum[2] == 0.6);
+                REQUIRE( coeffSum[3] == 0.8);
+            }
+            THEN( "check scalar / array" ) {
+                auto coeffSum = 5.0/data;
+                REQUIRE( coeffSum[0] == 5.0);
+                REQUIRE( coeffSum[1] == 2.5);
+                REQUIRE( coeffSum[2] == 5.0/3.0);
+                REQUIRE( coeffSum[3] == 1.25);
+            }
+            THEN( "check division of two arrays" ) {
+                auto coeffSum = data / data;
+                REQUIRE( coeffSum[0] == 1);
+                REQUIRE( coeffSum[1] == 1.);
+                REQUIRE( coeffSum[2] == 1.);
+                REQUIRE( coeffSum[3] == 1.);
+            }
+            THEN( "check / of two arrays and scalar" ) {
+                auto coeffSum = data/(data*2.0);
+                REQUIRE( coeffSum[0] == 0.5);
+                REQUIRE( coeffSum[1] == 0.5);
+                REQUIRE( coeffSum[2] == 0.5);
+                REQUIRE( coeffSum[3] == 0.5);
+            }
+            THEN( "check / of two arrays and scalar 2" ) {
+                auto coeffSum = (data*2.0)/data;
+                REQUIRE( coeffSum[0] == 2);
+                REQUIRE( coeffSum[1] == 2.);
+                REQUIRE( coeffSum[2] == 2.);
+                REQUIRE( coeffSum[3] == 2.);
+            }
+        }
+
         THEN( "check map methods" ) {
             THEN( "reverse" ) {
                 core::Array1Dd reverse = data.reverse();

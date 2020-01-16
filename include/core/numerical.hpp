@@ -101,6 +101,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using BaseEigenArray::operator-;
             using BaseEigenArray::operator-=;
             using BaseEigenArray::operator/;
+            using BaseEigenArray::operator/=;
 
             PEAKINGDUCK_NUMERICAL_OPERATOR_IMP_MACRO(NumericalData,BaseEigenArray,+)
             PEAKINGDUCK_NUMERICAL_OPERATOR_IMP_MACRO(NumericalData,BaseEigenArray,-)
