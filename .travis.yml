@@ -10,6 +10,8 @@ git:
 before_install:
   - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
+  - PY_CMD=python3
+  - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
 compiler:
   - gcc
@@ -25,6 +27,8 @@ addons:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.8
     packages:
+      - python3.6-dev
+      - python3.6-venv
       - lcov
       - g++-6
       - clang-3.8
@@ -36,15 +40,19 @@ branches:
 install:
   - "[ $CXX = g++ ] && export CXX=g++-6 || true"
   - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
-  
+  - $PY_CMD -m pip install --user --upgrade pytest
+env:
+  - PYTHON=3.6
+  - PYTHONPATH=${TRAVIS_BUILD_DIR}/build/py
 script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir build
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON ..
   - make -j4
-  - ./bin/peakingduckcpptests
   - cd ${TRAVIS_BUILD_DIR}
+  - ./build/bin/peakingduckcpptests
+  - pytest ./tests/py/testsuite.py
   - mkdir build_coverage
   - cd build_coverage
   - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON ..
