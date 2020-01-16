@@ -22,7 +22,9 @@
 PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(core)
 
-    template<typename Scalar, int Size=Eigen::Dynamic>
+    const int ArrayTypeDynamic = Eigen::Dynamic;
+
+    template<typename Scalar, int Size=ArrayTypeDynamic>
     using Array1D = Eigen::Array<Scalar, Size, 1>;
 
     using Array1Di = Array1D<int>;
@@ -60,47 +62,77 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
         Eigen array is pretty good, it has things like sqrt, exp on array coefficients, but 
         we need to extend this to other functions, so we use CRTP to do this.
-
-        ToDo: Template array type on this - how??
     */
-    class NumericalData : private Array1Dd, 
-                          public NumericalFunctions<NumericalData>
+    template<typename T=double, int Size=ArrayTypeDynamic>
+    class NumericalData : private Array1D<T, Size>, 
+                          public NumericalFunctions<NumericalData<T, Size>>
     {
         public:
-            using Array1Dd::Array1Dd;
+            using BaseEigenArray = Array1D<T, Size>;
+
+            // typedef Array1Dd Base;
+            using BaseEigenArray::BaseEigenArray;
 
             // operations such as (x > 0).all()
-            using Array1Dd::Base;
-            using Array1Dd::Base::all;
-            using Array1Dd::Base::any;
-            using Array1Dd::Base::count;
+            using BaseEigenArray::Base;
+            using BaseEigenArray::Base::all;
+            using BaseEigenArray::Base::any;
+            using BaseEigenArray::Base::count;
 
             // essential operations on arrays
-            using Array1Dd::operator>;
-            using Array1Dd::operator<;
-            using Array1Dd::operator<<;
-            using Array1Dd::operator=;
-            using Array1Dd::operator==;
-            using Array1Dd::operator*;
-            using Array1Dd::operator+;
-            using Array1Dd::operator-;
-            using Array1Dd::operator/;
+            using BaseEigenArray::operator<<;
+            using BaseEigenArray::operator>;
+            using BaseEigenArray::operator<;
+            using BaseEigenArray::operator=;
+            using BaseEigenArray::operator==;
+            using BaseEigenArray::operator*;
+            using BaseEigenArray::operator*=;
+            using BaseEigenArray::operator+;
+            using BaseEigenArray::operator+=;
+            using BaseEigenArray::operator-;
+            using BaseEigenArray::operator-=;
+            using BaseEigenArray::operator/;
+
+            // addition of a scalar returns a new array not a reference
+            NumericalData operator+(const T& scalar) const
+            {
+                return this->BaseEigenArray::operator+(scalar);
+            }
+
+            // addition of an another array returns a new array not a reference
+            NumericalData operator+(const NumericalData& rhs) const
+            {
+                return static_cast<const BaseEigenArray&>(*this) + static_cast<const BaseEigenArray&>(rhs);
+            }
+
+            // addition in place (+=) with another returns a reference
+            const NumericalData& operator+=(const NumericalData& rhs)
+            {
+                this->BaseEigenArray::operator+=(static_cast<const BaseEigenArray&>(rhs));
+                return *this;
+            }
 
             // entry access operations
-            using Array1Dd::operator[];
-            using Array1Dd::operator();
+            using BaseEigenArray::operator[];
+            using BaseEigenArray::operator();
+            using BaseEigenArray::data;
 
-            // some useful predefined methods from 
-            using Array1Dd::sqrt;
-            using Array1Dd::square;
-            using Array1Dd::mean;
-            using Array1Dd::sum;
-            using Array1Dd::prod;
-            using Array1Dd::maxCoeff;
-            using Array1Dd::minCoeff;
+            // some useful predefined methods 
+            // map
+            using BaseEigenArray::sqrt;
+            using BaseEigenArray::square;
+            using BaseEigenArray::pow;
+            using BaseEigenArray::reverse;
+            using BaseEigenArray::reverseInPlace;
+
+            // reduce
+            using BaseEigenArray::mean;
+            using BaseEigenArray::sum;
+            using BaseEigenArray::maxCoeff;
+            using BaseEigenArray::minCoeff;
 
             // custom unary operations
-            using Array1Dd::unaryExpr;
+            using BaseEigenArray::unaryExpr;
     };
 
 PEAKINGDUCK_NAMESPACE_END

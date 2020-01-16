@@ -15,9 +15,9 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
 
     SCENARIO( "Test numerical array" ) {
         // create a string for splitting
-        core::NumericalData data(4);
+        core::NumericalData<double, 4> data({1,2,3,4});
 
-        data << 1,2,3,4;
+        // data << 1,2,3,4;
         THEN( "check scale" ) {
             data.scale(4);
             REQUIRE( data[0] == 4);
@@ -34,6 +34,91 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[3] == 40);
             }
         } 
+
+        THEN( "check basic operations" ) {
+            THEN( "check += scalar" ) {
+                data += 3.0;
+                REQUIRE( data[0] == 4);
+                REQUIRE( data[1] == 5);
+                REQUIRE( data[2] == 6);
+                REQUIRE( data[3] == 7);
+            }
+            THEN( "check += array" ) {
+                data += core::NumericalData<double, 4>({1, 2, 3, 5});
+                REQUIRE( data[0] == 2);
+                REQUIRE( data[1] == 4);
+                REQUIRE( data[2] == 6);
+                REQUIRE( data[3] == 9);
+            }
+            THEN( "check += array dynamic" ) {
+                data += (core::NumericalData<double>(4) << 1, 2, 3, 5).finished();
+                REQUIRE( data[0] == 2);
+                REQUIRE( data[1] == 4);
+                REQUIRE( data[2] == 6);
+                REQUIRE( data[3] == 9);
+            }
+            THEN( "check sum of array + scalar" ) {
+                auto coeffSum = data + 6.0;
+                REQUIRE( coeffSum[0] == 7);
+                REQUIRE( coeffSum[1] == 8);
+                REQUIRE( coeffSum[2] == 9);
+                REQUIRE( coeffSum[3] == 10);
+            }
+            THEN( "check sum of two arrays" ) {
+                auto coeffSum = data + data;
+                REQUIRE( coeffSum[0] == 2);
+                REQUIRE( coeffSum[1] == 4);
+                REQUIRE( coeffSum[2] == 6);
+                REQUIRE( coeffSum[3] == 8);
+            }
+        }  
+
+        THEN( "check map methods" ) {
+            THEN( "reverse" ) {
+                core::Array1Dd reverse = data.reverse();
+                REQUIRE( reverse[0] == 4.0);
+                REQUIRE( reverse[1] == 3.0);
+                REQUIRE( reverse[2] == 2.0);
+                REQUIRE( reverse[3] == 1.0);
+            }  
+            THEN( "reverse in place" ) {
+                data.reverseInPlace();
+                REQUIRE( data[0] == 4.0);
+                REQUIRE( data[1] == 3.0);
+                REQUIRE( data[2] == 2.0);
+                REQUIRE( data[3] == 1.0);
+            }  
+            THEN( "square" ) {
+                core::Array1Dd squared = data.square();
+                REQUIRE( squared[0] == 1.0);
+                REQUIRE( squared[1] == 4.0);
+                REQUIRE( squared[2] == 9.0);
+                REQUIRE( squared[3] == 16.0);
+            }  
+            THEN( "sqrt" ) {
+                data << 100.0, 4.0, 9.0, 16.0;
+                core::Array1Dd sqrted = data.sqrt();
+                REQUIRE( sqrted[0] == 10.0);
+                REQUIRE( sqrted[1] == 2.0);
+                REQUIRE( sqrted[2] == 3.0);
+                REQUIRE( sqrted[3] == 4.0);
+            }  
+            THEN( "pow" ) {
+                data << 1,2,3,4;
+                core::Array1Dd sqrted = data.pow(3);
+                REQUIRE( sqrted[0] == 1.0);
+                REQUIRE( sqrted[1] == 8.0);
+                REQUIRE( sqrted[2] == 27.0);
+                REQUIRE( sqrted[3] == 64.0);
+            }  
+        }  
+
+        THEN( "check reduce methods" ) {
+            REQUIRE( data.mean() == 2.5);
+            REQUIRE( data.sum() == 10.0);
+            REQUIRE( data.minCoeff() == 1.0);
+            REQUIRE( data.maxCoeff() == 4.0);
+        }  
 
         THEN( "check all operations" ) {
             REQUIRE( (data > 0).all() == 1);
