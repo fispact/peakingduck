@@ -1,6 +1,6 @@
 language: cpp
-sudo: false
-dist: trusty
+sudo: true
+dist: xenial
 
 # Handle git submodules yourself
 git:
@@ -28,7 +28,7 @@ addons:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.8
     packages:
-      - python3.6-dev
+      - python3.7-dev
       - python3-pip
       - lcov
       - g++-6
