@@ -7,10 +7,9 @@ import pykingduck as pkd
 class NumericalDataUnitTest(unittest.TestCase):
 
     def test_empty(self):
-        self.assertEqual(True, True, "Assert test")
-        # a = pkd.core.NumericalData()
-        # self.assertEqual(0, len(a), "Assert length of list")
-        # self.assertEqual([], a.to_list(), "Assert to list")
+        a = pkd.core.NumericalData()
+        self.assertEqual(0, len(a), "Assert length of list")
+        self.assertEqual([], a.to_list(), "Assert to list")
 
     def _test_construct_from_list(self):
         a = pkd.core.NumericalData([5, 9, 10, -2])
