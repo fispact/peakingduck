@@ -9,6 +9,7 @@
 
 #include <pybind11/eigen.h>
 #include <pybind11/functional.h>
+#include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <pybind11/pybind11.h>
 
@@ -40,8 +41,11 @@ PYBIND11_MODULE(pykingduck, m) {
     // version
     m.attr("__version__") = "0.0.1";
 
-    // util module for helpers like zai_from_name
+    // util module
     py::module m_util = m.def_submodule("util");
+
+    // core module 
+    py::module m_core = m.def_submodule("core");
 
     m_util.def("get_window", &util::get_window<double>,
             py::arg("values"),
@@ -49,4 +53,33 @@ PYBIND11_MODULE(pykingduck, m) {
             py::arg("nouter") = 5,
             py::arg("ninner") = 0,
             py::arg("includeindex") = true);
+
+    using NumericalDataCoreType = double;
+    using NumericalDataPyType = core::NumericalData<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<NumericalDataPyType>(m_core, "NumericalData")
+        .def(py::init<>())
+        .def(py::init<const std::vector<NumericalDataCoreType>&>())
+        // .def(py::init<const Eigen::Ref<core::Array1Dd>&>())
+        .def(py::init<const Eigen::Ref<core::Array1Dd>&>())
+        .def(py::self + py::self)
+        .def(py::self + NumericalDataCoreType())
+        .def(py::self - py::self)
+        .def(py::self - NumericalDataCoreType())
+        .def(py::self * NumericalDataCoreType())
+        .def(py::self / NumericalDataCoreType())
+        .def(py::self * py::self)
+        .def(py::self / py::self)
+        .def(py::self += py::self)
+        .def(py::self -= py::self)
+        .def(py::self *= NumericalDataCoreType())
+        .def(py::self /= NumericalDataCoreType())
+        .def(py::self *= py::self)
+        .def(py::self /= py::self)
+        .def(NumericalDataCoreType() + py::self)
+        .def(NumericalDataCoreType() - py::self)
+        .def(NumericalDataCoreType() * py::self)
+        .def(NumericalDataCoreType() / py::self)
+        .def(-py::self)
+        .def("to_list", &NumericalDataPyType::to_vector)
+        .def("ramp", &NumericalDataPyType::ramp);
 }

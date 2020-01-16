@@ -4,6 +4,8 @@
 //                                                                //
 ////////////////////////////////////////////////////////////////////
 
+#include <vector>
+
 #include "catch.hpp"
 
 #include "common.hpp"
@@ -25,7 +27,8 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
     */
     SCENARIO( "Test numerical array" ) {
         // create a string for splitting
-        core::NumericalData<double, 4> data({1,2,3,4});
+        core::NumericalData<double, 4> data(1,2,3,4);
+        REQUIRE( data.to_vector() == std::vector<double>({1,2,3,4}));
 
         // data << 1,2,3,4;
         THEN( "check scale" ) {
@@ -54,7 +57,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[3] == 7);
             }
             THEN( "check += array" ) {
-                data += core::NumericalData<double, 4>({1, 2, 3, 5});
+                data += core::NumericalData<double, 4>(std::vector<double>({1, 2, 3, 5}));
                 REQUIRE( data[0] == 2);
                 REQUIRE( data[1] == 4);
                 REQUIRE( data[2] == 6);
@@ -106,7 +109,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[3] == 3);
             }
             THEN( "check -= array" ) {
-                data -= core::NumericalData<double, 4>({1, 2, 3, 5});
+                data -= core::NumericalData<double, 4>(1, 2, 3, 5);
                 REQUIRE( data[0] == 0);
                 REQUIRE( data[1] == 0);
                 REQUIRE( data[2] == 0);
@@ -165,7 +168,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[3] == 20.);
             }
             THEN( "check *= array" ) {
-                data *= core::NumericalData<double, 4>({1, 2, 3, 5});
+                data *= core::NumericalData<double, 4>(1, 2, 3, 5);
                 REQUIRE( data[0] == 1.);
                 REQUIRE( data[1] == 4.);
                 REQUIRE( data[2] == 9.);
@@ -231,7 +234,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[3] == 2.);
             }
             THEN( "check /= array" ) {
-                data /= core::NumericalData<double, 4>({1, 2, 3, 2});
+                data /= core::NumericalData<double, 4>(1, 2, 3, 2);
                 REQUIRE( data[0] == 1.);
                 REQUIRE( data[1] == 1.);
                 REQUIRE( data[2] == 1.);
@@ -356,6 +359,11 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             REQUIRE( data[2] == 3);
             REQUIRE( data[3] == 4);
         }    
+    }
+
+    SCENARIO( "Test assignment" ) {
+        core::NumericalData<double> data = core::NumericalData<double>::Ones(10);
+        REQUIRE( data.to_vector() == std::vector<double>(10, 1.0));
     }
 
 PEAKINGDUCK_NAMESPACE_END // unittests

@@ -13,8 +13,11 @@
 #ifndef CORE_NUMERICAL_HPP
 #define CORE_NUMERICAL_HPP
 
+#include <vector>
+
 #include <Eigen/Core>
 #include <Eigen/Dense>
+#include <Eigen/StdVector>
 
 #include "common.hpp"
 #include "crtp.hpp"
@@ -79,6 +82,33 @@ PEAKINGDUCK_NAMESPACE_START(core)
             // typedef Array1Dd Base;
             using BaseEigenArray::BaseEigenArray;
 
+            // This constructor allows you to construct Derived type from Eigen expressions
+            template<typename OtherDerived>
+            NumericalData(const Eigen::ArrayBase<OtherDerived>& other)
+                : BaseEigenArray(other)
+            { }
+
+            // This constructor allows you to construct from a std::vector
+            explicit NumericalData(const std::vector<T>& other)
+            { 
+                from_vector(other);
+            }
+
+            // This method allows you to assign Eigen expressions to Derived type
+            template<typename OtherDerived>
+            NumericalData& operator=(const Eigen::ArrayBase <OtherDerived>& other)
+            {
+                this->BaseEigenArray::operator=(other);
+                return *this;
+            }
+
+            // This method allows you to assign Eigen expressions to Derived type
+            NumericalData& operator=(const std::vector<T>& other)
+            {
+                from_vector(other);
+                return *this;
+            }
+
             // clang does not like this, but gcc does,
             // not sure why, but maybe not needed?
             // using BaseEigenArray::Base;
@@ -87,6 +117,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using BaseEigenArray::Base::all;
             using BaseEigenArray::Base::any;
             using BaseEigenArray::Base::count;
+
+            using BaseEigenArray::Base::Ones;
 
             // essential operations on arrays
             using BaseEigenArray::operator<<;
@@ -102,6 +134,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using BaseEigenArray::operator-=;
             using BaseEigenArray::operator/;
             using BaseEigenArray::operator/=;
+            using BaseEigenArray::operator new;
+            using BaseEigenArray::operator delete;
 
             PEAKINGDUCK_NUMERICAL_OPERATOR_IMP_MACRO(NumericalData,BaseEigenArray,+)
             PEAKINGDUCK_NUMERICAL_OPERATOR_IMP_MACRO(NumericalData,BaseEigenArray,-)
@@ -112,6 +146,15 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using BaseEigenArray::operator[];
             using BaseEigenArray::operator();
             using BaseEigenArray::data;
+            using BaseEigenArray::size;
+
+            inline void from_vector(const std::vector<T>& raw){
+                this->BaseEigenArray::operator=(BaseEigenArray::Map(raw.data(), raw.size()));
+            }
+
+            inline std::vector<T> to_vector() const{
+                return std::vector<T>(this->data(), this->data() + this->size());
+            }
 
             // some useful predefined methods 
             // map
