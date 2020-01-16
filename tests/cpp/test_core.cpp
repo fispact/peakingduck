@@ -13,6 +13,16 @@
 PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(unittests)
 
+    /*
+        Ideally it would be nice if we could do all this at compile time,
+        but as I understand Eigen does not provide constexpr for any
+        methods (maybe I am mistaken). 
+        If we can do this, then all REQUIRES can be replaced with
+        STATIC_REQUIRES.
+        I think most modern compilers are quite clever at doing
+        some stuff at compile time, let's not waste too much time on 
+        this now.
+    */
     SCENARIO( "Test numerical array" ) {
         // create a string for splitting
         core::NumericalData<double, 4> data({1,2,3,4});
@@ -145,6 +155,72 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( coeffSum[3] == -4);
             }
         }  
+
+        THEN( "check * operations" ) {
+            THEN( "check *= scalar" ) {
+                data *= 5.0;
+                REQUIRE( data[0] == 5.);
+                REQUIRE( data[1] == 10.);
+                REQUIRE( data[2] == 15.0);
+                REQUIRE( data[3] == 20.);
+            }
+            THEN( "check *= array" ) {
+                data *= core::NumericalData<double, 4>({1, 2, 3, 5});
+                REQUIRE( data[0] == 1.);
+                REQUIRE( data[1] == 4.);
+                REQUIRE( data[2] == 9.);
+                REQUIRE( data[3] == 20.);
+            }
+            THEN( "check *= array dynamic" ) {
+                data *= (core::NumericalData<double>(4) << -4, 2, 1, 5).finished();
+                REQUIRE( data[0] == -4.);
+                REQUIRE( data[1] == 4.);
+                REQUIRE( data[2] == 3.);
+                REQUIRE( data[3] == 20.);
+            }
+            THEN( "check array * scalar" ) {
+                auto coeffSum = data*6.0;
+                REQUIRE( coeffSum[0] == 6.0);
+                REQUIRE( coeffSum[1] == 12.0);
+                REQUIRE( coeffSum[2] == 18.0);
+                REQUIRE( coeffSum[3] == 24.0);
+            }
+            THEN( "check scalar * array" ) {
+                auto coeffSum = 6.0*data;
+                REQUIRE( coeffSum[0] == 6.0);
+                REQUIRE( coeffSum[1] == 12.0);
+                REQUIRE( coeffSum[2] == 18.0);
+                REQUIRE( coeffSum[3] == 24.0);
+            }
+            THEN( "check product of two arrays" ) {
+                auto coeffSum = data * data;
+                REQUIRE( coeffSum[0] == 1);
+                REQUIRE( coeffSum[1] == 4.);
+                REQUIRE( coeffSum[2] == 9.);
+                REQUIRE( coeffSum[3] == 16.);
+            }
+            THEN( "check product of two arrays and scalar" ) {
+                auto coeffSum = data*data*2.0;
+                REQUIRE( coeffSum[0] == 2);
+                REQUIRE( coeffSum[1] == 8.);
+                REQUIRE( coeffSum[2] == 18.);
+                REQUIRE( coeffSum[3] == 32.);
+            }
+            THEN( "check product of two arrays and scalar 2" ) {
+                auto coeffSum = data*2.0*data;
+                REQUIRE( coeffSum[0] == 2);
+                REQUIRE( coeffSum[1] == 8.);
+                REQUIRE( coeffSum[2] == 18.);
+                REQUIRE( coeffSum[3] == 32.);
+            }
+            THEN( "check product of two arrays and scalar 3" ) {
+                auto coeffSum = 2.0*data*data;
+                REQUIRE( coeffSum[0] == 2);
+                REQUIRE( coeffSum[1] == 8.);
+                REQUIRE( coeffSum[2] == 18.);
+                REQUIRE( coeffSum[3] == 32.);
+            }
+        }
 
         THEN( "check map methods" ) {
             THEN( "reverse" ) {

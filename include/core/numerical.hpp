@@ -82,7 +82,6 @@ PEAKINGDUCK_NAMESPACE_START(core)
             // clang does not like this, but gcc does,
             // not sure why, but maybe not needed?
             // using BaseEigenArray::Base;
-            // using BaseEigenArray::Base::col;
 
             // operations such as (x > 0).all()
             using BaseEigenArray::Base::all;
