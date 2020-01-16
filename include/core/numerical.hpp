@@ -72,7 +72,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
                           public NumericalFunctions<NumericalData<T, Size>>
     {
         public:
-            using BaseEigenArray = Array1D<T, Size>;
+            typedef Array1D<T, Size> BaseEigenArray;
 
             // typedef Array1Dd Base;
             using BaseEigenArray::BaseEigenArray;
