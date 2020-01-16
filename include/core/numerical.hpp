@@ -72,13 +72,16 @@ PEAKINGDUCK_NAMESPACE_START(core)
                           public NumericalFunctions<NumericalData<T, Size>>
     {
         public:
-            typedef Array1D<T, Size> BaseEigenArray;
+            using BaseEigenArray = Array1D<T, Size>;
 
             // typedef Array1Dd Base;
             using BaseEigenArray::BaseEigenArray;
 
+            // clang does not like this, but gcc does,
+            // not sure why, but maybe not needed?
+            // using BaseEigenArray::Base;
+
             // operations such as (x > 0).all()
-            using BaseEigenArray::Base;
             using BaseEigenArray::Base::all;
             using BaseEigenArray::Base::any;
             using BaseEigenArray::Base::count;
