@@ -89,5 +89,8 @@ PYBIND11_MODULE(pykingduck, m) {
              })
         .def("from_list", &NumericalDataPyType::from_vector)
         .def("to_list", &NumericalDataPyType::to_vector)
+        .def("LLS", &NumericalDataPyType::LLS)
+        .def("inverseLLS", &NumericalDataPyType::inverseLLS)
+        .def("snip", &NumericalDataPyType::snip)
         .def("ramp", &NumericalDataPyType::ramp);
 }

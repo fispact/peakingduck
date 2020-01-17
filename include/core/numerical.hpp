@@ -44,17 +44,56 @@ PEAKINGDUCK_NAMESPACE_START(core)
     template <class Derived>
     struct NumericalFunctions : crtp<Derived, NumericalFunctions>
     {
-        void scale(double multiplicator)
+
+        /*!
+            @brief log(log(sqrt(value + 1) + 1) + 1)
+        */
+        Derived& LLS()
         {
-            this->underlying() = this->underlying() * multiplicator;
+            this->underlying() = (((this->underlying() + 1.0).sqrt() + 1.0).log() + 1.0).log();
+            return this->underlying();
         }
 
-        void ramp(double threshold)
+        /*!
+            @brief exp(log(sqrt(value + 1) + 1) + 1)
+        */
+        Derived& inverseLLS()
+        {
+            this->underlying() = ((((this->underlying().exp() - 1.0).exp()) - 1.0).square()) - 1.0;
+            return this->underlying();
+        }
+
+        /*!
+            @brief Sensitive Nonlinear Iterative Peak (SNIP) algorithm for removing backgrounds
+            ref needed here:
+
+            does via increasing window only (ToDo: need to allow decreasing window)
+        */
+        Derived& snip(int niterations)
+        {
+            // first scale by LLS
+            this->underlying().LLS();
+
+            // ToDo: implement
+
+            // lastly scale it back LLS
+            this->underlying().inverseLLS();
+
+            return this->underlying();
+        }
+
+        /*!
+            @brief A simple function for filtering values above a certain
+            threshold (>=). This is useful to remove entries that are negative 
+            for example.
+        */
+        Derived& ramp(double threshold)
         {
             std::function<double(double)> imp = [&](double x){
                 return (x >= threshold) ? x : 0;
             };
             this->underlying() = this->underlying().unaryExpr(imp);
+            return this->underlying();
         }
     };
 
@@ -68,9 +107,18 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
         We wrap this with private inheritance on the Eigen type but there
         are a lot of methods to expose, easy to add when/if we need them. 
-
+        
         Eigen array is pretty good, it has things like sqrt, exp on array coefficients, but 
         we need to extend this to other functions, so we use CRTP to do this.
+
+        For all of this, you may ask why not just use Eigen and use an alias?
+        Well for one, we don't need all of Eigen just the array, and not all
+        of the array type (we require a simpler interface). Additionally, at some
+        point we may wish to use another data structure as std::array for example.
+        In this case we just change the NumericalData class to wrap that instead.
+        If we change the alias this could break existing interfaces and APIs, causing
+        big changes later on. Since this datastructure is fundamental to everything
+        we need to make sure that we have this sorted properly first!
     */
     template<typename T=double, int Size=ArrayTypeDynamic>
     class NumericalData : private Array1D<T, Size>, 
@@ -165,6 +213,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
             // some useful predefined methods 
             // map
+            using BaseEigenArray::exp;
+            using BaseEigenArray::log;
             using BaseEigenArray::sqrt;
             using BaseEigenArray::square;
             using BaseEigenArray::pow;

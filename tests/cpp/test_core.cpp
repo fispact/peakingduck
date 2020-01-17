@@ -30,24 +30,6 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         core::NumericalData<double, 4> data(1,2,3,4);
         REQUIRE( data.to_vector() == std::vector<double>({1,2,3,4}));
 
-        // data << 1,2,3,4;
-        THEN( "check scale" ) {
-            data.scale(4);
-            REQUIRE( data[0] == 4);
-            REQUIRE( data[1] == 8);
-            REQUIRE( data[2] == 12);
-            REQUIRE( data[3] == 16);
-
-            THEN( "change last entry and scale again" ) {
-                data[3] = 20;
-                data.scale(2);
-                REQUIRE( data[0] == 8);
-                REQUIRE( data[1] == 16);
-                REQUIRE( data[2] == 24);
-                REQUIRE( data[3] == 40);
-            }
-        } 
-
         THEN( "check + operations" ) {
             THEN( "check += scalar" ) {
                 data += 3.0;
@@ -364,6 +346,39 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
     SCENARIO( "Test assignment" ) {
         core::NumericalData<double> data = core::NumericalData<double>::Ones(10);
         REQUIRE( data.to_vector() == std::vector<double>(10, 1.0));
+    }
+
+    SCENARIO( "Test custom operations" ) {
+        THEN( "check LLS" ) {
+            core::NumericalData<double, 3> data(3, 8, 15);
+            data.LLS();
+            REQUIRE( data[0] == std::log(std::log(3) + 1) );
+            REQUIRE( data[1] == std::log(std::log(4) + 1) );
+            REQUIRE( data[2] == std::log(std::log(5) + 1) );
+        } 
+        THEN( "check LLS -> ILLS" ) {
+            core::NumericalData<double, 3> data(3.454e3, 8.34e6, 15.12e-4);
+            data.LLS();
+            data.inverseLLS();
+            REQUIRE( data[0] == Approx(3.454e3) );
+            REQUIRE( data[1] == Approx(8.34e6) );
+            REQUIRE( data[2] == Approx(15.12e-4) );
+        } 
+        THEN( "check ILLS -> LLS" ) {
+            core::NumericalData<double, 3> data(3.42e-3, 8.34e-1, 15.12e-4);
+            data.inverseLLS();
+            data.LLS();
+            REQUIRE( data[0] == Approx(3.42e-3) );
+            REQUIRE( data[1] == Approx(8.34e-1) );
+            REQUIRE( data[2] == Approx(15.12e-4) );
+        } 
+        THEN( "check LLS -> ILLS chaining" ) {
+            core::NumericalData<double, 3> data(3.454e3, 8.34e6, 15.12e-4);
+            data.LLS().inverseLLS();
+            REQUIRE( data[0] == Approx(3.454e3) );
+            REQUIRE( data[1] == Approx(8.34e6) );
+            REQUIRE( data[2] == Approx(15.12e-4) );
+        } 
     }
 
 PEAKINGDUCK_NAMESPACE_END // unittests
