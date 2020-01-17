@@ -52,20 +52,6 @@ PEAKINGDUCK_NAMESPACE_START(util)
         }
     }
     
-    /*!
-        Get the whole content of the file
-        @param filename the name of the file.
-        @return A string containing the file content
-    */
-    static std::string file_dump(const std::string& filename) {
-        std::string s = "";
-        if(file_exists(filename)){
-            std::ifstream ifs(filename, std::ifstream::in);
-            s = read_stream_into_string(ifs);
-        }
-        return s;
-    }    
-
 PEAKINGDUCK_NAMESPACE_END //util
 PEAKINGDUCK_NAMESPACE_END //peakingduck
 

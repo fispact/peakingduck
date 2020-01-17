@@ -88,6 +88,13 @@ PEAKINGDUCK_NAMESPACE_START(core)
                 : BaseEigenArray(other)
             { }
 
+            // issue constructing with no arguments
+            // this aims to fix it
+            explicit NumericalData()
+            { 
+                from_vector(std::vector<T>());
+            }
+
             // This constructor allows you to construct from a std::vector
             explicit NumericalData(const std::vector<T>& other)
             { 
