@@ -59,7 +59,8 @@ script:
   - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON ..
   - make -j4
   - cd ${TRAVIS_BUILD_DIR}
-  - pytest --pdb --tb=long ./tests/py/testsuite.py
+  # - pytest --pdb --tb=long ./tests/py/testsuite.py
+  - $PY_CMD ./examples/simple.py
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}/build_coverage
