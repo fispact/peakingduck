@@ -379,6 +379,113 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             REQUIRE( data[1] == Approx(8.34e6) );
             REQUIRE( data[2] == Approx(15.12e-4) );
         } 
+        THEN( "check midpoint shift" ) {
+            core::NumericalData<double, 7> data(1, 4, 6, 2, 4, 2, 5);
+            THEN( "check order 0" ) {
+                data.midpoint(0);
+                REQUIRE( data[0] == 1.0 );
+                REQUIRE( data[1] == 4.0 );
+                REQUIRE( data[2] == 6.0 );
+                REQUIRE( data[3] == 2.0 );
+                REQUIRE( data[4] == 4.0 );
+                REQUIRE( data[5] == 2.0 );
+                REQUIRE( data[6] == 5.0 );
+            }
+            THEN( "check order 1" ) {
+                data.midpoint(1);
+                REQUIRE( data[0] == 1.0 );
+                REQUIRE( data[1] == 3.5 );
+                REQUIRE( data[2] == 3.0 );
+                REQUIRE( data[3] == 5.0 );
+                REQUIRE( data[4] == 2.0 );
+                REQUIRE( data[5] == 4.5 );
+                REQUIRE( data[6] == 5.0 );
+            }
+            THEN( "check order 2" ) {
+                data.midpoint(2);
+                REQUIRE( data[0] == 1.0 );
+                REQUIRE( data[1] == 4.0 );
+                REQUIRE( data[2] == 2.5 );
+                REQUIRE( data[3] == 3.0 );
+                REQUIRE( data[4] == 5.5 );
+                REQUIRE( data[5] == 2.0 );
+                REQUIRE( data[6] == 5.0 );
+            }
+            THEN( "check order 3" ) {
+                data.midpoint(3);
+                REQUIRE( data[0] == 1.0 );
+                REQUIRE( data[1] == 4.0 );
+                REQUIRE( data[2] == 6.0 );
+                REQUIRE( data[3] == 3.0 );
+                REQUIRE( data[4] == 4.0 );
+                REQUIRE( data[5] == 2.0 );
+                REQUIRE( data[6] == 5.0 );
+            }
+            THEN( "check order 4" ) {
+                data.midpoint(4);
+                REQUIRE( data[0] == 1.0 );
+                REQUIRE( data[1] == 4.0 );
+                REQUIRE( data[2] == 6.0 );
+                REQUIRE( data[3] == 2.0 );
+                REQUIRE( data[4] == 4.0 );
+                REQUIRE( data[5] == 2.0 );
+                REQUIRE( data[6] == 5.0 );
+            }
+        } 
+        THEN( "check midpoint shift - dynamic array" ) {
+            core::NumericalData<double> data(7);
+            data << 1, 4, 6, 2, 4, 2, 5;
+            THEN( "check order 0" ) {
+                data.midpoint(0);
+                REQUIRE( data[0] == 1.0 );
+                REQUIRE( data[1] == 4.0 );
+                REQUIRE( data[2] == 6.0 );
+                REQUIRE( data[3] == 2.0 );
+                REQUIRE( data[4] == 4.0 );
+                REQUIRE( data[5] == 2.0 );
+                REQUIRE( data[6] == 5.0 );
+            }
+            THEN( "check order 1" ) {
+                data.midpoint(1);
+                REQUIRE( data[0] == 1.0 );
+                REQUIRE( data[1] == 3.5 );
+                REQUIRE( data[2] == 3.0 );
+                REQUIRE( data[3] == 5.0 );
+                REQUIRE( data[4] == 2.0 );
+                REQUIRE( data[5] == 4.5 );
+                REQUIRE( data[6] == 5.0 );
+            }
+            THEN( "check order 2" ) {
+                data.midpoint(2);
+                REQUIRE( data[0] == 1.0 );
+                REQUIRE( data[1] == 4.0 );
+                REQUIRE( data[2] == 2.5 );
+                REQUIRE( data[3] == 3.0 );
+                REQUIRE( data[4] == 5.5 );
+                REQUIRE( data[5] == 2.0 );
+                REQUIRE( data[6] == 5.0 );
+            }
+            THEN( "check order 3" ) {
+                data.midpoint(3);
+                REQUIRE( data[0] == 1.0 );
+                REQUIRE( data[1] == 4.0 );
+                REQUIRE( data[2] == 6.0 );
+                REQUIRE( data[3] == 3.0 );
+                REQUIRE( data[4] == 4.0 );
+                REQUIRE( data[5] == 2.0 );
+                REQUIRE( data[6] == 5.0 );
+            }
+            THEN( "check order 4" ) {
+                data.midpoint(4);
+                REQUIRE( data[0] == 1.0 );
+                REQUIRE( data[1] == 4.0 );
+                REQUIRE( data[2] == 6.0 );
+                REQUIRE( data[3] == 2.0 );
+                REQUIRE( data[4] == 4.0 );
+                REQUIRE( data[5] == 2.0 );
+                REQUIRE( data[6] == 5.0 );
+            }
+        } 
     }
 
 PEAKINGDUCK_NAMESPACE_END // unittests
