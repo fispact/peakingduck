@@ -55,7 +55,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
         }
 
         /*!
-            @brief exp(log(sqrt(value + 1) + 1) + 1)
+            @brief exp(exp(sqrt(value + 1) + 1) + 1)
         */
         Derived& inverseLLS()
         {
