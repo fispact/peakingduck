@@ -30,29 +30,51 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
         /*!
             @brief log(log(sqrt(value + 1) + 1) + 1)
+            Returns a new array
         */
-        Derived& LLS()
+        Derived LLS() const
         {
-            this->underlying() = (((this->underlying() + 1.0).sqrt() + 1.0).log() + 1.0).log();
+            return (((this->underlying() + 1.0).sqrt() + 1.0).log() + 1.0).log();
+        }
+
+        /*!
+            @brief log(log(sqrt(value + 1) + 1) + 1)
+            Changes the underlying array
+        */
+        Derived& LLSInPlace()
+        {
+            this->underlying() = this->underlying().LLS();
             return this->underlying();
         }
 
         /*!
             @brief exp(exp(sqrt(value + 1) + 1) + 1)
+            Returns a new array
         */
-        Derived& inverseLLS()
+        Derived inverseLLS() const
         {
-            this->underlying() = ((((this->underlying().exp() - 1.0).exp()) - 1.0).square()) - 1.0;
-            return this->underlying();
+            return ((((this->underlying().exp() - 1.0).exp()) - 1.0).square()) - 1.0;
         }
 
+        /*!
+            @brief exp(exp(sqrt(value + 1) + 1) + 1)
+            Changes the underlying array
+        */
+        Derived& inverseLLSInPlace()
+        {
+            this->underlying() = this->underlying().inverseLLS();
+            return this->underlying();
+        }
+        
         /*!
             @brief For each element calculate a new value from the symmetric neigbour values
             at a given order. 
             Take the i-order point and the i+order point and apply a function to that value
             End points are not counted (stay as original) - max(0, i-j) and min(i+j, len(array))
+
+            Returns a new array
         */
-        Derived& symmetricNeighbourOp(const std::function<void(int, int, const Derived&, Derived&)>& operation, int order=1)
+        Derived symmetricNeighbourOp(const std::function<void(int, int, const Derived&, Derived&)>& operation, int order=1) const
         {            
             // perform algorithm between these two indices
             const int istart = order;
@@ -61,13 +83,11 @@ PEAKINGDUCK_NAMESPACE_START(core)
             // can we do this without copying twice, or even once?
             // since we cannot change in place for each entry in loop as this
             // changes results for other entries later.
-            Derived temp = this->underlying();
+            Derived newvalues = this->underlying();
             for(int i=istart; i<iend; ++i){
-                operation(i, order, this->underlying(), temp);
-            }
-            this->underlying() = temp;
-            
-            return this->underlying();
+                operation(i, order, this->underlying(), newvalues);
+            }            
+            return newvalues;
         }
 
         /*!
@@ -82,8 +102,10 @@ PEAKINGDUCK_NAMESPACE_START(core)
             we have the midpoints for order 2:   [1,   4, 2.5, 3, 5.5,   2, 5]
             we have the midpoints for order 3:   [1,   4,   6, 3,   4,   2, 5]
             we have the midpoints for order 4+:  [1,   4,   6, 2,   4,   2, 5]
+
+            Returns a new array
         */
-        Derived& midpoint(int order=1)
+        Derived midpoint(int order=1) const
         {            
             auto midpointOp = [](int i, int order, const Derived& values, Derived& newValues){
                 newValues[i] = (values[i-order] + values[i+order])/2.0;
@@ -92,43 +114,82 @@ PEAKINGDUCK_NAMESPACE_START(core)
         }        
 
         /*!
+            @brief For each element calculate the midpoint value from the adjacent elements at a given 
+            order. 
+            Take the i-order point and the i+order point and determine the average = (array[i-j]+array[i+j])/2.0.
+            End points are not counted (stay as original) - max(0, i-j) and min(i+j, len(array))
+
+            For example, given an array:         [1,   4,   6, 2,   4,   2, 5]
+            we have the midpoints for order 0:   [1,   4,   6, 2,   4,   2, 5]
+            we have the midpoints for order 1:   [1, 3.5,   3, 5,   2, 4.5, 5]
+            we have the midpoints for order 2:   [1,   4, 2.5, 3, 5.5,   2, 5]
+            we have the midpoints for order 3:   [1,   4,   6, 3,   4,   2, 5]
+            we have the midpoints for order 4+:  [1,   4,   6, 2,   4,   2, 5]
+
+            Mutates underlying array
+        */
+        Derived& midpointInPlace(int order=1)
+        {           
+            this->underlying() = this->underlying().midpoint(order);
+            return this->underlying();
+        }      
+
+        /*!
             @brief Sensitive Nonlinear Iterative Peak (SNIP) algorithm for removing backgrounds
             ref needed here:
 
             does via increasing window only (ToDo: need to allow decreasing window)
+
+            Returns a new array
         */
-        Derived& snip(int niterations)
+        Derived snip(int niterations) const
         { 
             auto midpointMinOp = [](int i, int order, const Derived& values, Derived& newValues){
                 newValues[i] = (values[i-order] + values[i+order])/2.0;
                 newValues[i] = std::min(newValues[i], values[i]);
             };
 
+            Derived snipped = this->underlying();
+
             // first scale by LLS
-            this->underlying().LLS();
+            snipped.LLSInPlace();
 
             // iterate over iterations from 1 to niterations
             for(int i=0;i<niterations;++i){
-                this->underlying().symmetricNeighbourOp(midpointMinOp, i+1);
+                snipped = snipped.symmetricNeighbourOp(midpointMinOp, i+1);
             }
 
             // lastly scale it back LLS
-            this->underlying().inverseLLS();
+            snipped.inverseLLSInPlace();
 
-            return this->underlying();
+            return snipped;
         }
 
         /*!
             @brief A simple function for filtering values above a certain
             threshold (>=). This is useful to remove entries that are negative 
             for example.
+
+            Returns a new array
         */
-        Derived& ramp(double threshold)
+        Derived ramp(double threshold) const
         {
             std::function<double(double)> imp = [&](double x){
                 return (x >= threshold) ? x : 0;
             };
-            this->underlying() = this->underlying().unaryExpr(imp);
+            return this->underlying().unaryExpr(imp);
+        }
+
+        /*!
+            @brief A simple function for filtering values above a certain
+            threshold (>=). This is useful to remove entries that are negative 
+            for example.
+
+            Mutates underlying array
+        */
+        Derived& rampInPlace(double threshold)
+        {
+            this->underlying() = this->underlying().ramp(threshold);
             return this->underlying();
         }
     };

@@ -332,14 +332,6 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             REQUIRE( (data < 3).any() == 1);
             REQUIRE( (data == 1).any() == 1);
             REQUIRE( (data == 5).any() == 0);
-        }     
-           
-        THEN( "check custom ramp method" ) {
-            data.ramp(3);
-            REQUIRE( data[0] == 0);
-            REQUIRE( data[1] == 0);
-            REQUIRE( data[2] == 3);
-            REQUIRE( data[3] == 4);
         }    
     }
 
@@ -348,33 +340,55 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         REQUIRE( data.to_vector() == std::vector<double>(10, 1.0));
     }
 
-    SCENARIO( "Test custom operations" ) {
+    SCENARIO( "Test custom operations" ) { 
+        THEN( "check custom ramp method" ) {
+            const core::NumericalData<double, 4> data(1,2,3,4);
+            const core::NumericalData<double, 4> ramped = data.ramp(3);
+            REQUIRE( ramped[0] == 0);
+            REQUIRE( ramped[1] == 0);
+            REQUIRE( ramped[2] == 3);
+            REQUIRE( ramped[3] == 4);
+        }               
+        THEN( "check custom ramp in place method" ) {
+            core::NumericalData<double, 4> data(1,2,3,4);
+            data.rampInPlace(3);
+            REQUIRE( data[0] == 0);
+            REQUIRE( data[1] == 0);
+            REQUIRE( data[2] == 3);
+            REQUIRE( data[3] == 4);
+        }    
         THEN( "check LLS" ) {
             core::NumericalData<double, 3> data(3, 8, 15);
-            data.LLS();
+            const core::NumericalData<double, 3> lls = data.LLS();
+            REQUIRE( lls[0] == std::log(std::log(3) + 1) );
+            REQUIRE( lls[1] == std::log(std::log(4) + 1) );
+            REQUIRE( lls[2] == std::log(std::log(5) + 1) );
+        } 
+        THEN( "check LLS in place" ) {
+            core::NumericalData<double, 3> data(3, 8, 15);
+            data.LLSInPlace();
             REQUIRE( data[0] == std::log(std::log(3) + 1) );
             REQUIRE( data[1] == std::log(std::log(4) + 1) );
             REQUIRE( data[2] == std::log(std::log(5) + 1) );
         } 
         THEN( "check LLS -> ILLS" ) {
             core::NumericalData<double, 3> data(3.454e3, 8.34e6, 15.12e-4);
-            data.LLS();
-            data.inverseLLS();
+            data.LLSInPlace().inverseLLSInPlace();
             REQUIRE( data[0] == Approx(3.454e3) );
             REQUIRE( data[1] == Approx(8.34e6) );
             REQUIRE( data[2] == Approx(15.12e-4) );
         } 
         THEN( "check ILLS -> LLS" ) {
             core::NumericalData<double, 3> data(3.42e-3, 8.34e-1, 15.12e-4);
-            data.inverseLLS();
-            data.LLS();
+            data.inverseLLSInPlace();
+            data.LLSInPlace();
             REQUIRE( data[0] == Approx(3.42e-3) );
             REQUIRE( data[1] == Approx(8.34e-1) );
             REQUIRE( data[2] == Approx(15.12e-4) );
         } 
         THEN( "check LLS -> ILLS chaining" ) {
             core::NumericalData<double, 3> data(3.454e3, 8.34e6, 15.12e-4);
-            data.LLS().inverseLLS();
+            data.LLSInPlace().inverseLLSInPlace();
             REQUIRE( data[0] == Approx(3.454e3) );
             REQUIRE( data[1] == Approx(8.34e6) );
             REQUIRE( data[2] == Approx(15.12e-4) );
@@ -382,7 +396,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         THEN( "check midpoint shift" ) {
             core::NumericalData<double, 7> data(1, 4, 6, 2, 4, 2, 5);
             THEN( "check order 0" ) {
-                data.midpoint(0);
+                data.midpointInPlace(0);
                 REQUIRE( data[0] == 1.0 );
                 REQUIRE( data[1] == 4.0 );
                 REQUIRE( data[2] == 6.0 );
@@ -392,7 +406,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[6] == 5.0 );
             }
             THEN( "check order 1" ) {
-                data.midpoint(1);
+                data.midpointInPlace(1);
                 REQUIRE( data[0] == 1.0 );
                 REQUIRE( data[1] == 3.5 );
                 REQUIRE( data[2] == 3.0 );
@@ -402,7 +416,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[6] == 5.0 );
             }
             THEN( "check order 2" ) {
-                data.midpoint(2);
+                data.midpointInPlace(2);
                 REQUIRE( data[0] == 1.0 );
                 REQUIRE( data[1] == 4.0 );
                 REQUIRE( data[2] == 2.5 );
@@ -412,7 +426,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[6] == 5.0 );
             }
             THEN( "check order 3" ) {
-                data.midpoint(3);
+                data.midpointInPlace(3);
                 REQUIRE( data[0] == 1.0 );
                 REQUIRE( data[1] == 4.0 );
                 REQUIRE( data[2] == 6.0 );
@@ -422,7 +436,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[6] == 5.0 );
             }
             THEN( "check order 4" ) {
-                data.midpoint(4);
+                data.midpointInPlace(4);
                 REQUIRE( data[0] == 1.0 );
                 REQUIRE( data[1] == 4.0 );
                 REQUIRE( data[2] == 6.0 );
@@ -436,7 +450,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             core::NumericalData<double> data(7);
             data << 1, 4, 6, 2, 4, 2, 5;
             THEN( "check order 0" ) {
-                data.midpoint(0);
+                data.midpointInPlace(0);
                 REQUIRE( data[0] == 1.0 );
                 REQUIRE( data[1] == 4.0 );
                 REQUIRE( data[2] == 6.0 );
@@ -446,7 +460,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[6] == 5.0 );
             }
             THEN( "check order 1" ) {
-                data.midpoint(1);
+                data.midpointInPlace(1);
                 REQUIRE( data[0] == 1.0 );
                 REQUIRE( data[1] == 3.5 );
                 REQUIRE( data[2] == 3.0 );
@@ -456,7 +470,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[6] == 5.0 );
             }
             THEN( "check order 2" ) {
-                data.midpoint(2);
+                data.midpointInPlace(2);
                 REQUIRE( data[0] == 1.0 );
                 REQUIRE( data[1] == 4.0 );
                 REQUIRE( data[2] == 2.5 );
@@ -466,7 +480,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[6] == 5.0 );
             }
             THEN( "check order 3" ) {
-                data.midpoint(3);
+                data.midpointInPlace(3);
                 REQUIRE( data[0] == 1.0 );
                 REQUIRE( data[1] == 4.0 );
                 REQUIRE( data[2] == 6.0 );
@@ -476,7 +490,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[6] == 5.0 );
             }
             THEN( "check order 4" ) {
-                data.midpoint(4);
+                data.midpointInPlace(4);
                 REQUIRE( data[0] == 1.0 );
                 REQUIRE( data[1] == 4.0 );
                 REQUIRE( data[2] == 6.0 );

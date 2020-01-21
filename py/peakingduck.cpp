@@ -90,9 +90,13 @@ PYBIND11_MODULE(pykingduck, m) {
         .def("from_list", &NumericalDataPyType::from_vector)
         .def("to_list", &NumericalDataPyType::to_vector)
         .def("LLS", &NumericalDataPyType::LLS)
+        .def("LLSInPlace", &NumericalDataPyType::LLSInPlace)
         .def("inverseLLS", &NumericalDataPyType::inverseLLS)
+        .def("inverseLLSInPlace", &NumericalDataPyType::inverseLLSInPlace)
         .def("midpoint", &NumericalDataPyType::midpoint)
+        .def("midpointInPlace", &NumericalDataPyType::midpointInPlace)
         .def("snip", &NumericalDataPyType::snip,
             py::arg("niterations") = 20)
-        .def("ramp", &NumericalDataPyType::ramp);
+        .def("ramp", &NumericalDataPyType::ramp)
+        .def("rampInPlace", &NumericalDataPyType::rampInPlace);
 }
