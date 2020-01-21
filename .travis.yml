@@ -54,11 +54,13 @@ script:
   - make -j4
   - cd ${TRAVIS_BUILD_DIR}
   - ./build/bin/peakingduckcpptests
+  - pytest ./tests/py/testsuite.py
   - mkdir build_coverage
   - cd build_coverage
   - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON ..
   - make -j4
   - cd ${TRAVIS_BUILD_DIR}
+  - ./build_coverage/bin/peakingduckcpptests
   - pytest --pdb --tb=long ./tests/py/testsuite.py
 
 after_success:
