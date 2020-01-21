@@ -28,7 +28,7 @@ git clone --recursive -j8 https://github.com/thomasms/peakingduck
 cd peakingduck
 mkdir build
 cd build
-cmake -DBUILD_PY_BINDINGS=ON ..
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PY_BINDINGS=ON ..
 make -j4
 ```
 Note: Project uses cmake (> 3.2) to build peaking duck.
