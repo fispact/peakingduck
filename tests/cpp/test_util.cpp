@@ -56,6 +56,36 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         }        
     }
 
+    SCENARIO( "Trim a string by whitespace" ) {
+        std::string teststring("    some blanks at start and end    .     ");
+        
+        THEN( "check ltrim" ) {
+            util::ltrim(teststring);
+            REQUIRE( teststring == "some blanks at start and end    .     ");
+        }   
+        THEN( "check rtrim" ) {
+            util::rtrim(teststring);
+            REQUIRE( teststring == "    some blanks at start and end    .");
+        }     
+        THEN( "check lrtrim" ) {
+            util::trim(teststring);
+            REQUIRE( teststring == "some blanks at start and end    .");
+        }             
+    }
+
+    SCENARIO( "Trim a string by custom" ) {        
+        THEN( "check ltrim" ) {
+            std::string teststring("...  some blanks at start and end    .     ");
+            util::ltrim(teststring, '.');
+            REQUIRE( teststring == "  some blanks at start and end    .     ");
+        }   
+        THEN( "check rtrim" ) {
+            std::string teststring("remove trailing T's TTTTTTTTT");
+            util::rtrim(teststring, 'T');
+            REQUIRE( teststring == "remove trailing T's ");
+        }            
+    }
+
     SCENARIO( "Get window - int" ) {
         std::vector<int> values = {45, 2, 78, 23, 23, 89, 27, 23, 67};
         

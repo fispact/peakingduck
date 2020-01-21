@@ -15,6 +15,14 @@
 PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(unittests)
 
+    template<typename T=double, int Size=core::ArrayTypeDynamic>
+    void REQUIRE_NUMERICS_APPROX_THE_SAME(const core::NumericalData<T, Size>& lhs, const core::NumericalData<T, Size>& rhs){
+        REQUIRE( lhs.size() == rhs.size());
+        for(int i=0;i<lhs.size();++i){
+            REQUIRE( lhs[i] == Approx(rhs[i]) );
+        }
+    }
+
     /*
         Ideally it would be nice if we could do all this at compile time,
         but as I understand Eigen does not provide constexpr for any
@@ -500,6 +508,69 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( data[6] == 5.0 );
             }
         } 
+        THEN( "check SNIP simple" ) {
+            const core::NumericalData<double, 4> data(1,2,3,4);
+            const core::NumericalData<double, 4> snipped = data.snip(20);
+            REQUIRE( snipped[0] == Approx(1.0) );
+            REQUIRE( snipped[1] == Approx(1.8333089468266763) );
+            REQUIRE( snipped[2] == Approx(2.874216968707311) );
+            REQUIRE( snipped[3] == Approx(4.0) );
+        }       
+        THEN( "check SNIP complex" ) {
+            const core::NumericalData<double, 16> 
+                data(1.0, 42.2, 61.4, 2.1, 4.2, 23.4, 52.32, 2.3, 213.21,32.4,1.2,3.4,5.2,123.3,23.2,4.1);
+            const core::NumericalData<double, 16> snipped = data.snip(0);
+            const core::NumericalData<double, 16> 
+                expected(1.0, 42.2, 61.4, 2.1, 4.2, 23.4, 52.32, 2.3, 213.21,32.4,1.2,3.4,5.2,123.3,23.2,4.1);
+            REQUIRE_NUMERICS_APPROX_THE_SAME(expected, snipped);
+        }         
+        THEN( "check SNIP complex" ) {
+            const core::NumericalData<double, 16> 
+                data(1.0, 42.2, 61.4, 2.1, 4.2, 23.4, 52.32, 2.3, 213.21, 32.4, 1.2, 3.4, 5.2, 123.3, 23.2, 4.1);
+            const core::NumericalData<double, 16> snipped = data.snip(4);
+            const core::NumericalData<double, 16> 
+                expected(1.0, 
+                9.599840039956527, 
+                2.2325487695967374, 
+                2.1, 
+                1.6262270466592428, 
+                2.1984699168502932, 
+                1.668357848457926, 
+                2.3, 
+                2.440060339020095, 
+                2.494169045564714, 
+                1.2, 
+                2.6995733396237362, 
+                3.2217712295589997, 
+                3.3438927139799794, 
+                22.267498846621255, 
+                4.1);
+            REQUIRE_NUMERICS_APPROX_THE_SAME(expected, snipped);
+        }     
+        THEN( "check SNIP complex 2" ) {
+            const core::NumericalData<double, 16> 
+                data(1.0, 42.2, 61.4, 2.1, 4.2, 23.4, 52.32, 2.3, 213.21, 32.4, 1.2, 3.4, 5.2, 123.3, 23.2, 4.1);
+            const core::NumericalData<double, 16> snipped = data.snip(20);
+            const core::NumericalData<double, 16> 
+            
+                expected(1.0, 
+                9.599840039956527, 
+                2.2325487695967374, 
+                2.1, 
+                1.6262270466592428, 
+                1.097732439852992, 
+                1.668357848457926, 
+                2.3, 
+                2.440060339020095, 
+                2.494169045564714, 
+                1.2, 
+                2.6995733396237362, 
+                3.2217712295589997, 
+                3.3438927139799794, 
+                22.267498846621255, 
+                4.1);
+            REQUIRE_NUMERICS_APPROX_THE_SAME(expected, snipped);
+        }     
     }
 
 PEAKINGDUCK_NAMESPACE_END // unittests
