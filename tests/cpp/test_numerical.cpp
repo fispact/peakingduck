@@ -62,9 +62,18 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( slice[2] == -2);
                 REQUIRE( slice[3] == 2);
             }
+            THEN( "check slice 4 - comma operator" ) {
+                core::NumericalData<double, 9> data2(1, 4, 5, 2, 10, -2, 2, -8, 2);
+                const core::NumericalData<double> slice = data2(3, -2);
+                REQUIRE( slice.size() == 4);
+                REQUIRE( slice[0] == 2);
+                REQUIRE( slice[1] == 10);
+                REQUIRE( slice[2] == -2);
+                REQUIRE( slice[3] == 2);
+            }
             THEN( "check combining slices" ) {
                 core::NumericalData<double, 9> data2(1, 4, 5, 2, 10, -2, 2, -8, 2);
-                const core::NumericalData<double> combined = core::combine(data2.slice(1, 4), data2.slice(5, -1));
+                const core::NumericalData<double> combined = core::combine(data2(1, 4), data2(5, -1));
                 REQUIRE( combined.size() == 6);
                 REQUIRE( combined[0] == 4);
                 REQUIRE( combined[1] == 5);
@@ -72,6 +81,18 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 REQUIRE( combined[3] == -2);
                 REQUIRE( combined[4] == 2);
                 REQUIRE( combined[5] == -8);
+            }
+            THEN( "check combining 3 slices" ) {
+                core::NumericalData<double, 9> data2(1, 4, 5, 2, 10, -2, 2, -8, 2);
+                const core::NumericalData<double> combined = core::combine(data2(1, 4), core::combine(data2(4, 5), data2(5, -1)));
+                REQUIRE( combined.size() == 7);
+                REQUIRE( combined[0] == 4);
+                REQUIRE( combined[1] == 5);
+                REQUIRE( combined[2] == 2);
+                REQUIRE( combined[3] == 10);
+                REQUIRE( combined[4] == -2);
+                REQUIRE( combined[5] == 2);
+                REQUIRE( combined[6] == -8);
             }
         }
 

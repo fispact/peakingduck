@@ -158,7 +158,6 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
             // entry access operations
             using BaseEigenArray::operator[];
-            using BaseEigenArray::operator();
             using BaseEigenArray::data;
             using BaseEigenArray::size;
             using BaseEigenArray::begin;
@@ -200,11 +199,20 @@ PEAKINGDUCK_NAMESPACE_START(core)
             //
             // can we add templates when sindex and eindex are known
             // at compile time?
-            NumericalData<T> slice(int sindex, int eindex) const{
+            NumericalData<T> slice(int sindex, int eindex) const
+            {
                 if(eindex >= 0){
                     return this->segment(sindex, eindex - sindex);
                 }
                 return this->segment(sindex, this->size() + eindex - sindex);
+            }
+
+            // uses the () operator with two indicies to do the slice
+            // no way (overload comma operator?) to do this with square []
+            // braces
+            NumericalData<T> operator()(int sindex, int eindex) const
+            {
+                return slice(sindex, eindex);
             }
     };
 
