@@ -64,10 +64,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             }
             THEN( "check combining slices" ) {
                 core::NumericalData<double, 9> data2(1, 4, 5, 2, 10, -2, 2, -8, 2);
-                const core::NumericalData<double, 3> slice1 = data2.slice(1, 4);
-                const core::NumericalData<double, 3> slice2 = data2.slice(5, -1);
-                core::NumericalData<double> combined(slice1.size() + slice2.size());
-                combined << slice1, slice2;
+                const core::NumericalData<double> combined = core::combine(data2.slice(1, 4), data2.slice(5, -1));
                 REQUIRE( combined.size() == 6);
                 REQUIRE( combined[0] == 4);
                 REQUIRE( combined[1] == 5);

@@ -34,6 +34,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
     using Array1Di = Array1D<int>;
     using Array1Df = Array1D<float>;
     using Array1Dd = Array1D<double>;
+
+    using DefaultType = double;
   
     /*!
        @brief Represents a 1-dimensional data structure (basically a 1D Eigen array)
@@ -58,7 +60,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
         big changes later on. Since this datastructure is fundamental to everything
         we need to make sure that we have this sorted properly first!
     */
-    template<typename T=double, int Size=ArrayTypeDynamic>
+    template<typename T=DefaultType, int Size=ArrayTypeDynamic>
     class NumericalData : private Array1D<T, Size>, 
                           public NumericalFunctions<NumericalData<T, Size>>
     {
@@ -67,12 +69,10 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
             // typedef Array1Dd Base;
             using BaseEigenArray::BaseEigenArray;
-            using BaseEigenArray::ArrayBase;
-            using BaseEigenArray::DenseBase;
 
             // This constructor allows you to construct Derived type from Eigen expressions
             template<typename OtherDerived>
-            NumericalData(const Eigen::ArrayBase<OtherDerived>& other)
+            explicit NumericalData(const Eigen::ArrayBase<OtherDerived>& other)
                 : BaseEigenArray(other)
             { }
 
@@ -97,6 +97,20 @@ PEAKINGDUCK_NAMESPACE_START(core)
                 return *this;
             }
 
+            template<typename OtherDerived>
+            NumericalData& operator=(const Eigen::EigenBase<OtherDerived> &other)
+            {
+                this->BaseEigenArray::operator=(other);
+                return *this;
+            }
+
+            template<typename OtherDerived>
+            NumericalData& operator=(const Eigen::ReturnByValue<OtherDerived> &other)
+            {
+                this->BaseEigenArray::operator=(other);
+                return *this;
+            }
+
             // This method allows you to assign Eigen expressions to Derived type
             NumericalData& operator=(const std::vector<T>& other)
             {
@@ -105,8 +119,12 @@ PEAKINGDUCK_NAMESPACE_START(core)
             }
 
             // clang does not like this, but gcc does,
-            // not sure why, but maybe not needed?
+            // not sure why?
+            // maybe private inheritance was not a good 
+            // option, composition is too much effort though!
             // using BaseEigenArray::Base;
+            // using BaseEigenArray::ArrayBase;
+            // using BaseEigenArray::DenseBase;
 
             // operations such as (x > 0).all()
             using BaseEigenArray::Base::all;
@@ -189,6 +207,23 @@ PEAKINGDUCK_NAMESPACE_START(core)
                 return this->segment(sindex, this->size() + eindex - sindex);
             }
     };
+
+    template<typename T=DefaultType, int Size=ArrayTypeDynamic>
+    NumericalData<T, ArrayTypeDynamic> combine(const NumericalData<T, ArrayTypeDynamic>& one, const NumericalData<T, ArrayTypeDynamic>& two){
+
+        NumericalData<T, ArrayTypeDynamic> combined(one.size() + two.size());
+        // cannot do this - needs access to DenseBase but clang complains
+        // ** combined << one, two;
+        // instead we just do a loop - there must be a better way
+        for(int i=0;i<one.size();++i){
+            combined[i] = one[i];
+        }
+
+        for(int i=0;i<two.size();++i){
+            combined[i+one.size()] = two[i];
+        }
+        return combined;
+    }
 
 PEAKINGDUCK_NAMESPACE_END
 PEAKINGDUCK_NAMESPACE_END
