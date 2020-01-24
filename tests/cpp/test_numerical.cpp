@@ -38,6 +38,46 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         core::NumericalData<double, 4> data(1,2,3,4);
         REQUIRE( data.to_vector() == std::vector<double>({1,2,3,4}));
 
+        THEN( "check slice" ) {
+            THEN( "check slice 1" ) {
+                const core::NumericalData<double> slice = data.slice(1, 3);
+                REQUIRE( slice.size() == 2);
+                REQUIRE( slice[0] == 2);
+                REQUIRE( slice[1] == 3);
+            }
+            THEN( "check slice 2" ) {
+                core::NumericalData<double, 9> data2(1, 4, 5, 2, 10, 2, 2, -8, 2);
+                const core::NumericalData<double> slice = data2.slice(1, 4);
+                REQUIRE( slice.size() == 3);
+                REQUIRE( slice[0] == 4);
+                REQUIRE( slice[1] == 5);
+                REQUIRE( slice[2] == 2);
+            }
+            THEN( "check slice 3 - negative" ) {
+                core::NumericalData<double, 9> data2(1, 4, 5, 2, 10, -2, 2, -8, 2);
+                const core::NumericalData<double> slice = data2.slice(3, -2);
+                REQUIRE( slice.size() == 4);
+                REQUIRE( slice[0] == 2);
+                REQUIRE( slice[1] == 10);
+                REQUIRE( slice[2] == -2);
+                REQUIRE( slice[3] == 2);
+            }
+            THEN( "check combining slices" ) {
+                core::NumericalData<double, 9> data2(1, 4, 5, 2, 10, -2, 2, -8, 2);
+                const core::NumericalData<double, 3> slice1 = data2.slice(1, 4);
+                const core::NumericalData<double, 3> slice2 = data2.slice(5, -1);
+                core::NumericalData<double> combined(slice1.size() + slice2.size());
+                combined << slice1, slice2;
+                REQUIRE( combined.size() == 6);
+                REQUIRE( combined[0] == 4);
+                REQUIRE( combined[1] == 5);
+                REQUIRE( combined[2] == 2);
+                REQUIRE( combined[3] == -2);
+                REQUIRE( combined[4] == 2);
+                REQUIRE( combined[5] == -8);
+            }
+        }
+
         THEN( "check + operations" ) {
             THEN( "check += scalar" ) {
                 data += 3.0;

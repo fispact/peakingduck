@@ -116,15 +116,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
         /*!
             @brief For each element calculate the midpoint value from the adjacent elements at a given 
             order. 
-            Take the i-order point and the i+order point and determine the average = (array[i-j]+array[i+j])/2.0.
-            End points are not counted (stay as original) - max(0, i-j) and min(i+j, len(array))
-
-            For example, given an array:         [1,   4,   6, 2,   4,   2, 5]
-            we have the midpoints for order 0:   [1,   4,   6, 2,   4,   2, 5]
-            we have the midpoints for order 1:   [1, 3.5,   3, 5,   2, 4.5, 5]
-            we have the midpoints for order 2:   [1,   4, 2.5, 3, 5.5,   2, 5]
-            we have the midpoints for order 3:   [1,   4,   6, 3,   4,   2, 5]
-            we have the midpoints for order 4+:  [1,   4,   6, 2,   4,   2, 5]
+             
+            See: NumericalFunctions::midpoint
 
             Mutates underlying array
         */
@@ -135,7 +128,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
         }      
 
         /*!
-            @brief Sensitive Nonlinear Iterative Peak (SNIP) algorithm for removing backgrounds
+            @brief Sensitive Nonlinear Iterative Peak (SNIP) algorithm for estimating backgrounds
             ref needed here:
 
             does via increasing window only (ToDo: need to allow decreasing window)
@@ -163,6 +156,19 @@ PEAKINGDUCK_NAMESPACE_START(core)
             snipped.inverseLLSInPlace();
 
             return snipped;
+        }
+
+        /*!
+            @brief Sensitive Nonlinear Iterative Peak (SNIP) algorithm for estimating backgrounds
+
+            See: NumericalFunctions::snip
+
+            Mutates underlying array
+        */
+        Derived& snipInPlace(int niterations)
+        {
+            this->underlying() = this->underlying().snip(niterations);
+            return this->underlying();
         }
 
         /*!

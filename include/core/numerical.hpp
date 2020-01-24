@@ -67,6 +67,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
             // typedef Array1Dd Base;
             using BaseEigenArray::BaseEigenArray;
+            using BaseEigenArray::ArrayBase;
+            using BaseEigenArray::DenseBase;
 
             // This constructor allows you to construct Derived type from Eigen expressions
             template<typename OtherDerived>
@@ -111,6 +113,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using BaseEigenArray::Base::any;
             using BaseEigenArray::Base::count;
 
+            using BaseEigenArray::Base::Zero;
             using BaseEigenArray::Base::Ones;
 
             // essential operations on arrays
@@ -140,6 +143,9 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using BaseEigenArray::operator();
             using BaseEigenArray::data;
             using BaseEigenArray::size;
+            using BaseEigenArray::begin;
+            using BaseEigenArray::end;
+            using BaseEigenArray::segment;
 
             inline void from_vector(const std::vector<T>& raw){
                 this->BaseEigenArray::operator=(BaseEigenArray::Map(raw.data(), raw.size()));
@@ -168,6 +174,20 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
             // custom unary operations
             using BaseEigenArray::unaryExpr;
+
+            // similar to python slicing,, but a bit more primative
+            // arr = [1, 4, 5, 2, 10, 2, 2, -8, 2]
+            // arr.slice(1, 3) == arr[1:3] == [4, 5]
+            // arr.slice(1, -2) == arr[1:-2] == [4, 5, 2, 10, 2, 2]
+            //
+            // can we add templates when sindex and eindex are known
+            // at compile time?
+            NumericalData<T> slice(int sindex, int eindex) const{
+                if(eindex >= 0){
+                    return this->segment(sindex, eindex - sindex);
+                }
+                return this->segment(sindex, this->size() + eindex - sindex);
+            }
     };
 
 PEAKINGDUCK_NAMESPACE_END
