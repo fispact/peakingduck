@@ -216,10 +216,13 @@ PEAKINGDUCK_NAMESPACE_START(core)
             }
     };
 
+    /*!
+        @brief Combine (concatenate) arrays into another.
+    */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
-    NumericalData<T, ArrayTypeDynamic> combine(const NumericalData<T, ArrayTypeDynamic>& one, const NumericalData<T, ArrayTypeDynamic>& two){
+    NumericalData<T, Size> combine(const NumericalData<T, ArrayTypeDynamic>& one, const NumericalData<T, ArrayTypeDynamic>& two){
 
-        NumericalData<T, ArrayTypeDynamic> combined(one.size() + two.size());
+        NumericalData<T, Size> combined(one.size() + two.size());
         // cannot do this - needs access to DenseBase but clang complains
         // ** combined << one, two;
         // instead we just do a loop - there must be a better way
