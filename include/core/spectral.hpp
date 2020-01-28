@@ -107,7 +107,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
             this->_Y = this->_Y - this->_Y.snip(iterations);
         }
 
-        NumericalData<YScalar> estimateBackground(int iterations){
+        NumericalData<YScalar> estimateBackground(int iterations) const{
             return this->_Y.snip(iterations);
         }
     };
@@ -123,7 +123,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
         /*!
              @brief  Deserialization method for histogram
 
-             Assumes delimited text data in form of:
+             Assumes delimited text data in column form of:
 
              channel,lowerenergy,upperenergy,count         
          */

@@ -170,34 +170,6 @@ PEAKINGDUCK_NAMESPACE_START(core)
             this->underlying() = this->underlying().snip(niterations);
             return this->underlying();
         }
-
-        /*!
-            @brief A simple function for filtering values above a certain
-            threshold (>=). This is useful to remove entries that are negative 
-            for example.
-
-            Returns a new array
-        */
-        Derived ramp(double threshold) const
-        {
-            std::function<double(double)> imp = [&](double x){
-                return (x >= threshold) ? x : 0;
-            };
-            return this->underlying().unaryExpr(imp);
-        }
-
-        /*!
-            @brief A simple function for filtering values above a certain
-            threshold (>=). This is useful to remove entries that are negative 
-            for example.
-
-            Mutates underlying array
-        */
-        Derived& rampInPlace(double threshold)
-        {
-            this->underlying() = this->underlying().ramp(threshold);
-            return this->underlying();
-        }
     };
 
 PEAKINGDUCK_NAMESPACE_END

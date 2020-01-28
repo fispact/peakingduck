@@ -114,6 +114,48 @@ PYBIND11_MODULE(pykingduck, m) {
         .def("ramp", &NumericalDataPyType::ramp)
         .def("rampInPlace", &NumericalDataPyType::rampInPlace);
 
+    // integral type
+    using IntegerDataCoreType = int;
+    using IntegerDataPyType = core::NumericalData<IntegerDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<IntegerDataPyType>(m_core, "IntegerData")
+        .def(py::init<>())
+        .def(py::init<const std::vector<IntegerDataCoreType>&>())
+        .def(py::init<const Eigen::Ref<core::Array1Di>&>())
+        .def(py::self + py::self)
+        .def(py::self + IntegerDataCoreType())
+        .def(py::self - py::self)
+        .def(py::self - IntegerDataCoreType())
+        .def(py::self * IntegerDataCoreType())
+        .def(py::self / IntegerDataCoreType())
+        .def(py::self * py::self)
+        .def(py::self / py::self)
+        .def(py::self += py::self)
+        .def(py::self -= py::self)
+        .def(py::self *= IntegerDataCoreType())
+        .def(py::self /= IntegerDataCoreType())
+        .def(py::self *= py::self)
+        .def(py::self /= py::self)
+        .def(IntegerDataCoreType() + py::self)
+        .def(IntegerDataCoreType() - py::self)
+        .def(IntegerDataCoreType() * py::self)
+        .def(IntegerDataCoreType() / py::self)
+        .def(-py::self)
+        .def("__call__",
+             [](const IntegerDataPyType& data, int sindex, int eindex) {
+                 return data(sindex, eindex);
+             })
+        .def("__len__",
+             [](const IntegerDataPyType& data) {
+                 return data.size();
+             })
+        .def("__getitem__",
+             [](const IntegerDataPyType& data, size_t index) {
+                 return data[index];
+             })
+        .def("from_list", &IntegerDataPyType::from_vector)
+        .def("to_list", &IntegerDataPyType::to_vector)
+        .def("ramp", &IntegerDataPyType::ramp)
+        .def("rampInPlace", &IntegerDataPyType::rampInPlace);
 
     // smoothing objects
     using MovingAverageSmootherPyType = core::MovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;

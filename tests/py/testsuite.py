@@ -1,6 +1,7 @@
 import unittest
 
-from .coretests import NumericalDataUnitTest
+from .numericaltests import NumericalDataUnitTest
+from .spectraltests import SpectralDataUnitTest
 
 
 def main():
