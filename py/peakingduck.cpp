@@ -214,7 +214,7 @@ PYBIND11_MODULE(pykingduck, m) {
             [](SpectrumEnergyBasedPyType& hist, const std::string& filename) {
                 std::ifstream file(filename);
                 //file >> m;
-                core::io::Deserialize<double, double, ','>(file, hist);
+                io::Deserialize<double, double, ','>(file, hist);
                 file.close();
             });
 }

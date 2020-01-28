@@ -16,7 +16,7 @@
 #include <cmath>
 
 #include "common.hpp"
-#include "numerical.hpp"
+#include "core/numerical.hpp"
 
 PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(core)

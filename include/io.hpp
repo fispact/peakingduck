@@ -6,18 +6,13 @@
 
 /*!
     @file
-    Defines the full library.
-    A single header file for whole library
+    Defines all I/O - serialization, etc
 
     @copyright UK Atomic Energy Authority (UKAEA) - 2019-20
 */
-#ifndef PEAKINGDUCK_HPP
-#define PEAKINGDUCK_HPP
+#ifndef IO_HPP
+#define IO_HPP
 
-#include "exceptions.hpp"
-#include "constants.hpp"
-#include "util.hpp"
-#include "core.hpp"
-#include "io.hpp"
+#include "io/spectralio.hpp"
 
-#endif //PEAKINGDUCK_HPP
+#endif //IO_HPP

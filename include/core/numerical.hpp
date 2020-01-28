@@ -20,8 +20,8 @@
 #include <Eigen/StdVector>
 
 #include "common.hpp"
-#include "numericalfunctions.hpp"
-#include "numericalmacros.h"
+#include "core/numericalfunctions.hpp"
+#include "core/numericalmacros.h"
 
 PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(core)
