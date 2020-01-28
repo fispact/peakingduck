@@ -16,5 +16,6 @@
 #include "core/crtp.hpp"
 #include "core/numerical.hpp"
 #include "core/smoothing.hpp"
+#include "core/spectral.hpp"
 
 #endif //CORE_HPP

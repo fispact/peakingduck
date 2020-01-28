@@ -125,6 +125,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
             // using BaseEigenArray::Base;
             // using BaseEigenArray::ArrayBase;
             // using BaseEigenArray::DenseBase;
+            using BaseEigenArray::Base::eval;
 
             // operations such as (x > 0).all()
             using BaseEigenArray::Base::all;

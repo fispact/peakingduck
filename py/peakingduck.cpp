@@ -47,6 +47,9 @@ PYBIND11_MODULE(pykingduck, m) {
     // core module 
     py::module m_core = m.def_submodule("core");
 
+    // io module
+    py::module m_io = m.def_submodule("io");
+
     m_util.def("get_window", &util::get_window<double>,
             py::arg("values"),
             py::arg("centerindex"),
@@ -54,6 +57,13 @@ PYBIND11_MODULE(pykingduck, m) {
             py::arg("ninner") = 0,
             py::arg("includeindex") = true);
 
+
+    // core numerical object - tries to be like numpy array
+    // but why you ask?
+    // well this is a custom type specific for custom operations
+    // like SNIP and others, that can be implemented in python
+    // but we want it as quick as possible
+    // can swap between numpy if need be
     using NumericalDataCoreType = double;
     using NumericalDataPyType = core::NumericalData<NumericalDataCoreType,core::ArrayTypeDynamic>;
     py::class_<NumericalDataPyType>(m_core, "NumericalData")
@@ -105,6 +115,7 @@ PYBIND11_MODULE(pykingduck, m) {
         .def("rampInPlace", &NumericalDataPyType::rampInPlace);
 
 
+    // smoothing objects
     using MovingAverageSmootherPyType = core::MovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
     py::class_<MovingAverageSmootherPyType>(m_core, "MovingAverageSmoother")
         .def(py::init<int>())
@@ -120,4 +131,48 @@ PYBIND11_MODULE(pykingduck, m) {
              [](const WeightedMovingAverageSmootherPyType& smoother, const NumericalDataPyType& data) {
                  return smoother(data);
              });
+
+    // histogram objects
+    using HistPyType = core::Histogram<double,double>;
+    using HistChannelPyType = core::Histogram<int,double>;
+
+    py::class_<HistPyType>(m_core, "Histogram")
+        .def(py::init<>())
+        .def(py::init<const core::NumericalData<double>&, const core::NumericalData<double>&>())
+        .def(py::init<const HistPyType&>())
+        .def_property_readonly("X", &HistPyType::X)
+        .def_property_readonly("Y", &HistPyType::Y);
+
+    py::class_<HistChannelPyType>(m_core, "HistogramChannelBased")
+        .def(py::init<>())
+        .def(py::init<const core::NumericalData<int>&, const core::NumericalData<double>&>())
+        .def(py::init<const HistChannelPyType&>())
+        .def_property_readonly("X", &HistChannelPyType::X)
+        .def_property_readonly("Y", &HistChannelPyType::Y);
+
+    // spectrum objects
+    using SpectrumChannelBasedPyType = core::Spectrum<int,double>;
+    py::class_<SpectrumChannelBasedPyType, HistChannelPyType>(m_core, "SpectrumChannelBased")
+        .def(py::init<>())
+        .def(py::init<const core::NumericalData<int>&, const core::NumericalData<double>&>())
+        .def(py::init<const SpectrumChannelBasedPyType&>())
+        .def("estimateBackground", &SpectrumChannelBasedPyType::estimateBackground)
+        .def("removeBackground", &SpectrumChannelBasedPyType::removeBackground);
+
+    using SpectrumEnergyBasedPyType = core::Spectrum<double,double>;
+    py::class_<SpectrumEnergyBasedPyType, HistPyType>(m_core, "SpectrumEnergyBased")
+        .def(py::init<>())
+        .def(py::init<const core::NumericalData<double>&, const core::NumericalData<double>&>())
+        .def(py::init<const SpectrumEnergyBasedPyType&>())
+        .def("estimateBackground", &SpectrumEnergyBasedPyType::estimateBackground)
+        .def("removeBackground", &SpectrumEnergyBasedPyType::removeBackground);
+
+    // IO module read/write to file, etc...
+    m_io.def("from_csv", 
+            [](SpectrumEnergyBasedPyType& hist, const std::string& filename) {
+                std::ifstream file(filename);
+                //file >> m;
+                core::io::Deserialize<double, double, ','>(file, hist);
+                file.close();
+            });
 }
