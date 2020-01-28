@@ -35,11 +35,17 @@ def getplotvalues(x,y):
 # plot the histogram
 import matplotlib.pyplot as plt
 
+f = plt.figure(figsize=(10,8))
 plt.semilogy(*getplotvalues(energies, counts), 'k', linewidth=0.6, alpha=0.8, label="raw")
 # plt.semilogy(*getplotvalues(energies, snippedCounts), 'r', linewidth=0.4, alpha=0.5, label="no background")
-plt.semilogy(*getplotvalues(energies, background), 'g', linewidth=0.6, alpha=0.8, label="background")
+plt.semilogy(*getplotvalues(energies, background), 'g', linewidth=1.0, alpha=0.8, label="background")
 plt.ylim(bottom=0.5, top=1e4)
 plt.xlabel("Energy (eV)", fontsize=24)
 plt.ylabel("Counts", fontsize=24)
 plt.legend(fontsize=18)
+plt.tick_params(axis='both', which='major', labelsize=20)
+plt.tick_params(axis='both', which='minor', labelsize=20)
+# spacing
+# plt.subplots_adjust(left=0.06, bottom=0.12, right=0.97, top=0.97, wspace=0.2, hspace=0.2)
+# plt.savefig('sample.png')
 plt.show()
