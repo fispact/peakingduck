@@ -79,6 +79,10 @@ PYBIND11_MODULE(pykingduck, m) {
         .def(NumericalDataCoreType() * py::self)
         .def(NumericalDataCoreType() / py::self)
         .def(-py::self)
+        .def("__call__",
+             [](const NumericalDataPyType& data, int sindex, int eindex) {
+                 return data(sindex, eindex);
+             })
         .def("__len__",
              [](const NumericalDataPyType& data) {
                  return data.size();
@@ -99,4 +103,21 @@ PYBIND11_MODULE(pykingduck, m) {
             py::arg("niterations") = 20)
         .def("ramp", &NumericalDataPyType::ramp)
         .def("rampInPlace", &NumericalDataPyType::rampInPlace);
+
+
+    using MovingAverageSmootherPyType = core::MovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<MovingAverageSmootherPyType>(m_core, "MovingAverageSmoother")
+        .def(py::init<int>())
+        .def("__call__",
+             [](const MovingAverageSmootherPyType& smoother, const NumericalDataPyType& data) {
+                 return smoother(data);
+             });
+
+    using WeightedMovingAverageSmootherPyType = core::WeightedMovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<WeightedMovingAverageSmootherPyType>(m_core, "WeightedMovingAverageSmoother")
+        .def(py::init<int>())
+        .def("__call__",
+             [](const WeightedMovingAverageSmootherPyType& smoother, const NumericalDataPyType& data) {
+                 return smoother(data);
+             });
 }
