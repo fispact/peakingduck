@@ -27,6 +27,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
     struct ISmoother
     {
+        virtual ~ISmoother(){};
+        
         virtual NumericalData<T, Size> 
         operator()(const NumericalData<T, Size>& data) const = 0;
     };    
