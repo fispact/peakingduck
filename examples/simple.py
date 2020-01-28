@@ -5,7 +5,7 @@ a_list = [1, 8, 9.7]
 
 print("A simple list works OK:", a_list)
 
-a_numpy = np.array([1, 8, 9.7])
+a_numpy = np.array(a_list)
 
 print("A numpy array works OK:", a_numpy)
 
