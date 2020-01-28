@@ -7,15 +7,21 @@ filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         '..', 'reference', 'spectrum0.csv')
 
 # read in from csv file
-hist = pkd.core.SpectrumEnergyBased()
-pkd.io.from_csv(hist, filename)
-energies, counts = hist.X, hist.Y
+hist_raw = pkd.core.SpectrumEnergyBased()
+pkd.io.from_csv(hist_raw, filename)
+energies, counts = hist_raw.X, hist_raw.Y
+
+# smooth it
+smoother = pkd.core.MovingAverageSmoother(3)
+# smoother = pkd.core.WeightedMovingAverageSmoother(5)
+counts = smoother(counts)
+hist_smoothed = pkd.core.SpectrumEnergyBased(energies, counts)
 
 # estimate and then remove background
 ITERS = 15
-background = hist.estimateBackground(ITERS)
-hist.removeBackground(ITERS)
-snippedCounts = hist.Y
+background = hist_smoothed.estimateBackground(ITERS)
+hist_smoothed.removeBackground(ITERS)
+snippedCounts = hist_smoothed.Y
 
 # function to plot histogram
 def getplotvalues(x,y):
@@ -35,8 +41,8 @@ def getplotvalues(x,y):
 # plot the histogram
 import matplotlib.pyplot as plt
 
-f = plt.figure(figsize=(10,8))
-plt.semilogy(*getplotvalues(energies, counts), 'k', linewidth=0.6, alpha=0.8, label="raw")
+f = plt.figure(figsize=(10,7))
+plt.semilogy(*getplotvalues(energies, counts), 'k', linewidth=0.8, alpha=0.5, label="raw")
 # plt.semilogy(*getplotvalues(energies, snippedCounts), 'r', linewidth=0.4, alpha=0.5, label="no background")
 plt.semilogy(*getplotvalues(energies, background), 'g', linewidth=1.0, alpha=0.8, label="background")
 plt.ylim(bottom=0.5, top=1e4)
@@ -46,6 +52,6 @@ plt.legend(fontsize=18)
 plt.tick_params(axis='both', which='major', labelsize=20)
 plt.tick_params(axis='both', which='minor', labelsize=20)
 # spacing
-# plt.subplots_adjust(left=0.06, bottom=0.12, right=0.97, top=0.97, wspace=0.2, hspace=0.2)
+plt.subplots_adjust(left=0.12, bottom=0.12, right=0.97, top=0.97, wspace=0.2, hspace=0.2)
 # plt.savefig('sample.png')
 plt.show()

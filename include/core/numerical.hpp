@@ -250,18 +250,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
     NumericalData<T, Size> combine(const NumericalData<T, ArrayTypeDynamic>& one, const NumericalData<T, ArrayTypeDynamic>& two){
-
         NumericalData<T, Size> combined(one.size() + two.size());
-        // cannot do this - needs access to DenseBase but clang complains
-        // ** combined << one, two;
-        // instead we just do a loop - there must be a better way
-        for(int i=0;i<one.size();++i){
-            combined[i] = one[i];
-        }
-
-        for(int i=0;i<two.size();++i){
-            combined[i+one.size()] = two[i];
-        }
+        combined << one.eval(), two.eval();
         return combined;
     }
 
