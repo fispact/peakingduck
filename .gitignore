@@ -42,3 +42,9 @@ build*/**
 
 # Mac rubbish
 .DS_Store
+
+
+# python build stuff
+.eggs
+dist/
+*.egg-info/
