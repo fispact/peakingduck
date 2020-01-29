@@ -18,8 +18,11 @@ counts = smoother(counts)
 hist_smoothed = pkd.core.SpectrumEnergyBased(energies, counts)
 
 # estimate and then remove background
-ITERS = 15
-background = hist_smoothed.estimateBackground(ITERS)
+ITERS = range(1, 21)
+# forward windowing
+background_forw = hist_smoothed.estimateBackground(ITERS)
+# backward windowing
+background_back = hist_smoothed.estimateBackground(list(reversed(ITERS)))
 hist_smoothed.removeBackground(ITERS)
 snippedCounts = hist_smoothed.Y
 
@@ -44,7 +47,8 @@ import matplotlib.pyplot as plt
 f = plt.figure(figsize=(10,7))
 plt.semilogy(*getplotvalues(energies, counts), 'k', linewidth=0.8, alpha=0.5, label="raw")
 # plt.semilogy(*getplotvalues(energies, snippedCounts), 'r', linewidth=0.4, alpha=0.5, label="no background")
-plt.semilogy(*getplotvalues(energies, background), 'g', linewidth=1.0, alpha=0.8, label="background")
+plt.semilogy(*getplotvalues(energies, background_forw), 'g', linewidth=1.0, alpha=0.8, label="background - forwards")
+plt.semilogy(*getplotvalues(energies, background_back), 'r', linewidth=1.0, alpha=0.8, label="background - backwards")
 plt.ylim(bottom=0.5, top=1e4)
 plt.xlabel("Energy (eV)", fontsize=24)
 plt.ylabel("Counts", fontsize=24)
