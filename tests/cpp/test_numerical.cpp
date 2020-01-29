@@ -634,7 +634,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 data(1.0, 42.2, 61.4, 2.1, 4.2, 23.4, 52.32, 2.3, 213.21, 32.4, 1.2, 3.4, 5.2, 123.3, 23.2, 4.1);
             std::vector<int> iterations(20);
             std::generate(iterations.begin(), iterations.end(), [n = 1] () mutable { return n++; });
-            const core::NumericalData<double, 16> snipped = data.snip2(iterations.begin(), iterations.end());
+            const core::NumericalData<double, 16> snipped = data.snip(iterations.begin(), iterations.end());
             const core::NumericalData<double, 16>             
                 expected(1.0, 
                 9.599840039956527, 
@@ -658,7 +658,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             const core::NumericalData<double, 16> 
                 data(1.0, 42.2, 61.4, 2.1, 4.2, 23.4, 52.32, 2.3, 213.21, 32.4, 1.2, 3.4, 5.2, 123.3, 23.2, 4.1);
             auto rn = util::range<int,1,21,1>();
-            const core::NumericalData<double, 16> snipped = data.snip2(rn.begin(), rn.end());
+            const core::NumericalData<double, 16> snipped = data.snip(rn.begin(), rn.end());
             const core::NumericalData<double, 16>             
                 expected(1.0, 
                 9.599840039956527, 

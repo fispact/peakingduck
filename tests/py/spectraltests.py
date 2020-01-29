@@ -35,5 +35,5 @@ class SpectralDataUnitTest(unittest.TestCase):
             narray([1, 2, 4, 10, 12, 23, 24, 25, 28, 30]), 
             counts)
             
-        self.assertEqual(counts.snip(1).to_list(), hist.estimateBackground(1).to_list(), "Assert snip")
+        self.assertEqual(counts.snip(2).to_list(), hist.estimateBackground(range(1, 3)).to_list(), "Assert snip")
 

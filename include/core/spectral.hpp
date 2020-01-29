@@ -99,13 +99,15 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
         using Histogram<XScalar, YScalar>::Histogram;
 
-        void removeBackground(int iterations){
+        template<class Iterator>
+        void removeBackground(Iterator first, Iterator last){
             // perform snip on Y values
-            this->_Y = this->_Y - this->_Y.snip(iterations);
+            this->_Y = this->_Y - this->_Y.snip(first, last);
         }
 
-        NumericalData<YScalar> estimateBackground(int iterations) const{
-            return this->_Y.snip(iterations);
+        template<class Iterator>
+        NumericalData<YScalar> estimateBackground(Iterator first, Iterator last) const{
+            return this->_Y.snip(first, last);
         }
     };
 

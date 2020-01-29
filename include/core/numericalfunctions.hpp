@@ -13,6 +13,9 @@
 #ifndef CORE_NUMERICAL_FUNCTIONS_HPP
 #define CORE_NUMERICAL_FUNCTIONS_HPP
 
+#include <algorithm>
+#include <vector>
+
 #include "common.hpp"
 #include "crtp.hpp"
 
@@ -135,7 +138,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
             Returns a new array
         */
         template<class Iterator>
-        Derived snip2(Iterator first, Iterator last) const
+        Derived snip(Iterator first, Iterator last) const
         { 
             auto midpointMinOp = [](int i, int order, const Derived& values, Derived& newValues){
                 newValues[i] = (values[i-order] + values[i+order])/2.0;
@@ -170,25 +173,9 @@ PEAKINGDUCK_NAMESPACE_START(core)
         */
         Derived snip(int niterations) const
         { 
-            auto midpointMinOp = [](int i, int order, const Derived& values, Derived& newValues){
-                newValues[i] = (values[i-order] + values[i+order])/2.0;
-                newValues[i] = std::min(newValues[i], values[i]);
-            };
-
-            Derived snipped = this->underlying();
-
-            // first scale by LLS
-            snipped.LLSInPlace();
-
-            // iterate over iterations from 1 to niterations
-            for(int i=0;i<niterations;++i){
-                snipped = snipped.symmetricNeighbourOp(midpointMinOp, i+1);
-            }
-
-            // lastly scale it back LLS
-            snipped.inverseLLSInPlace();
-
-            return snipped;
+            std::vector<int> iterations(niterations);
+            std::generate(iterations.begin(), iterations.end(), [n = 1] () mutable { return n++; });
+            return this->underlying().snip(iterations.begin(), iterations.end());
         }
 
         /*!

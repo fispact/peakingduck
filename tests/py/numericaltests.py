@@ -67,6 +67,9 @@ class NumericalDataUnitTest(unittest.TestCase):
         for e, a in zip(expected_order4, data.snip(4).to_list()):
             self.assertAlmostEqual(e, a, delta=1e-12, msg="Assert 4th order")
 
+        for e, a in zip(expected_order4, data.snip(range(1,5)).to_list()):
+            self.assertAlmostEqual(e, a, delta=1e-12, msg="Assert 4th order")
+
         expected_order20 = [1.0, 
                 9.599840039956527, 
                 2.2325487695967374, 
@@ -84,5 +87,8 @@ class NumericalDataUnitTest(unittest.TestCase):
                 22.267498846621255, 
                 4.1]
         for e, a in zip(expected_order20, data.snip(20).to_list()):
+            self.assertAlmostEqual(e, a, delta=1e-12, msg="Assert 20th order")
+
+        for e, a in zip(expected_order20, data.snip(range(1,21)).to_list()):
             self.assertAlmostEqual(e, a, delta=1e-12, msg="Assert 20th order")
         

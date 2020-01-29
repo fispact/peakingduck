@@ -109,8 +109,17 @@ PYBIND11_MODULE(pykingduck, m) {
         .def("inverseLLSInPlace", &NumericalDataPyType::inverseLLSInPlace)
         .def("midpoint", &NumericalDataPyType::midpoint)
         .def("midpointInPlace", &NumericalDataPyType::midpointInPlace)
-        .def("snip", &NumericalDataPyType::snip,
+        .def("snip", [](const NumericalDataPyType& data, const std::vector<int>& iteration_list){
+            return data.snip(iteration_list.begin(), iteration_list.end());
+        })
+        .def("snip", (NumericalDataPyType (NumericalDataPyType::*)(int) const)&NumericalDataPyType::snip,
             py::arg("niterations") = 20)
+
+        /* pybind cannot deduce types so we need to use old style function pointers */
+        // .def("snip", py::overload_cast<std::vector<int>::iterator,std::vector<int>::iterator>(&NumericalDataPyType::snip))
+        // .def("snip", py::overload_cast<int>(&NumericalDataPyType::snip),
+        //     py::arg("niterations") = 20)
+
         .def("ramp", &NumericalDataPyType::ramp)
         .def("rampInPlace", &NumericalDataPyType::rampInPlace);
 
@@ -198,16 +207,24 @@ PYBIND11_MODULE(pykingduck, m) {
         .def(py::init<>())
         .def(py::init<const core::NumericalData<int>&, const core::NumericalData<double>&>())
         .def(py::init<const SpectrumChannelBasedPyType&>())
-        .def("estimateBackground", &SpectrumChannelBasedPyType::estimateBackground)
-        .def("removeBackground", &SpectrumChannelBasedPyType::removeBackground);
+        .def("estimateBackground", [](const SpectrumChannelBasedPyType& spectrum, const std::vector<int>& iteration_list){
+            return spectrum.estimateBackground(iteration_list.begin(), iteration_list.end());
+        })
+        .def("removeBackground", [](SpectrumChannelBasedPyType& spectrum, const std::vector<int>& iteration_list){
+            spectrum.removeBackground(iteration_list.begin(), iteration_list.end());
+        });
 
     using SpectrumEnergyBasedPyType = core::Spectrum<double,double>;
     py::class_<SpectrumEnergyBasedPyType, HistPyType>(m_core, "SpectrumEnergyBased")
         .def(py::init<>())
         .def(py::init<const core::NumericalData<double>&, const core::NumericalData<double>&>())
         .def(py::init<const SpectrumEnergyBasedPyType&>())
-        .def("estimateBackground", &SpectrumEnergyBasedPyType::estimateBackground)
-        .def("removeBackground", &SpectrumEnergyBasedPyType::removeBackground);
+        .def("estimateBackground", [](const SpectrumEnergyBasedPyType& spectrum, const std::vector<int>& iteration_list){
+            return spectrum.estimateBackground(iteration_list.begin(), iteration_list.end());
+        })
+        .def("removeBackground", [](SpectrumEnergyBasedPyType& spectrum, const std::vector<int>& iteration_list){
+            spectrum.removeBackground(iteration_list.begin(), iteration_list.end());
+        });
 
     // IO module read/write to file, etc...
     m_io.def("from_csv", 
