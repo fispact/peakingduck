@@ -14,6 +14,7 @@
 #define UTIL_HPP
 
 #include "util/file.hpp"
+#include "util/range.hpp"
 #include "util/stream.hpp"
 #include "util/string.hpp"
 #include "util/window.hpp"

@@ -4,6 +4,7 @@
 //                                                                //
 ////////////////////////////////////////////////////////////////////
 
+#include <algorithm>
 #include <vector>
 
 #include "catch.hpp"
@@ -609,8 +610,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             const core::NumericalData<double, 16> 
                 data(1.0, 42.2, 61.4, 2.1, 4.2, 23.4, 52.32, 2.3, 213.21, 32.4, 1.2, 3.4, 5.2, 123.3, 23.2, 4.1);
             const core::NumericalData<double, 16> snipped = data.snip(20);
-            const core::NumericalData<double, 16> 
-            
+            const core::NumericalData<double, 16>             
                 expected(1.0, 
                 9.599840039956527, 
                 2.2325487695967374, 
@@ -628,7 +628,56 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 22.267498846621255, 
                 4.1);
             REQUIRE_NUMERICS_APPROX_THE_SAME(expected, snipped);
-        }     
+        }         
+        THEN( "check SNIP2" ) {
+            const core::NumericalData<double, 16> 
+                data(1.0, 42.2, 61.4, 2.1, 4.2, 23.4, 52.32, 2.3, 213.21, 32.4, 1.2, 3.4, 5.2, 123.3, 23.2, 4.1);
+            std::vector<int> iterations(20);
+            std::generate(iterations.begin(), iterations.end(), [n = 1] () mutable { return n++; });
+            const core::NumericalData<double, 16> snipped = data.snip2(iterations.begin(), iterations.end());
+            const core::NumericalData<double, 16>             
+                expected(1.0, 
+                9.599840039956527, 
+                2.2325487695967374, 
+                2.1, 
+                1.6262270466592428, 
+                1.097732439852992, 
+                1.668357848457926, 
+                2.3, 
+                2.440060339020095, 
+                2.494169045564714, 
+                1.2, 
+                2.6995733396237362, 
+                3.2217712295589997, 
+                3.3438927139799794, 
+                22.267498846621255, 
+                4.1);
+            REQUIRE_NUMERICS_APPROX_THE_SAME(expected, snipped);
+        }             
+        THEN( "check SNIP2 - range" ) {
+            const core::NumericalData<double, 16> 
+                data(1.0, 42.2, 61.4, 2.1, 4.2, 23.4, 52.32, 2.3, 213.21, 32.4, 1.2, 3.4, 5.2, 123.3, 23.2, 4.1);
+            auto rn = util::range<int,1,21,1>();
+            const core::NumericalData<double, 16> snipped = data.snip2(rn.begin(), rn.end());
+            const core::NumericalData<double, 16>             
+                expected(1.0, 
+                9.599840039956527, 
+                2.2325487695967374, 
+                2.1, 
+                1.6262270466592428, 
+                1.097732439852992, 
+                1.668357848457926, 
+                2.3, 
+                2.440060339020095, 
+                2.494169045564714, 
+                1.2, 
+                2.6995733396237362, 
+                3.2217712295589997, 
+                3.3438927139799794, 
+                22.267498846621255, 
+                4.1);
+            REQUIRE_NUMERICS_APPROX_THE_SAME(expected, snipped);
+        }    
     }
 
 PEAKINGDUCK_NAMESPACE_END // unittests

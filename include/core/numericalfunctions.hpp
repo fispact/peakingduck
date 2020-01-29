@@ -27,7 +27,6 @@ PEAKINGDUCK_NAMESPACE_START(core)
     template <class Derived>
     struct NumericalFunctions : crtp<Derived, NumericalFunctions>
     {
-
         /*!
             @brief log(log(sqrt(value + 1) + 1) + 1)
             Returns a new array
@@ -131,7 +130,41 @@ PEAKINGDUCK_NAMESPACE_START(core)
             @brief Sensitive Nonlinear Iterative Peak (SNIP) algorithm for estimating backgrounds
             ref needed here:
 
+            Allows any form of iterations given an iterator
+
+            Returns a new array
+        */
+        template<class Iterator>
+        Derived snip2(Iterator first, Iterator last) const
+        { 
+            auto midpointMinOp = [](int i, int order, const Derived& values, Derived& newValues){
+                newValues[i] = (values[i-order] + values[i+order])/2.0;
+                newValues[i] = std::min(newValues[i], values[i]);
+            };
+
+            Derived snipped = this->underlying();
+
+            // first scale by LLS
+            snipped.LLSInPlace();
+
+            // iterations
+            for(auto it=first; it!=last; ++it){
+                snipped = snipped.symmetricNeighbourOp(midpointMinOp, *it);
+            }
+
+            // lastly scale it back LLS
+            snipped.inverseLLSInPlace();
+
+            return snipped;
+        }
+
+        /*!
+            @brief Sensitive Nonlinear Iterative Peak (SNIP) algorithm for estimating backgrounds
+            ref needed here:
+
             does via increasing window only (ToDo: need to allow decreasing window)
+
+            Deprecate this!
 
             Returns a new array
         */
