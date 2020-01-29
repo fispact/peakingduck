@@ -228,7 +228,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
                 std::function<T(T)> imp = [&](const T& x){
                     return (x >= threshold) ? x : 0;
                 };
-                return this->underlying().unaryExpr(imp);
+                return this->unaryExpr(imp);
             }
 
             /*!
@@ -240,8 +240,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
             */
             NumericalData& rampInPlace(const T& threshold)
             {
-                this->underlying() = this->underlying().ramp(threshold);
-                return this->underlying();
+                this->BaseEigenArray::operator=(this->ramp(threshold));
+                return *this;
             }
     };
 
