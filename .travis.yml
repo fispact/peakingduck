@@ -30,6 +30,7 @@ addons:
     packages:
       - python3.7-dev
       - python3-pip
+      - python3-setuptools
       - lcov
       - g++-6
       - clang-3.8
