@@ -4,7 +4,8 @@ coverage:
   
   ignore:
     - "tests/"  # ignore folders and all its contents
-    - "test_*"       # wildcards accepted
+    - "test_*"  # wildcards accepted
+    - "py/peakingduck.cpp" # ignore the pybind wrapper     
 
 codecov:
   token: 924f9e75-5768-420a-88d3-c48457a4cdba
