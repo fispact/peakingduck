@@ -66,8 +66,9 @@ script:
   # clean the cmake build and now just try the pip install
   - rm -rf ${TRAVIS_BUILD_DIR}/build
   - unset PYTHONPATH
-  - $PY_CMD setup.py install
-  - $PY_CMD setup.py test
+  - $PY_CMD -m pip install --user install
+  - pytest ./tests/py/testsuite.py
+  # - $PY_CMD setup.py test
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}/build_coverage
