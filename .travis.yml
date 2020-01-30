@@ -62,6 +62,11 @@ script:
   - cd ${TRAVIS_BUILD_DIR}
   - ./build_coverage/bin/peakingduckcpptests
   - pytest --tb=long ./tests/py/testsuite.py
+  # clean the cmake build and now just try the pip install
+  - rm -rf ${TRAVIS_BUILD_DIR}/build
+  - unset PYTHONPATH
+  - python3 setup.py install
+  - python3 setup.py test
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}/build_coverage
