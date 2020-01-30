@@ -1,5 +1,5 @@
 import os
-import pykingduck as pkd
+import peakingduck as pkd
 
 
 # change the filename here for a given spectrum

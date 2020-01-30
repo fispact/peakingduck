@@ -3,7 +3,9 @@ set(Python_ADDITIONAL_VERSIONS 3.6)
 find_package(PythonInterp 3 REQUIRED)
 find_package(PythonLibs 3 REQUIRED)
 
-set(PEAKINGDUCK_PY_NAME pykingduck)
+# we use uppercase to dictate the raw c++ bindings
+# lowercase is the python wrapper that uses the bindings
+set(PEAKINGDUCK_PY_NAME PEAKINGDUCK)
 
 message(STATUS "Using PyBind")
 set(PYBIND_INC_DIR ${PYBIND_INCLUDES})

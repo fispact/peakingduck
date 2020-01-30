@@ -20,7 +20,7 @@ namespace py = pybind11;
 
 PEAKINGDUCK_NAMESPACE_USING(peakingduck)
 
-PYBIND11_MODULE(pykingduck, m) {
+PYBIND11_MODULE(PEAKINGDUCK, m) {
     
     m.doc() = R"pbdoc(
         Peaking duck library using pybind11
@@ -32,7 +32,7 @@ PYBIND11_MODULE(pykingduck, m) {
             - Entry 1
             - Entry 2
 
-        .. currentmodule:: pykingduck
+        .. currentmodule:: peakingduck
         .. autosummary::
            :toctree: _generate
 

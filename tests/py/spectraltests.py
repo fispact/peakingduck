@@ -1,7 +1,7 @@
 import unittest
 import math
 
-import pykingduck as pkd
+import peakingduck as pkd
 
 
 class SpectralDataUnitTest(unittest.TestCase):

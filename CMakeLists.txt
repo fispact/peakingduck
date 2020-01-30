@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 
-PROJECT(peakingduck LANGUAGES CXX)
+PROJECT(peakingduckfull LANGUAGES CXX)
 
 # cmake options
 OPTION(BUILD_TESTS "Build unit tests" ON)
@@ -94,7 +94,7 @@ write_basic_package_version_file(
   COMPATIBILITY SameMajorVersion
 )
 
-install(TARGETS peakingduck
+install(TARGETS PEAKINGDUCK
     EXPORT peakingduckConfig
 )
 

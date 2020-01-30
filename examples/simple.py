@@ -1,5 +1,5 @@
 import numpy as np
-import pykingduck as pkd
+import peakingduck as pkd
 
 a_list = [1, 8, 9.7]
 
