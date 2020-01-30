@@ -61,7 +61,7 @@ script:
   - make -j4
   - cd ${TRAVIS_BUILD_DIR}
   - ./build_coverage/bin/peakingduckcpptests
-  - pytest --pdb --tb=long ./tests/py/testsuite.py
+  - pytest --tb=long ./tests/py/testsuite.py
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}/build_coverage
