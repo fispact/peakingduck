@@ -184,13 +184,77 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
                     data                    /* Argument(s) */
                 );
             }
-        };
+    };
 
-    // smoothing objects
     py::class_<IProcessPyType, PyProcess>(m_core, "IProcess")
         .def(py::init<>())
         .def("__call__", &IProcessPyType::operator());
 
+    // process manager
+    using IProcessManagerPyType = core::IProcessManager<NumericalDataCoreType,core::ArrayTypeDynamic>;
+
+    class PyProcessManager : public IProcessManagerPyType {
+        public:
+            /* Inherit the constructors */
+            using IProcessManagerPyType::IProcessManager;
+
+            /* Trampoline (need one for each virtual function) */
+            IProcessManager&
+            append(const std::shared_ptr<IProcessPyType>& process) override {
+                PYBIND11_OVERLOAD_PURE(
+                    IProcessManager&,   /* Return type */
+                    IProcessManager,    /* Parent class */
+                    append,             /* Name of function in C++ (must match Python name) */
+                    process             /* Argument(s) */
+                );
+            }
+
+            NumericalDataPyType
+            run(const NumericalDataPyType& data) const override {
+                PYBIND11_OVERLOAD_PURE(
+                    NumericalDataPyType,                                                        /* Return type */
+                    IProcessManager,        /* Parent class */
+                    run,                                                                        /* Name of function in C++ (must match Python name) */
+                    data                                                                        /* Argument(s) */
+                );
+            }
+
+            size_t
+            size() const override {
+                PYBIND11_OVERLOAD_PURE(
+                    size_t,                                 /* Return type */
+                    IProcessManager,        /* Parent class */
+                    size                    /* Name of function in C++ (must match Python name) */
+                );
+            }
+
+            void
+            reset() override {
+                PYBIND11_OVERLOAD_PURE(
+                    void,                   /* Return type */
+                    IProcessManager,        /* Parent class */
+                    reset                   /* Name of function in C++ (must match Python name) */
+                );
+            }
+    };
+
+    py::class_<IProcessManagerPyType, PyProcessManager>(m_core, "IProcessManager")
+        .def(py::init<>())
+        .def("append", &IProcessManagerPyType::append)
+        .def("run", &IProcessManagerPyType::run)
+        .def("__len__", &IProcessManagerPyType::size)
+        .def("reset", &IProcessManagerPyType::reset);
+
+    // simple process manager
+    using SimpleProcessManagerPyType = core::SimpleProcessManager<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<SimpleProcessManagerPyType, IProcessManagerPyType>(m_core, "SimpleProcessManager")
+        .def(py::init<>())
+        .def("append", &SimpleProcessManagerPyType::append)
+        .def("run", &SimpleProcessManagerPyType::run)
+        .def("__len__", &SimpleProcessManagerPyType::size)
+        .def("reset", &SimpleProcessManagerPyType::reset);
+
+    // smoothing objects
     using MovingAverageSmootherPyType = core::MovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
     py::class_<MovingAverageSmootherPyType, IProcessPyType>(m_core, "MovingAverageSmoother")
         .def(py::init<int>())
