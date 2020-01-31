@@ -3,15 +3,15 @@ import numpy as np
 import math
 
 # raw C++ bindings library
-from PEAKINGDUCK.core import ISmoother, NumericalData
+from PEAKINGDUCK.core import IProcess, NumericalData
 
 """
     Add custom smoothers here.
 
-    Implement the ISmoother interface
+    Implement the IProcess interface
 """
 
-class WeightedMovingAverageNative(ISmoother): 
+class WeightedMovingAverageNative(IProcess): 
     """
         We can extend the C++ classes here
         This is an example
@@ -35,7 +35,7 @@ class WeightedMovingAverageNative(ISmoother):
         weights = [w/sum(weights) for w in weights]
         return NumericalData(np.convolve(data.to_list(), weights, mode='same'))
 
-class SavitzkyGolaySmoother(ISmoother):      
+class SavitzkyGolaySmoother(IProcess):      
     def __init__(self, windowsize, order=2):
         self.windowsize = windowsize
         self.order = order

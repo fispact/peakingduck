@@ -17,21 +17,10 @@
 
 #include "common.hpp"
 #include "core/numerical.hpp"
+#include "core/process.hpp"
 
 PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(core)
-
-    /*!
-       @brief Interface for smoothing algorithms
-    */
-    template<typename T=DefaultType, int Size=ArrayTypeDynamic>
-    struct ISmoother
-    {
-        virtual ~ISmoother(){};
-        
-        virtual NumericalData<T, Size> 
-        operator()(const NumericalData<T, Size>& data) const = 0;
-    };    
 
     /*!
        @brief Simple moving average smoother
@@ -40,7 +29,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
         It would certainly help with unit tests.
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
-    struct MovingAverageSmoother : public ISmoother<T, Size>
+    struct MovingAverageSmoother : public IProcess<T, Size>
     {
 
         explicit MovingAverageSmoother(int windowsize) : _windowsize(windowsize)
@@ -76,7 +65,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
-    struct WeightedMovingAverageSmoother : public ISmoother<T, Size>
+    struct WeightedMovingAverageSmoother : public IProcess<T, Size>
     {
         explicit WeightedMovingAverageSmoother(int windowsize) : _windowsize(windowsize)
         {

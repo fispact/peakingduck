@@ -6,6 +6,7 @@ set(CPP_UNIT_TESTS_SOURCES
     main.cpp
     test_util.cpp
     test_numerical.cpp
+    test_process.cpp
     test_smoothing.cpp)
 
 # Include directories
