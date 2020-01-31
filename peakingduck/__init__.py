@@ -1,6 +1,3 @@
-# raw C++ bindings library
-import PEAKINGDUCK as _pd
-
-util = _pd.util
-core = _pd.core
-io = _pd.io
+import peakingduck.util as util
+import peakingduck.core as core
+import peakingduck.io as io

@@ -13,18 +13,20 @@ energies, counts = hist_raw.X, hist_raw.Y
 
 # smooth it
 smoother = pkd.core.MovingAverageSmoother(3)
-# smoother = pkd.core.WeightedMovingAverageSmoother(5)
-counts = smoother(counts)
-hist_smoothed = pkd.core.SpectrumEnergyBased(energies, counts)
+smoother2 = pkd.core.SavitzkyGolaySmoother(3)
+counts1 = smoother(counts)
+hist_smoothed1 = pkd.core.SpectrumEnergyBased(energies, counts1)
+counts2 = smoother2(counts)
+hist_smoothed2 = pkd.core.SpectrumEnergyBased(energies, counts2)
 
 # estimate and then remove background
 ITERS = range(1, 21)
 # forward windowing
-background_forw = hist_smoothed.estimateBackground(ITERS)
+background_forw = hist_smoothed1.estimateBackground(ITERS)
 # backward windowing
-background_back = hist_smoothed.estimateBackground(list(reversed(ITERS)))
-hist_smoothed.removeBackground(ITERS)
-snippedCounts = hist_smoothed.Y
+background_back = hist_smoothed1.estimateBackground(list(reversed(ITERS)))
+hist_smoothed1.removeBackground(ITERS)
+snippedCounts = hist_smoothed1.Y
 
 # function to plot histogram
 def getplotvalues(x,y):
@@ -45,7 +47,8 @@ def getplotvalues(x,y):
 import matplotlib.pyplot as plt
 
 f = plt.figure(figsize=(10,7))
-plt.semilogy(*getplotvalues(energies, counts), 'k', linewidth=0.8, alpha=0.5, label="raw")
+plt.semilogy(*getplotvalues(energies, counts1), 'k', linewidth=0.8, alpha=0.5, label="smoothed1")
+plt.semilogy(*getplotvalues(energies, counts2), 'k--', linewidth=0.8, alpha=1.0, label="smoothed2")
 # plt.semilogy(*getplotvalues(energies, snippedCounts), 'r', linewidth=0.4, alpha=0.5, label="no background")
 plt.semilogy(*getplotvalues(energies, background_forw), 'g', linewidth=1.0, alpha=0.8, label="background - forwards")
 plt.semilogy(*getplotvalues(energies, background_back), 'r', linewidth=1.0, alpha=0.8, label="background - backwards")

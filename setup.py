@@ -121,7 +121,10 @@ setup(name='peakingduck',
     author_email='me@physicstom.com',
     license='MIT',
     packages=[
-        'peakingduck'
+        'peakingduck',
+        'peakingduck.util',
+        'peakingduck.core',
+        'peakingduck.io',
     ],
     install_requires=requirements_install,
     python_requires='>=3',

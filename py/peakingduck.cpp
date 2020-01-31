@@ -167,8 +167,30 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
         .def("rampInPlace", &IntegerDataPyType::rampInPlace);
 
     // smoothing objects
+    using ISmootherPyType = core::ISmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    class PySmoother : public ISmootherPyType {
+        public:
+            /* Inherit the constructors */
+            using ISmootherPyType::ISmoother;
+
+            /* Trampoline (need one for each virtual function) */
+            NumericalDataPyType
+            operator()(const NumericalDataPyType& data) const override {
+                PYBIND11_OVERLOAD_PURE(
+                    NumericalDataPyType,    /* Return type */
+                    ISmoother,              /* Parent class */
+                    __call__,               /* Name of function in C++ (must match Python name) */
+                    data                    /* Argument(s) */
+                );
+            }
+        };
+
+    py::class_<ISmootherPyType, PySmoother>(m_core, "ISmoother")
+        .def(py::init<>())
+        .def("__call__", &ISmootherPyType::operator());
+
     using MovingAverageSmootherPyType = core::MovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<MovingAverageSmootherPyType>(m_core, "MovingAverageSmoother")
+    py::class_<MovingAverageSmootherPyType, ISmootherPyType>(m_core, "MovingAverageSmoother")
         .def(py::init<int>())
         .def("__call__",
              [](const MovingAverageSmootherPyType& smoother, const NumericalDataPyType& data) {
@@ -176,7 +198,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
              });
 
     using WeightedMovingAverageSmootherPyType = core::WeightedMovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<WeightedMovingAverageSmootherPyType>(m_core, "WeightedMovingAverageSmoother")
+    py::class_<WeightedMovingAverageSmootherPyType, ISmootherPyType>(m_core, "WeightedMovingAverageSmoother")
         .def(py::init<int>())
         .def("__call__",
              [](const WeightedMovingAverageSmootherPyType& smoother, const NumericalDataPyType& data) {
