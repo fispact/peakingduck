@@ -17,6 +17,7 @@ class WeightedMovingAverageNative(IProcess):
         This is an example
     """       
     def __init__(self, windowsize):
+        IProcess.__init__(self)
         self.windowsize = windowsize
 
     def __call__(self, data):
@@ -37,6 +38,7 @@ class WeightedMovingAverageNative(IProcess):
 
 class SavitzkyGolaySmoother(IProcess):      
     def __init__(self, windowsize, order=2):
+        IProcess.__init__(self)
         self.windowsize = windowsize
         self.order = order
 

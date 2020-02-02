@@ -186,7 +186,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
             }
     };
 
-    py::class_<IProcessPyType, PyProcess>(m_core, "IProcess")
+    py::class_<IProcessPyType, PyProcess, std::shared_ptr<IProcessPyType>>(m_core, "IProcess")
         .def(py::init<>())
         .def("__call__", &IProcessPyType::operator());
 
@@ -238,7 +238,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
             }
     };
 
-    py::class_<IProcessManagerPyType, PyProcessManager>(m_core, "IProcessManager")
+    py::class_<IProcessManagerPyType, PyProcessManager, std::shared_ptr<IProcessManagerPyType>>(m_core, "IProcessManager")
         .def(py::init<>())
         .def("append", &IProcessManagerPyType::append)
         .def("run", &IProcessManagerPyType::run)
@@ -247,7 +247,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
 
     // simple process manager
     using SimpleProcessManagerPyType = core::SimpleProcessManager<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<SimpleProcessManagerPyType, IProcessManagerPyType>(m_core, "SimpleProcessManager")
+    py::class_<SimpleProcessManagerPyType, IProcessManagerPyType, std::shared_ptr<SimpleProcessManagerPyType>>(m_core, "SimpleProcessManager")
         .def(py::init<>())
         .def("append", &SimpleProcessManagerPyType::append)
         .def("run", &SimpleProcessManagerPyType::run)
@@ -256,7 +256,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
 
     // smoothing objects
     using MovingAverageSmootherPyType = core::MovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<MovingAverageSmootherPyType, IProcessPyType>(m_core, "MovingAverageSmoother")
+    py::class_<MovingAverageSmootherPyType, IProcessPyType, std::shared_ptr<MovingAverageSmootherPyType>>(m_core, "MovingAverageSmoother")
         .def(py::init<int>())
         .def("__call__",
              [](const MovingAverageSmootherPyType& smoother, const NumericalDataPyType& data) {
@@ -264,7 +264,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
              });
 
     using WeightedMovingAverageSmootherPyType = core::WeightedMovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<WeightedMovingAverageSmootherPyType, IProcessPyType>(m_core, "WeightedMovingAverageSmoother")
+    py::class_<WeightedMovingAverageSmootherPyType, IProcessPyType, std::shared_ptr<WeightedMovingAverageSmootherPyType>>(m_core, "WeightedMovingAverageSmoother")
         .def(py::init<int>())
         .def("__call__",
              [](const WeightedMovingAverageSmootherPyType& smoother, const NumericalDataPyType& data) {
