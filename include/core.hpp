@@ -18,5 +18,6 @@
 #include "core/process.hpp"
 #include "core/smoothing.hpp"
 #include "core/spectral.hpp"
+#include "core/peaking.hpp"
 
 #endif //CORE_HPP

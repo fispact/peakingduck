@@ -263,6 +263,11 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
     py::class_<WeightedMovingAverageSmootherPyType, IProcessPyType, std::shared_ptr<WeightedMovingAverageSmootherPyType>>(m_core, "WeightedMovingAverageSmoother")
         .def(py::init<int>());
 
+    // peak finding objects
+    using MovingAveragePeakFinderPyType = core::MovingAveragePeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<MovingAveragePeakFinderPyType, IProcessPyType, std::shared_ptr<MovingAveragePeakFinderPyType>>(m_core, "MovingAveragePeakFinder")
+        .def(py::init<int>());
+
     // histogram objects
     using HistPyType = core::Histogram<double,double>;
     using HistChannelPyType = core::Histogram<int,double>;
