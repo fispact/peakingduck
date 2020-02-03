@@ -14,9 +14,9 @@ energies, counts = hist_raw.X, hist_raw.Y
 # smooth it
 smoother = pkd.core.MovingAverageSmoother(3)
 smoother2 = pkd.core.SavitzkyGolaySmoother(3)
-counts1 = smoother(counts)
+counts1 = smoother.go(counts)
 hist_smoothed1 = pkd.core.SpectrumEnergyBased(energies, counts1)
-counts2 = smoother2(counts)
+counts2 = smoother2.go(counts)
 hist_smoothed2 = pkd.core.SpectrumEnergyBased(energies, counts2)
 
 # estimate and then remove background
