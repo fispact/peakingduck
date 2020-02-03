@@ -23,7 +23,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         ~AddOneProcess(){};
         
         core::NumericalData<T, Size> 
-        operator()(const core::NumericalData<T, Size>& data) const{
+        go(const core::NumericalData<T, Size>& data) const{
             return data + 1;
         }
     };    
@@ -34,7 +34,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         ~MultiplyByTwoProcess(){};
         
         core::NumericalData<T, Size> 
-        operator()(const core::NumericalData<T, Size>& data) const{
+        go(const core::NumericalData<T, Size>& data) const{
             return data*2;
         }
     };    

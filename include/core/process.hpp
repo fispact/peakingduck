@@ -36,7 +36,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
         virtual ~IProcess(){};
         
         virtual NumericalData<T, Size> 
-        operator()(const NumericalData<T, Size>& data) const = 0;
+        go(const NumericalData<T, Size>& data) const = 0;
     };    
 
     /*!
@@ -77,8 +77,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
             // can we avoid a copy here?
             NumericalData<T, Size> processedData = data;
             for(auto& process: _processes){
-                // looks a bit odd - maybe change the interface?
-                processedData = (*process)(processedData);
+                processedData = process->go(processedData);
             }
             return processedData;
         }

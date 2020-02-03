@@ -36,7 +36,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
         {}
 
         NumericalData<T, Size> 
-        operator()(const NumericalData<T, Size>& data) const override final
+        go(const NumericalData<T, Size>& data) const override final
         {
             NumericalData<T, Size> smoothed = data;
 
@@ -87,7 +87,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
         }
 
         NumericalData<T, Size> 
-        operator()(const NumericalData<T, Size>& data) const override final
+        go(const NumericalData<T, Size>& data) const override final
         {
             NumericalData<T, Size> smoothed = data;
 

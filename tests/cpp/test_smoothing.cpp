@@ -28,17 +28,17 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         using ND = core::NumericalData<double, 11>;
         using SMOOTHER = core::MovingAverageSmoother<double, 11>;
         THEN("window 1"){
-            const ND smoothed = SMOOTHER(1)(data);
+            const ND smoothed = SMOOTHER(1).go(data);
             const ND expected(3.0, 4.0, 7.0, 13.0, 38./3., 11.0, 5.0, 5.0, 4.0, 5.0, 8.0);
             REQUIRE_NUMERICS_APPROX_THE_SAME(expected, smoothed);
         }
         THEN("window 2"){
-            const ND smoothed = SMOOTHER(2)(data);
+            const ND smoothed = SMOOTHER(2).go(data);
             const ND expected(3.0, 5.0, 9.4, 9.4, 9.8, 10.0, 8.2, 4.4, 5.4, 4.0, 8.0);
             REQUIRE_NUMERICS_APPROX_THE_SAME(expected, smoothed);
         }
         THEN("window 3"){
-            const ND smoothed = SMOOTHER(3)(data);
+            const ND smoothed = SMOOTHER(3).go(data);
             const ND expected(3.0, 5.0, 4.0, 57./7.0, 59./7.0, 57./7.0, 57./7.0, 53./7.0, 3.0, 4.0, 8.0);
             REQUIRE_NUMERICS_APPROX_THE_SAME(expected, smoothed);
         }

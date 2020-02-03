@@ -20,7 +20,7 @@ class WeightedMovingAverageNative(IProcess):
         IProcess.__init__(self)
         self.windowsize = windowsize
 
-    def __call__(self, data):
+    def go(self, data):
         """
             if N=1, weights=[1] -> [1/N]
             if N=2, weights=[1,1] -> [1/2, 1/2]
@@ -42,5 +42,5 @@ class SavitzkyGolaySmoother(IProcess):
         self.windowsize = windowsize
         self.order = order
 
-    def __call__(self, data):  
+    def go(self, data):  
         return NumericalData(scipy.signal.savgol_filter(data.to_list(), self.windowsize, self.order))

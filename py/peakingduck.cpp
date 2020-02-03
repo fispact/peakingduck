@@ -176,19 +176,19 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
 
             /* Trampoline (need one for each virtual function) */
             NumericalDataPyType
-            operator()(const NumericalDataPyType& data) const override {
+            go(const NumericalDataPyType& data) const override {
                 PYBIND11_OVERLOAD_PURE(
                     NumericalDataPyType,    /* Return type */
-                    IProcess,               /* Parent class */
-                    __call__,               /* Name of function in C++ (must match Python name) */
+                    IProcessPyType,         /* Parent class */
+                    go,                     /* Name of function in C++ (must match Python name) */
                     data                    /* Argument(s) */
                 );
             }
     };
 
     py::class_<IProcessPyType, PyProcess, std::shared_ptr<IProcessPyType>>(m_core, "IProcess")
-        .def(py::init<>())
-        .def("__call__", &IProcessPyType::operator());
+        .def(py::init_alias<>())
+        .def("go", &IProcessPyType::go);
 
     // process manager
     using IProcessManagerPyType = core::IProcessManager<NumericalDataCoreType,core::ArrayTypeDynamic>;
@@ -212,17 +212,17 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
             NumericalDataPyType
             run(const NumericalDataPyType& data) const override {
                 PYBIND11_OVERLOAD_PURE(
-                    NumericalDataPyType,                                                        /* Return type */
+                    NumericalDataPyType,    /* Return type */
                     IProcessManager,        /* Parent class */
-                    run,                                                                        /* Name of function in C++ (must match Python name) */
-                    data                                                                        /* Argument(s) */
+                    run,                    /* Name of function in C++ (must match Python name) */
+                    data                    /* Argument(s) */
                 );
             }
 
             size_t
             size() const override {
                 PYBIND11_OVERLOAD_PURE(
-                    size_t,                                 /* Return type */
+                    size_t,                 /* Return type */
                     IProcessManager,        /* Parent class */
                     size                    /* Name of function in C++ (must match Python name) */
                 );
@@ -239,7 +239,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
     };
 
     py::class_<IProcessManagerPyType, PyProcessManager, std::shared_ptr<IProcessManagerPyType>>(m_core, "IProcessManager")
-        .def(py::init<>())
+        .def(py::init_alias<>())
         .def("append", &IProcessManagerPyType::append)
         .def("run", &IProcessManagerPyType::run)
         .def("__len__", &IProcessManagerPyType::size)
@@ -257,19 +257,11 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
     // smoothing objects
     using MovingAverageSmootherPyType = core::MovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
     py::class_<MovingAverageSmootherPyType, IProcessPyType, std::shared_ptr<MovingAverageSmootherPyType>>(m_core, "MovingAverageSmoother")
-        .def(py::init<int>())
-        .def("__call__",
-             [](const MovingAverageSmootherPyType& smoother, const NumericalDataPyType& data) {
-                 return smoother(data);
-             });
+        .def(py::init<int>());
 
     using WeightedMovingAverageSmootherPyType = core::WeightedMovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
     py::class_<WeightedMovingAverageSmootherPyType, IProcessPyType, std::shared_ptr<WeightedMovingAverageSmootherPyType>>(m_core, "WeightedMovingAverageSmoother")
-        .def(py::init<int>())
-        .def("__call__",
-             [](const WeightedMovingAverageSmootherPyType& smoother, const NumericalDataPyType& data) {
-                 return smoother(data);
-             });
+        .def(py::init<int>());
 
     // histogram objects
     using HistPyType = core::Histogram<double,double>;
