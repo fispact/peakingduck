@@ -14,15 +14,10 @@ data = hist_raw.Y
 pm = pd.core.SimpleProcessManager()
 
 # this causes problems, due to Python ref counting
-# comment it out to find out
+# don't do this until issue #6 is fixed
 #pm.append(pd.core.SavitzkyGolaySmoother(3))
 
-# this also causes issues
-#sg = pd.core.SavitzkyGolaySmoother(3)
-#pm.append(sg)
-#del sg
-
-# this is OK, since it is fro C++
+# this is OK, since it is from C++
 pm.append(pd.core.MovingAverageSmoother(1))
 pm.append(pd.core.MovingAverageSmoother(3))
 
@@ -30,6 +25,22 @@ pm.append(pd.core.MovingAverageSmoother(3))
 # just don't delete before append
 sg = pd.core.SavitzkyGolaySmoother(3)
 pm.append(sg)
+
+# custom process
+class ThresholdCut(pd.core.IProcess):      
+    def __init__(self, threshold):
+        pd.core.IProcess.__init__(self)
+        self.threshold = threshold
+
+    def go(self, data): 
+        """
+            Chop off anything less than the threshold
+        """ 
+        return data.ramp(self.threshold)
+
+# keep anything above threshold
+tc = ThresholdCut(1e3)
+pm.append(tc)
 
 # process the data
 processeddata = pm.run(data).to_list()
