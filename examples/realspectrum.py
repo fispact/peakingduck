@@ -29,37 +29,22 @@ pm = pkd.core.PySimpleProcessManager(processes=[
 # process
 processed_counts = pm.run(snippedCounts)
 
-# function to plot histogram
-def getplotvalues(x,y):
-    """
-        Matplotlib hist is slow. Use a hist like plot with conventional line plot
-    """
-    assert (len(y) + 1) == len(x)
-    X = []
-    Y = []
-    for i in range(len(x)-1):
-        X.append(x[i])
-        Y.append(y[i])
-        X.append(x[i+1])
-        Y.append(y[i])
-    return X,Y
-
 # plot the histogram
-import matplotlib.pyplot as plt
+import peakingduck.plotting as pkdplot
 
-f = plt.figure(figsize=(10,7))
-plt.semilogy(*getplotvalues(energies, counts), 'k', linewidth=0.8, alpha=0.5, label="raw")
-plt.semilogy(*getplotvalues(energies, processed_counts), 'r', linewidth=2.0, alpha=0.8, label="processed")
+f = pkdplot.PLT.figure(figsize=(10,7))
+pkdplot.PLT.semilogy(*pkdplot.getplotvalues(energies, counts), 'k', linewidth=0.8, alpha=0.5, label="raw")
+pkdplot.PLT.semilogy(*pkdplot.getplotvalues(energies, processed_counts), 'r', linewidth=2.0, alpha=0.8, label="processed")
 # plt.semilogy(*getplotvalues(energies, snippedCounts), 'r', linewidth=0.4, alpha=0.5, label="no background")
-plt.semilogy(*getplotvalues(energies, background_forw), 'g', linewidth=1.0, alpha=0.8, label="background - forwards")
-plt.semilogy(*getplotvalues(energies, background_back), 'c', linewidth=1.0, alpha=0.8, label="background - backwards")
-plt.ylim(bottom=0.5, top=1e4)
-plt.xlabel("Energy (eV)", fontsize=24)
-plt.ylabel("Counts", fontsize=24)
-plt.legend(fontsize=18)
-plt.tick_params(axis='both', which='major', labelsize=20)
-plt.tick_params(axis='both', which='minor', labelsize=20)
+pkdplot.PLT.semilogy(*pkdplot.getplotvalues(energies, background_forw), 'g', linewidth=1.0, alpha=0.8, label="background - forwards")
+pkdplot.PLT.semilogy(*pkdplot.getplotvalues(energies, background_back), 'c', linewidth=1.0, alpha=0.8, label="background - backwards")
+pkdplot.PLT.ylim(bottom=0.5, top=1e4)
+pkdplot.PLT.xlabel("Energy (eV)", fontsize=24)
+pkdplot.PLT.ylabel("Counts", fontsize=24)
+pkdplot.PLT.legend(fontsize=18)
+pkdplot.PLT.tick_params(axis='both', which='major', labelsize=20)
+pkdplot.PLT.tick_params(axis='both', which='minor', labelsize=20)
 # spacing
-plt.subplots_adjust(left=0.12, bottom=0.12, right=0.97, top=0.97, wspace=0.2, hspace=0.2)
+pkdplot.PLT.subplots_adjust(left=0.12, bottom=0.12, right=0.97, top=0.97, wspace=0.2, hspace=0.2)
 # plt.savefig('sample.png')
-plt.show()
+pkdplot.PLT.show()
