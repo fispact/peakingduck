@@ -21,14 +21,10 @@ hist_raw.removeBackground(ITERS)
 snippedCounts = hist_raw.Y
 
 # process manager
-pm = pkd.core.SimpleProcessManager()
-
-# smooth
-sg = pkd.core.SavitzkyGolaySmoother(31)
-pm.append(sg)
-
-# peak finding
-pm.append(pkd.core.MovingAveragePeakFinder(400))
+pm = pkd.core.PySimpleProcessManager(processes=[
+    pkd.core.SavitzkyGolaySmoother(31),
+    pkd.core.MovingAveragePeakFinder(400)
+])
 
 # process
 processed_counts = pm.run(snippedCounts)
