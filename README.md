@@ -5,6 +5,7 @@
 
 [![Build Status](https://api.travis-ci.com/thomasms/peakingduck.svg?branch=master)](https://travis-ci.com/thomasms/peakingduck)
 [![codecov](https://codecov.io/gh/thomasms/peakingduck/branch/master/graph/badge.svg)](https://codecov.io/gh/thomasms/peakingduck)
+[![HitCount](http://hits.dwyl.io/thomasms/peakingduck.svg)](http://hits.dwyl.io/thomasms/peakingduck)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 - [About](#about)
