@@ -41,6 +41,21 @@ class NumericalDataUnitTest(unittest.TestCase):
         self.assertEqual(4, len(a), "Assert length of list")
         self.assertEqual([5, 9, 10, -2], a.to_list(), "Assert to list")
 
+    def test_iter1(self):
+        data = pkd.core.NumericalData([3.4,2.3,4.9,1.1])
+        for i, d in enumerate(data):
+            self.assertEqual(d, data[i], "Assert entry {}".format(i))
+
+    def test_iter2(self):
+        data = pkd.core.NumericalData([3.4,2.3,4.9,1.1])
+        expected_value = -34.3e2
+
+        for i in range(len(data)):
+            data[i] = expected_value
+
+        for d in data:
+            self.assertEqual(d, expected_value, "Assert entry iter")
+
     def test_snip(self):
         data = pkd.core.NumericalData([1.0, 42.2, 61.4, 2.1, 4.2, 23.4, 52.32, 2.3, 213.21,32.4,1.2,3.4,5.2,123.3,23.2,4.1])
 
