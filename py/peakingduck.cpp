@@ -93,13 +93,21 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
              [](const NumericalDataPyType& data, int sindex, int eindex) {
                  return data(sindex, eindex);
              })
-        .def("__len__",
+        .def("__iter__", 
+             [](const NumericalDataPyType &data) { 
+                return py::make_iterator(data.begin(), data.end()); 
+             }, py::keep_alive<0, 1>() /* Essential: keep object alive while iterator exists */)
+        .def("__len__", 
              [](const NumericalDataPyType& data) {
                  return data.size();
              })
         .def("__getitem__",
              [](const NumericalDataPyType& data, size_t index) {
                  return data[index];
+             })
+        .def("__setitem__",
+             [](NumericalDataPyType& data, size_t index, NumericalDataCoreType value) {
+                data[index] = value;
              })
         .def("from_list", &NumericalDataPyType::from_vector)
         .def("to_list", &NumericalDataPyType::to_vector)
@@ -153,13 +161,21 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
              [](const IntegerDataPyType& data, int sindex, int eindex) {
                  return data(sindex, eindex);
              })
-        .def("__len__",
+        .def("__iter__", 
+             [](const IntegerDataPyType &data) { 
+                return py::make_iterator(data.begin(), data.end()); 
+             }, py::keep_alive<0, 1>() /* Essential: keep object alive while iterator exists */)
+        .def("__len__", 
              [](const IntegerDataPyType& data) {
                  return data.size();
              })
         .def("__getitem__",
              [](const IntegerDataPyType& data, size_t index) {
                  return data[index];
+             })
+        .def("__setitem__",
+             [](IntegerDataPyType& data, size_t index, IntegerDataCoreType value) {
+                data[index] = value;
              })
         .def("from_list", &IntegerDataPyType::from_vector)
         .def("to_list", &IntegerDataPyType::to_vector)
