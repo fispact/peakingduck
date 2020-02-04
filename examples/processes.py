@@ -10,7 +10,18 @@ hist_raw = pd.core.SpectrumEnergyBased()
 pd.io.from_csv(hist_raw, filename)
 energies, data = hist_raw.X, hist_raw.Y
 
-# custom process
+# custom processes
+class SNIPRemoval(pd.core.IProcess):      
+    def __init__(self, size):
+        pd.core.IProcess.__init__(self)
+        self.size = size
+
+    def go(self, data): 
+        """
+            Remove background based on SNIP
+        """ 
+        return data - data.snip(range(self.size+1))
+
 class ThresholdCut(pd.core.IProcess):      
     def __init__(self, threshold):
         pd.core.IProcess.__init__(self)
@@ -26,13 +37,14 @@ class ThresholdCut(pd.core.IProcess):
 # process manager
 pm = pd.core.PySimpleProcessManager(processes=[
     pd.core.MovingAverageSmoother(1),
+    SNIPRemoval(40),
     pd.core.SavitzkyGolaySmoother(3),
     ThresholdCut(1e3),
     pd.core.MovingAverageSmoother(3),
 ])
 
 # process the data
-processeddata = pm.run(data).to_list()
+processeddata = pm.run(data)
 
 # very naive filters and peak finding - just an example of 
 # adding and creating processes
