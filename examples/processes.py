@@ -8,23 +8,7 @@ filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 # read in from csv file
 hist_raw = pd.core.SpectrumEnergyBased()
 pd.io.from_csv(hist_raw, filename)
-data = hist_raw.Y
-
-# create a process manager
-pm = pd.core.SimpleProcessManager()
-
-# this causes problems, due to Python ref counting
-# don't do this until issue #6 is fixed
-#pm.append(pd.core.SavitzkyGolaySmoother(3))
-
-# this is OK, since it is from C++
-pm.append(pd.core.MovingAverageSmoother(1))
-pm.append(pd.core.MovingAverageSmoother(3))
-
-# this is OK, for python implemented algorithms
-# just don't delete before append
-sg = pd.core.SavitzkyGolaySmoother(3)
-pm.append(sg)
+energies, data = hist_raw.X, hist_raw.Y
 
 # custom process
 class ThresholdCut(pd.core.IProcess):      
@@ -38,11 +22,20 @@ class ThresholdCut(pd.core.IProcess):
         """ 
         return data.ramp(self.threshold)
 
-# keep anything above threshold
-tc = ThresholdCut(1e3)
-pm.append(tc)
+
+# process manager
+pm = pd.core.PySimpleProcessManager(processes=[
+    pd.core.MovingAverageSmoother(1),
+    pd.core.SavitzkyGolaySmoother(3),
+    ThresholdCut(1e3),
+    pd.core.MovingAverageSmoother(3),
+])
 
 # process the data
 processeddata = pm.run(data).to_list()
 
-print(processeddata)
+# very naive filters and peak finding - just an example of 
+# adding and creating processes
+for i, d in enumerate(processeddata):
+    if d > 0.0:
+        print("Peak at energy: {:.3e} eV".format((energies[i]+energies[i+1])/2.0))
