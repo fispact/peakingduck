@@ -279,19 +279,19 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
     py::class_<WeightedMovingAverageSmootherPyType, IProcessPyType, std::shared_ptr<WeightedMovingAverageSmootherPyType>>(m_core, "WeightedMovingAverageSmoother")
         .def(py::init<int>());
 
-    // peak finding objects
-    using GlobalThresholdPeakFinderPyType = core::GlobalThresholdPeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<GlobalThresholdPeakFinderPyType, IProcessPyType, std::shared_ptr<GlobalThresholdPeakFinderPyType>>(m_core, "GlobalThresholdPeakFinder")
+    // peak filter objects
+    using GlobalThresholdPeakFilterPyType = core::GlobalThresholdPeakFilter<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<GlobalThresholdPeakFilterPyType, IProcessPyType, std::shared_ptr<GlobalThresholdPeakFilterPyType>>(m_core, "GlobalThresholdPeakFilter")
         .def(py::init<NumericalDataCoreType>());
 
-    using ChunkedThresholdPeakFinderPyType = core::ChunkedThresholdPeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<ChunkedThresholdPeakFinderPyType, IProcessPyType, std::shared_ptr<ChunkedThresholdPeakFinderPyType>>(m_core, "ChunkedThresholdPeakFinder")
+    using ChunkedThresholdPeakFilterPyType = core::ChunkedThresholdPeakFilter<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<ChunkedThresholdPeakFilterPyType, IProcessPyType, std::shared_ptr<ChunkedThresholdPeakFilterPyType>>(m_core, "ChunkedThresholdPeakFilter")
         .def(py::init<NumericalDataCoreType, size_t>(), 
             py::arg("percentThreshold"), 
             py::arg("chunkSize") = 10);
 
-    using MovingAveragePeakFinderPyType = core::MovingAveragePeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<MovingAveragePeakFinderPyType, IProcessPyType, std::shared_ptr<MovingAveragePeakFinderPyType>>(m_core, "MovingAveragePeakFinder")
+    using MovingAveragePeakFilterPyType = core::MovingAveragePeakFilter<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<MovingAveragePeakFilterPyType, IProcessPyType, std::shared_ptr<MovingAveragePeakFilterPyType>>(m_core, "MovingAveragePeakFilter")
         .def(py::init<int>());
 
     // histogram objects

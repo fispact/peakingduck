@@ -25,13 +25,13 @@ PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(core)
 
     /*!
-       @brief Simple threshold global peak finder
+       @brief Simple threshold global peak filter
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
-    struct GlobalThresholdPeakFinder : public IProcess<T, Size>
+    struct GlobalThresholdPeakFilter : public IProcess<T, Size>
     {
 
-        explicit GlobalThresholdPeakFinder(T percentThreshold) : _percentThreshold(percentThreshold)
+        explicit GlobalThresholdPeakFilter(T percentThreshold) : _percentThreshold(percentThreshold)
         {
         }
 
@@ -49,13 +49,13 @@ PEAKINGDUCK_NAMESPACE_START(core)
     };  
 
     /*!
-       @brief Simple threshold local/chunked peak finder
+       @brief Simple threshold local/chunked peak filter
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
-    struct ChunkedThresholdPeakFinder : public IProcess<T, Size>
+    struct ChunkedThresholdPeakFilter : public IProcess<T, Size>
     {
 
-        explicit ChunkedThresholdPeakFinder(T percentThreshold, size_t chunkSize=10) 
+        explicit ChunkedThresholdPeakFilter(T percentThreshold, size_t chunkSize=10) 
         : _percentThreshold(percentThreshold), _chunkSize(chunkSize)
         {
         }
@@ -69,8 +69,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
             // get indicies for chunking
             auto chunkindices = util::rrange<size_t>(0, data.size(), _chunkSize);
 
-            // use the global threshold peak finder on each chunk
-            const GlobalThresholdPeakFinder<T> gpf(_percentThreshold);
+            // use the global threshold peak filter on each chunk
+            const GlobalThresholdPeakFilter<T> gpf(_percentThreshold);
 
             // iterate over chunks and apply peak finding
             // what if list is empty?            
@@ -91,13 +91,13 @@ PEAKINGDUCK_NAMESPACE_START(core)
     };  
 
     /*!
-       @brief Simple moving average peak finding 
+       @brief Simple moving average peak filter 
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
-    struct MovingAveragePeakFinder : public IProcess<T, Size>
+    struct MovingAveragePeakFilter : public IProcess<T, Size>
     {
 
-        explicit MovingAveragePeakFinder(int windowsize)
+        explicit MovingAveragePeakFilter(int windowsize)
         {
             _movingAverageSmoother = std::make_shared<MovingAverageSmoother<T,Size>>(windowsize);
         }
