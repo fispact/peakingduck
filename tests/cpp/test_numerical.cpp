@@ -688,6 +688,87 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         }    
     }
 
+    SCENARIO( "Test numerical gradient" ) {
+        // create a string for splitting
+        core::NumericalData<double, 6> data( 1. ,  2.0,  4.0,  7.0, 11.0, 16.0);
+        const core::NumericalData<double, 6> exp0( 1. ,  2.0,  4.0,  7.0, 11.0, 16.0);
+        const core::NumericalData<double, 6> exp1( 1. ,  1.5,  2.5,  3.5,  4.5,  5. );
+        const core::NumericalData<double, 6> exp2( 0.5,  0.75, 1.0,  1.0,  0.75, 0.5 );
+        const core::NumericalData<double, 6> exp3( 0.25, 0.25, 0.125,  -0.125,  -0.25, -0.25 );
+
+        THEN( "check grad" ) {
+            THEN("check order 0"){
+                const core::NumericalData<double, 6> re0 = data.gradient(0); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp0, re0);
+            }
+            THEN("check order 1"){
+                const core::NumericalData<double, 6> re1 = data.gradient(1); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp1, re1);
+                const core::NumericalData<double, 6> re10 = data.gradient(1).gradient(0); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp1, re10);
+                const core::NumericalData<double, 6> re01 = data.gradient(0).gradient(1); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp1, re01);
+            }
+            THEN("check order 2"){
+                const core::NumericalData<double, 6> re2 = data.gradient(2); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp2, re2);
+                const core::NumericalData<double, 6> re11 = data.gradient(1).gradient(1); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp2, re11);
+                const core::NumericalData<double, 6> re20 = data.gradient(2).gradient(0); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp2, re20);
+                const core::NumericalData<double, 6> re02 = data.gradient(0).gradient(2); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp2, re02);
+            }
+            THEN("check order 3"){
+                const core::NumericalData<double, 6> re3 = data.gradient(3); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp3, re3);
+                const core::NumericalData<double, 6> re12 = data.gradient(1).gradient(2); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp3, re12);
+                const core::NumericalData<double, 6> re21 = data.gradient(2).gradient(1); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp3, re21);
+                const core::NumericalData<double, 6> re30 = data.gradient(3).gradient(0); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp3, re30);
+                const core::NumericalData<double, 6> re111 = data.gradient(1).gradient(1).gradient(1); 
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp3, re111);
+            }
+        }
+        THEN( "check grad in place" ) {
+            THEN("check order 0"){
+                data.gradientInPlace(0);
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp0, data);
+            }
+            THEN("check order 1"){
+                data.gradientInPlace(1);
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp1, data);
+                data.gradientInPlace(0);
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp1, data);
+            }
+            THEN("check order 2"){
+                data.gradientInPlace(2);
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp2, data);
+                data.gradientInPlace(0);
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp2, data);
+            }
+            THEN("check order 2 - v2"){
+                data.gradientInPlace(1);
+                data.gradientInPlace(1);
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp2, data);
+            }
+            THEN("check order 3"){
+                data.gradientInPlace(3);
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp3, data);
+                data.gradientInPlace(0);
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp3, data);
+            }
+            THEN("check order 3 - v2"){
+                data.gradientInPlace(0);
+                data.gradientInPlace(1);
+                data.gradientInPlace(2);
+                REQUIRE_NUMERICS_APPROX_THE_SAME(exp3, data);
+            }
+        }
+    }
+
     SCENARIO( "Test numerical array iterator" ) {
         // create a string for splitting
         core::NumericalData<int, 20> data(1,2,3,24,5,36,7,8,9,10,11,12,133,-14,15,216,17,18,19,20);

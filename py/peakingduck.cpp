@@ -115,6 +115,8 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
         .def("LLSInPlace", &NumericalDataPyType::LLSInPlace)
         .def("inverseLLS", &NumericalDataPyType::inverseLLS)
         .def("inverseLLSInPlace", &NumericalDataPyType::inverseLLSInPlace)
+        .def("gradient", &NumericalDataPyType::gradient)
+        .def("gradientInPlace", &NumericalDataPyType::gradientInPlace)
         .def("midpoint", &NumericalDataPyType::midpoint)
         .def("midpointInPlace", &NumericalDataPyType::midpointInPlace)
         .def("snip", [](const NumericalDataPyType& data, const std::vector<int>& iteration_list){

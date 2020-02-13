@@ -28,7 +28,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
        but it doesn't require us to change the underlying data structure.
     */
     template <class Derived>
-    struct NumericalFunctions : crtp<Derived, NumericalFunctions>
+    struct NumericalFunctions : public crtp<Derived, NumericalFunctions>
     {
         /*!
             @brief log(log(sqrt(value + 1) + 1) + 1)
@@ -91,6 +91,57 @@ PEAKINGDUCK_NAMESPACE_START(core)
             }            
             return newvalues;
         }
+
+        /*!
+            @brief For each element calculate the numerical gradient value from the adjacent elements at a given 
+            order. 
+            Take the i-1 point and the i+1 point and determine the grad = (array[i+1]-array[i-1])/2.0.
+            End points are handled differently as first point grad = array[1]-array[0]
+            End points are handled differently as last point grad = array[-1]-array[-2]
+
+            For example, given an array:      [ 1. ,  2.0,  4.0,  7.0, 11.0, 16.0 ]
+            The 1-st order gradient would be: [ 1. ,  1.5,  2.5,  3.5,  4.5,  5.  ]
+            The 2-nd order gradient would be: [ 0.5,  0.75, 1.0,  1.0,  0.75, 0.5 ]
+            The 3-rd order gradient would be: [ 0.25, 0.25, 0.125,  -0.125,  -0.25, -0.25 ]
+
+            Returns a new array
+        */
+        Derived gradient(int order=1) const
+        {            
+            const size_t datasize = this->underlying().size();
+            assert(datasize >= 2 && "Cannot compute gradient with less than 2 points.");
+
+            if(order == 0)
+                return this->underlying();
+
+            const size_t neighbourDiff = 1;
+            auto gradOp = [](int i, int , const Derived& values, Derived& newValues){
+                newValues[i] = (values[i+neighbourDiff] - values[i-neighbourDiff])/2.0;
+            };
+
+            // this handles everything other than the end points which remain unchanged
+            Derived grad = this->underlying().symmetricNeighbourOp(gradOp, neighbourDiff);
+
+            // first and last points
+            grad[0] = this->underlying()[1] - this->underlying()[0];
+            grad[datasize-1] = this->underlying()[datasize-1] - this->underlying()[datasize-2];
+
+            // recursively compute higher orders
+            return grad.gradient(order-1);
+        }    
+
+        /*!
+            @brief Computes the numerical gradient in place.
+             
+            See: NumericalFunctions::gradient
+
+            Mutates underlying array
+        */
+        Derived& gradientInPlace(int order=1)
+        {           
+            this->underlying() = this->underlying().gradient(order);
+            return this->underlying();
+        }      
 
         /*!
             @brief For each element calculate the midpoint value from the adjacent elements at a given 
