@@ -238,13 +238,13 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
             REQUIRE( std::vector<int>{10, 11, 12, 13, 14, 15, 16, 17, 18} == vec);
         }         
         THEN( "check std::prev and std::next" ) {
-            auto rn = util::rrange<size_t>(10, 20, 1);
+            auto rn = util::rrange<size_t>(10, 20, 2);
             std::vector<int> vec;
             // ignore the last one
             for(auto it=rn.begin(); it!=std::prev(rn.end()); ++it){
-                vec.push_back(std::next(it));
+                vec.push_back(std::next(it, 2));
             }
-            REQUIRE( std::vector<int>{11, 12, 13, 14, 15, 16, 17, 18, 19} == vec);
+            REQUIRE( std::vector<int>{12, 14, 16, 18, 20} == vec);
         }                  
     }
 

@@ -22,8 +22,8 @@ snippedCounts = hist_raw.Y
 
 # process manager
 pm = pkd.core.PySimpleProcessManager(processes=[
-    pkd.core.SavitzkyGolaySmoother(31),
-    pkd.core.MovingAveragePeakFinder(400)
+    pkd.core.SavitzkyGolaySmoother(3),
+    pkd.core.ChunkedThresholdPeakFinder(0.5, 5000)
 ])
 
 # process

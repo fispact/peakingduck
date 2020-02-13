@@ -16,6 +16,14 @@
 PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(unittests)
 
+    template<typename T=int, int Size=core::ArrayTypeDynamic>
+    void REQUIRE_NUMERICS_THE_SAME(const core::NumericalData<T, Size>& lhs, const core::NumericalData<T, Size>& rhs){
+        REQUIRE( lhs.size() == rhs.size());
+        for(int i=0;i<lhs.size();++i){
+            REQUIRE( lhs[i] == rhs[i] );
+        }
+    }
+
     template<typename T=double, int Size=core::ArrayTypeDynamic>
     void REQUIRE_NUMERICS_APPROX_THE_SAME(const core::NumericalData<T, Size>& lhs, const core::NumericalData<T, Size>& rhs){
         REQUIRE( lhs.size() == rhs.size());
@@ -678,6 +686,37 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 4.1);
             REQUIRE_NUMERICS_APPROX_THE_SAME(expected, snipped);
         }    
+    }
+
+    SCENARIO( "Test numerical array iterator" ) {
+        // create a string for splitting
+        core::NumericalData<int, 20> data(1,2,3,24,5,36,7,8,9,10,11,12,133,-14,15,216,17,18,19,20);
+        core::NumericalData<int, 20> retrieved = core::NumericalData<int, 20>::Zero();
+
+        THEN( "check slice" ) {
+            const int stepsize = 4;
+            auto chunkindices = util::range<int, 0, 20, stepsize>(); // 0, 4, 8, 12, 16, 20
+            for(auto it=chunkindices.begin(); it!=std::prev(chunkindices.end()); ++it){
+                //take a slice between chunk indices
+                auto newdata = data(*it, *std::next(it, stepsize));
+                for(int i=0;i<newdata.size();++i){
+                    retrieved[i+*it] = newdata[i];
+                }
+            }
+            REQUIRE_NUMERICS_THE_SAME<int>(data, retrieved);
+        }
+        THEN( "check slice 2 - step size does not cover full range" ) {
+            const int stepsize = 3;
+            auto chunkindices = util::range<int, 0, 20, stepsize>(); // 0, 3, 6, 9, 12, 15, 18
+            for(auto it=chunkindices.begin(); it!=std::prev(chunkindices.end()); ++it){
+                //take a slice between chunk indices
+                auto newdata = data(*it, std::min(*std::next(it, stepsize), *chunkindices.end()));
+                for(int i=0;i<newdata.size();++i){
+                    retrieved[i+*it] = newdata[i];
+                }
+            }
+            REQUIRE_NUMERICS_THE_SAME<int>(data, retrieved);
+        }
     }
 
 PEAKINGDUCK_NAMESPACE_END // unittests

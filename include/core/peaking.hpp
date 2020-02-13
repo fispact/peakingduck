@@ -49,6 +49,48 @@ PEAKINGDUCK_NAMESPACE_START(core)
     };  
 
     /*!
+       @brief Simple threshold local/chunked peak finder
+    */
+    template<typename T=DefaultType, int Size=ArrayTypeDynamic>
+    struct ChunkedThresholdPeakFinder : public IProcess<T, Size>
+    {
+
+        explicit ChunkedThresholdPeakFinder(T percentThreshold, size_t chunkSize=10) 
+        : _percentThreshold(percentThreshold), _chunkSize(chunkSize)
+        {
+        }
+
+        NumericalData<T, Size> 
+        go(const NumericalData<T, Size>& data) const override final
+        {
+            // copy input data for output processing
+            NumericalData<T, Size> processed = NumericalData<T, Size>::Zero(data.size());
+
+            // get indicies for chunking
+            auto chunkindices = util::rrange<size_t>(0, data.size(), _chunkSize);
+
+            // use the global threshold peak finder on each chunk
+            const GlobalThresholdPeakFinder<T> gpf(_percentThreshold);
+
+            // iterate over chunks and apply peak finding
+            // what if list is empty?            
+            for(auto it=chunkindices.begin(); it!=std::prev(chunkindices.end()); ++it){
+                // slice it and apply the threshold
+                auto newdata = gpf.go(data(*it, std::min(*std::next(it, _chunkSize), *chunkindices.end())));
+                // copy over data
+                for(int i=0; i<newdata.size();++i){
+                    processed[*it+i] = newdata[i];
+                }
+            }
+            return processed;
+        };
+
+      private:
+        const T _percentThreshold;
+        const size_t _chunkSize;
+    };  
+
+    /*!
        @brief Simple moving average peak finding 
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>

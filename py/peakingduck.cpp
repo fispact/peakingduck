@@ -284,6 +284,12 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
     py::class_<GlobalThresholdPeakFinderPyType, IProcessPyType, std::shared_ptr<GlobalThresholdPeakFinderPyType>>(m_core, "GlobalThresholdPeakFinder")
         .def(py::init<NumericalDataCoreType>());
 
+    using ChunkedThresholdPeakFinderPyType = core::ChunkedThresholdPeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<ChunkedThresholdPeakFinderPyType, IProcessPyType, std::shared_ptr<ChunkedThresholdPeakFinderPyType>>(m_core, "ChunkedThresholdPeakFinder")
+        .def(py::init<NumericalDataCoreType, size_t>(), 
+            py::arg("percentThreshold"), 
+            py::arg("chunkSize") = 10);
+
     using MovingAveragePeakFinderPyType = core::MovingAveragePeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
     py::class_<MovingAveragePeakFinderPyType, IProcessPyType, std::shared_ptr<MovingAveragePeakFinderPyType>>(m_core, "MovingAveragePeakFinder")
         .def(py::init<int>());
