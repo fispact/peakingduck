@@ -25,6 +25,30 @@ PEAKINGDUCK_NAMESPACE_START(peakingduck)
 PEAKINGDUCK_NAMESPACE_START(core)
 
     /*!
+       @brief Simple threshold global peak finder
+    */
+    template<typename T=DefaultType, int Size=ArrayTypeDynamic>
+    struct GlobalThresholdPeakFinder : public IProcess<T, Size>
+    {
+
+        explicit GlobalThresholdPeakFinder(T percentThreshold) : _percentThreshold(percentThreshold)
+        {
+        }
+
+        NumericalData<T, Size> 
+        go(const NumericalData<T, Size>& data) const override final
+        {
+            const T absThreshold = data.maxCoeff()*_percentThreshold;
+            NumericalData<T, Size> processed = data.ramp(absThreshold);
+            // ToDo: check clusters and take the max value within each cluster
+            return processed;
+        };
+
+      private:
+        const T _percentThreshold;
+    };  
+
+    /*!
        @brief Simple moving average peak finding 
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>

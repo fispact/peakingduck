@@ -280,6 +280,10 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
         .def(py::init<int>());
 
     // peak finding objects
+    using GlobalThresholdPeakFinderPyType = core::GlobalThresholdPeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<GlobalThresholdPeakFinderPyType, IProcessPyType, std::shared_ptr<GlobalThresholdPeakFinderPyType>>(m_core, "GlobalThresholdPeakFinder")
+        .def(py::init<NumericalDataCoreType>());
+
     using MovingAveragePeakFinderPyType = core::MovingAveragePeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
     py::class_<MovingAveragePeakFinderPyType, IProcessPyType, std::shared_ptr<MovingAveragePeakFinderPyType>>(m_core, "MovingAveragePeakFinder")
         .def(py::init<int>());

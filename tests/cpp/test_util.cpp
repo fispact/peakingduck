@@ -175,7 +175,16 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 vec.push_back(it);
             }
             REQUIRE( std::vector<int>{20, 15, 10, 5, 0} == vec);
-        }            
+        }          
+        THEN( "check std::prev" ) {
+            auto rn = util::range<size_t, 10, 20, 1>();
+            std::vector<int> vec;
+            // ignore the last one
+            for(auto it=rn.begin(); it!=std::prev(rn.end()); ++it){
+                vec.push_back(it);
+            }
+            REQUIRE( std::vector<int>{10, 11, 12, 13, 14, 15, 16, 17, 18} == vec);
+        }               
     }
 
     SCENARIO( "Using custom range - run time" ) {        
@@ -218,7 +227,25 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
                 vec.push_back(it);
             }
             REQUIRE( std::vector<int>{20, 15, 10, 5, 0} == vec);
-        }            
+        }           
+        THEN( "check std::prev" ) {
+            auto rn = util::rrange<size_t>(10, 20, 1);
+            std::vector<int> vec;
+            // ignore the last one
+            for(auto it=rn.begin(); it!=std::prev(rn.end()); ++it){
+                vec.push_back(it);
+            }
+            REQUIRE( std::vector<int>{10, 11, 12, 13, 14, 15, 16, 17, 18} == vec);
+        }         
+        THEN( "check std::prev and std::next" ) {
+            auto rn = util::rrange<size_t>(10, 20, 1);
+            std::vector<int> vec;
+            // ignore the last one
+            for(auto it=rn.begin(); it!=std::prev(rn.end()); ++it){
+                vec.push_back(std::next(it));
+            }
+            REQUIRE( std::vector<int>{11, 12, 13, 14, 15, 16, 17, 18, 19} == vec);
+        }                  
     }
 
 PEAKINGDUCK_NAMESPACE_END // unittests
