@@ -135,7 +135,7 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         }          
     }
 
-    SCENARIO( "Using custom range" ) {        
+    SCENARIO( "Using custom range - compile time" ) {        
         THEN( "check simple" ) {
             auto rn = util::range<size_t, 0, 5, 1>();
             std::vector<int> vec;
@@ -170,6 +170,49 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         }         
         THEN( "check reverse and different step" ) {
             auto rn = util::range<int, 20, 0, -5>();
+            std::vector<int> vec;
+            for(auto it=rn.begin(); it!=rn.end(); ++it){
+                vec.push_back(it);
+            }
+            REQUIRE( std::vector<int>{20, 15, 10, 5, 0} == vec);
+        }            
+    }
+
+    SCENARIO( "Using custom range - run time" ) {        
+        THEN( "check simple" ) {
+            auto rn = util::rrange<size_t>(0, 5, 1);
+            std::vector<int> vec;
+            for(auto it=rn.begin(); it!=rn.end(); ++it){
+                vec.push_back(it);
+            }
+            REQUIRE( std::vector<int>{0, 1, 2, 3, 4} == vec);
+        }             
+        THEN( "check simple non zero start" ) {
+            auto rn = util::rrange<size_t>(10, 20, 1);
+            std::vector<int> vec;
+            for(auto it=rn.begin(); it!=rn.end(); ++it){
+                vec.push_back(it);
+            }
+            REQUIRE( std::vector<int>{10, 11, 12, 13, 14, 15, 16, 17, 18, 19} == vec);
+        }               
+        THEN( "check simple non zero start and different step" ) {
+            auto rn = util::rrange<int>(10, 20, 3);
+            std::vector<int> vec;
+            for(auto it=rn.begin(); it!=rn.end(); ++it){
+                vec.push_back(it);
+            }
+            REQUIRE( std::vector<int>{10, 13, 16, 19} == vec);
+        }           
+        THEN( "check reverse" ) {
+            auto rn = util::rrange<int>(20, 15, -1);
+            std::vector<int> vec;
+            for(auto it=rn.begin(); it!=rn.end(); ++it){
+                vec.push_back(it);
+            }
+            REQUIRE( std::vector<int>{20, 19, 18, 17, 16, 15} == vec);
+        }         
+        THEN( "check reverse and different step" ) {
+            auto rn = util::rrange<int>(20, 0, -5);
             std::vector<int> vec;
             for(auto it=rn.begin(); it!=rn.end(); ++it){
                 vec.push_back(it);
