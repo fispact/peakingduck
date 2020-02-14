@@ -109,8 +109,42 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
              [](NumericalDataPyType& data, size_t index, NumericalDataCoreType value) {
                 data[index] = value;
              })
+        .def("maxCoeff", [](const NumericalDataPyType& data){
+            return data.maxCoeff();
+        })
+        .def("minCoeff", [](const NumericalDataPyType& data){
+            return data.minCoeff();
+        })
+        .def("mean", [](const NumericalDataPyType& data){
+            return data.mean();
+        })
+        .def("sum", [](const NumericalDataPyType& data){
+            return data.sum();
+        })
+        .def("exp", [](const NumericalDataPyType& data){
+            return data.exp();
+        })
+        .def("log", [](const NumericalDataPyType& data){
+            return data.log();
+        })
+        .def("sqrt", [](const NumericalDataPyType& data){
+            return data.sqrt();
+        })
+        .def("square", [](const NumericalDataPyType& data){
+            return data.square();
+        })
+        .def("pow", [](const NumericalDataPyType& data, NumericalDataCoreType exponent){
+            return data.pow(exponent);
+        })
+        .def("reverse", [](const NumericalDataPyType& data){
+            return data.reverse();
+        })
+        .def("reverseInPlace", [](NumericalDataPyType& data){
+            data.reverseInPlace();
+        })
         .def("from_list", &NumericalDataPyType::from_vector)
         .def("to_list", &NumericalDataPyType::to_vector)
+        .def("slice", &NumericalDataPyType::slice)
         .def("LLS", &NumericalDataPyType::LLS)
         .def("LLSInPlace", &NumericalDataPyType::LLSInPlace)
         .def("inverseLLS", &NumericalDataPyType::inverseLLS)
@@ -179,6 +213,22 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
              [](IntegerDataPyType& data, size_t index, IntegerDataCoreType value) {
                 data[index] = value;
              })
+        .def("maxCoeff", [](const IntegerDataPyType& data){
+            return data.maxCoeff();
+        })
+        .def("minCoeff", [](const IntegerDataPyType& data){
+            return data.minCoeff();
+        })
+        .def("sum", [](const IntegerDataPyType& data){
+            return data.sum();
+        })
+        .def("reverse", [](const IntegerDataPyType& data){
+            return data.reverse();
+        })
+        .def("reverseInPlace", [](IntegerDataPyType& data){
+            data.reverseInPlace();
+        })
+        .def("slice", &IntegerDataPyType::slice)
         .def("from_list", &IntegerDataPyType::from_vector)
         .def("to_list", &IntegerDataPyType::to_vector)
         .def("ramp", &IntegerDataPyType::ramp)
@@ -295,6 +345,43 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
     using MovingAveragePeakFilterPyType = core::MovingAveragePeakFilter<NumericalDataCoreType,core::ArrayTypeDynamic>;
     py::class_<MovingAveragePeakFilterPyType, IProcessPyType, std::shared_ptr<MovingAveragePeakFilterPyType>>(m_core, "MovingAveragePeakFilter")
         .def(py::init<int>());
+
+    // peak info struct
+    using PeakInfoPyType = core::PeakInfo<NumericalDataCoreType>;
+    py::class_<PeakInfoPyType>(m_core, "PeakInfo")
+        .def(py::init<size_t, NumericalDataCoreType>(),
+            py::arg("index") = 0,
+            py::arg("value") = 0.0)
+        .def_property_readonly("index", [](const PeakInfoPyType& peak){
+            return peak.index;
+        })
+        .def_property_readonly("value", [](const PeakInfoPyType& peak){
+            return peak.value;
+        });
+
+    // core peak finding interface
+    using IPeakFinderPyType = core::IPeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
+
+    class PyPeakFinder : public IPeakFinderPyType {
+        public:
+            /* Inherit the constructors */
+            using IPeakFinderPyType::IPeakFinder;
+
+            /* Trampoline (need one for each virtual function) */
+            core::PeakList<NumericalDataCoreType>
+            find(const NumericalDataPyType& data) const override {
+                PYBIND11_OVERLOAD_PURE(
+                    core::PeakList<NumericalDataCoreType>,      /* Return type */
+                    IPeakFinderPyType,                          /* Parent class */
+                    find,                                       /* Name of function in C++ (must match Python name) */
+                    data                                        /* Argument(s) */
+                );
+            }
+    };
+
+    py::class_<IPeakFinderPyType, PyPeakFinder, std::shared_ptr<IPeakFinderPyType>>(m_core, "IPeakFinder")
+        .def(py::init_alias<>())
+        .def("find", &IPeakFinderPyType::find);
 
     // histogram objects
     using HistPyType = core::Histogram<double,double>;

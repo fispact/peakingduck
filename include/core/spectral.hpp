@@ -47,24 +47,14 @@ PEAKINGDUCK_NAMESPACE_START(core)
             Histogram(other._X, other._Y)
             {}
  
-            // // move constructor
-            Histogram(Histogram&& other) noexcept :
-            Histogram(std::move(other))
-            {}
+            // move constructor
+            Histogram(Histogram&& other) = default;
 
             // copy assignment
-            Histogram& operator=(const Histogram& other)
-            {
-                return *this = Histogram(other);
-            }
+            Histogram& operator=(const Histogram& other) = default;
 
             // move assignment
-            Histogram& operator=(Histogram&& other) noexcept
-            {
-                std::swap(_X, other._X);
-                std::swap(_Y, other._Y);
-                return *this;
-            }
+            Histogram& operator=(Histogram&& other) noexcept = default;
 
             // destructor
             virtual ~Histogram() {};

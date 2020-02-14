@@ -15,6 +15,7 @@
 
 #include <cmath>
 #include <memory>
+#include <vector>
 
 #include "common.hpp"
 #include "core/numerical.hpp"
@@ -115,6 +116,75 @@ PEAKINGDUCK_NAMESPACE_START(core)
         std::shared_ptr<IProcess<T,Size>> _movingAverageSmoother;
     };  
 
+    /*!
+       @brief Simple struct for holding peak info
+
+       Stores the:
+        value    = value i.e. count, flux
+        index    = the corresponding index/channel in the data
+
+    */
+    template<typename ValueType=DefaultType>
+    struct PeakInfo
+    {
+        const size_t index;
+        const ValueType value;
+
+        PeakInfo(size_t pindex, ValueType pvalue) : index(pindex), value(pvalue) {}
+    };
+
+    /*!
+       @brief Struct extends basic PeakInfo with a property value
+
+       Stores the:
+        property = property i.e. energy, time
+        value    = value i.e. count, flux
+        index    = the corresponding index/channel in the data
+
+    */
+    template<typename ValueType=DefaultType, typename PropType=DefaultType>
+    struct PeakInfoWithProp : public PeakInfo<ValueType>
+    {
+        const PropType property;
+
+        PeakInfoWithProp(size_t pindex, ValueType pvalue, PropType pprop) : PeakInfo<ValueType>(pindex, pvalue), property(pprop) {}
+    };
+
+    // it is not immediatly clear to me how to make this container
+    // for PeakInfo polymorphic, i.e. how can we keep the container the same
+    // for different types?
+    // Since everything must be runtime polymorphic (python bindings), it leads
+    // us to use interfaces and vtables but what about cases where
+    // we don't want or even know the property? Cannot force property in the interface.
+    // for now we just use value and index and properties can be introduced later 
+    // if you have the index
+    template<typename ValueType=DefaultType>
+    using PeakList = std::vector<PeakInfo<ValueType>>;
+
+    /*!
+       @brief Interface for peak finding algorithms
+
+       Operates on numerical data (filtered or unfiltered)
+       Never mutates the input (always const process)
+       returns a list of peaks - PeakList
+    */
+    template<typename ValueType=DefaultType, 
+             int Size=ArrayTypeDynamic>
+    struct IPeakFinder
+    {
+        virtual ~IPeakFinder(){};
+        
+        /*!
+           @brief Identifies potential peaks in the data
+        */
+        virtual PeakList<ValueType>
+        find(const NumericalData<ValueType, Size>& data) const = 0;
+
+        // What else should this do?
+        // If find is a slow process should we allow interface to provide
+        // get last values? 
+        // nrofpeaks? getstored?
+    };    
 
 PEAKINGDUCK_NAMESPACE_END
 PEAKINGDUCK_NAMESPACE_END

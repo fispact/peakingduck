@@ -1,0 +1,54 @@
+import numpy as np
+import tensorflow as tf
+from scipy import signal, stats
+import os
+import math
+import array
+
+# raw C++ bindings library
+from PEAKINGDUCK.core import IPeakFinder, PeakInfo
+
+"""
+    Add custom peak finders here.
+
+    Implement the IPeakFinder interface
+"""
+
+class SimplePeakFinder(IPeakFinder):
+    """
+        Identify peaks using global threshold
+    """
+    def __init__(self, threshold=0.05):
+        self.threshold = threshold
+
+    def find(self, data):
+        max_value = data.maxCoeff()
+
+        # find consecutive bins for a peak group
+        peak_groups = []
+        last_index = -1
+        local_peak = []
+        for i, entry in enumerate(data):
+            if entry >= max_value*self.threshold:
+                if last_index + 1 < i and last_index >=0:
+                    peak_groups.append(local_peak)
+                    local_peak = []
+                local_peak.append(i)
+                last_index = i
+        if local_peak:
+            peak_groups.append(local_peak)
+
+        peaks = []
+        # find maximum in each group
+        for g in peak_groups:
+            max_value = -1.0
+            max_index = -1
+            for i in g:
+                if data[i] > max_value:
+                    max_value = data[i]
+                    max_index = i
+
+            peaks.append(PeakInfo(max_index, data[max_index]))
+            
+        return peaks
+

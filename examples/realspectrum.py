@@ -23,11 +23,23 @@ snippedCounts = hist_raw.Y
 # process manager
 pm = pkd.core.PySimpleProcessManager(processes=[
     pkd.core.SavitzkyGolaySmoother(3),
-    pkd.core.ChunkedThresholdPeakFilter(0.05, 5000)
+    pkd.core.GlobalThresholdPeakFilter(0.005),
+    # pkd.core.ChunkedThresholdPeakFilter(0.05, 5000)
 ])
 
+# peak finder
+pf = pkd.core.SimplePeakFinder(threshold=0.5)
+
 # process
-processed_counts = pm.run(snippedCounts)
+try:
+    processed_counts = pm.run(snippedCounts)
+    peaks = pf.find(processed_counts)
+except:
+    processed_counts = counts 
+    peaks = []
+
+for peak in peaks:
+    print("{1} @ {0} eV".format(energies[peak.index], peak.value))
 
 # plot the histogram
 import peakingduck.plotting as pkdplot
