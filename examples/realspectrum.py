@@ -23,30 +23,40 @@ snippedCounts = hist_raw.Y
 # process manager
 pm = pkd.core.PySimpleProcessManager(processes=[
     pkd.core.SavitzkyGolaySmoother(3),
-    pkd.core.GlobalThresholdPeakFilter(0.005),
+    # pkd.core.GlobalThresholdPeakFilter(0.005),
     # pkd.core.ChunkedThresholdPeakFilter(0.05, 5000)
 ])
 
 # peak finder
-pf = pkd.core.SimplePeakFinder(threshold=0.5)
+pf = pkd.core.ChunkedSimplePeakFinder(threshold=0.01, nchunks=100)
 
 # process
 try:
-    processed_counts = pm.run(snippedCounts)
+    processed_counts = pm.run(counts)
     peaks = pf.find(processed_counts)
 except:
     processed_counts = counts 
     peaks = []
 
+# plot the histogram and peaks
+import peakingduck.plotting as pkdplot
+# import matplotlib.patches as patches
+
+f, ax = pkdplot.PLT.subplots(1, figsize=(10,7))
+
 for peak in peaks:
     print("{1} @ {0} eV".format(energies[peak.index], peak.value))
+    marker = pkdplot.PLT.Line2D((energies[peak.index], energies[peak.index+1]), 
+                                (peak.value, peak.value), lw=5., 
+                                ls='-', marker='.', 
+                                markersize=10, 
+                                markerfacecolor='r', 
+                                markeredgecolor='r', 
+                                alpha=0.8)
+    ax.add_line(marker)
 
-# plot the histogram
-import peakingduck.plotting as pkdplot
-
-f = pkdplot.PLT.figure(figsize=(10,7))
-pkdplot.PLT.semilogy(*pkdplot.getplotvalues(energies, counts), 'k', linewidth=0.8, alpha=0.5, label="raw")
-pkdplot.PLT.semilogy(*pkdplot.getplotvalues(energies, processed_counts), 'r', linewidth=2.0, alpha=0.8, label="processed")
+pkdplot.PLT.semilogy(*pkdplot.getplotvalues(energies, counts), 'k', linewidth=0.8, alpha=0.8, label="raw")
+# pkdplot.PLT.semilogy(*pkdplot.getplotvalues(energies, processed_counts), 'r', linewidth=2.0, alpha=0.8, label="processed")
 # plt.semilogy(*getplotvalues(energies, snippedCounts), 'r', linewidth=0.4, alpha=0.5, label="no background")
 pkdplot.PLT.semilogy(*pkdplot.getplotvalues(energies, background_forw), 'g', linewidth=1.0, alpha=0.8, label="background - forwards")
 pkdplot.PLT.semilogy(*pkdplot.getplotvalues(energies, background_back), 'c', linewidth=1.0, alpha=0.8, label="background - backwards")

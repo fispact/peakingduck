@@ -6,7 +6,7 @@ import math
 import array
 
 # raw C++ bindings library
-from PEAKINGDUCK.core import IPeakFinder, PeakInfo
+from PEAKINGDUCK.core import IPeakFinder, PeakInfo, NumericalData
 
 """
     Add custom peak finders here.
@@ -52,3 +52,28 @@ class SimplePeakFinder(IPeakFinder):
             
         return peaks
 
+class ChunkedSimplePeakFinder(IPeakFinder):     
+    """
+        Breaks the spectrum up into nchunks
+        applying the threshold relative to that chunk
+    """   
+    def __init__(self, threshold=0.05, nchunks=10):
+        self.threshold = threshold
+        self.nchunks = nchunks
+
+    def find(self, data):
+        peaks = []
+
+        pf = SimplePeakFinder(threshold=self.threshold)
+
+        subvalues = np.array_split(data, self.nchunks)
+        last_index = 0
+        for sv in subvalues:
+            chunk_peaks = pf.find(NumericalData(sv))
+            for peak in chunk_peaks:
+                k = peak.index + last_index
+                peaks.append(PeakInfo(k, peak.value))
+
+            last_index += len(sv)
+
+        return peaks
