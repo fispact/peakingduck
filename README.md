@@ -9,6 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 - [About](#about)
+- [Motivation](#motivation)
 - [Status](#status)
 - [Building](#building)
 
@@ -18,6 +19,13 @@ Peaking identification is crucial for gamma spectroscopy and nuclear analysis. C
 
 ##### Example - SNIP estimation
 ![SNIP](https://github.com/thomasms/peakingduck/blob/master/figures/sample.png)
+
+Motivation
+------
+This project is based on a prototype written in Python. We have now began porting to c++/python using pybind11. Most of the algorithms remain in python. We define some underlying interfaces and datastructures in c++ for static safety and performance (no benchmarking done yet) with the ability to extend in both c++ and python.
+- **Why write this in c++ if you are just binding it to python?** We want core algorithms in c++ for performance and static typing. We want the power of python to play with algorithms and extend the base, especially making use of machine learning and AI.
+- **Why not just use numpy and everything in python?** Numpy is great and we don't want to replace it, but there is no numpy in c++ (see question above). Eigen is the closest thing and is pretty good at optimising (using expression templates and SIMD). Whilst we could have used numpy for 80% of the algorithms, for the remaining 20% we cannot import numpy on the c++ side. Since everything is based on the NumericalData type (Eigen 1D array) it provides 100% consistency and easily maps to numpy. Plus c++ people can use parts of the library without having to worry about python at all.
+- **Can I just use the c++ parts and ignore python?** You can, but it would not do much. Most of the power is in the algorithms implemented in python, particularly the pre-trained models. In the future it would be great if everything could be ported from python to c++, but this may not happen.
 
 Status
 ------
