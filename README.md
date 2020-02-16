@@ -12,6 +12,7 @@
 - [Motivation](#motivation)
 - [Status](#status)
 - [Building](#building)
+- [PyPi](#pypi)
 
 About
 ------
@@ -34,7 +35,7 @@ Very much a work in progress, but is expected to have the first version (0.0.1) 
 Building
 ------
 It is header only C++ so nothing to build (only unit tests) if using it in C++. 
-If you want python bindings enabled then it needs building (default will build them), as below.
+If you want python bindings enabled (which I hope you do) then it needs building (default will build them), as below.
 ```bash
 git clone --recursive -j8 https://github.com/thomasms/peakingduck
 cd peakingduck
@@ -43,4 +44,19 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PY_BINDINGS=ON ..
 make -j4
 ```
+Or pip should work too:
+```bash
+git clone --recursive -j8 https://github.com/thomasms/peakingduck
+cd peakingduck
+pip3 install --user .
+```
+
 Note: Project uses cmake (> 3.2) to build peaking duck.
+
+PyPi
+------
+The peakingduck repo has a placeholder on PyPi as ```peakingduck``` but is yet to have an official release. Once version 0.1 is ready do:
+
+```bash
+pip3 install --user peakingduck
+```
