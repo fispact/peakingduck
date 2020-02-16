@@ -61,11 +61,12 @@ PEAKINGDUCK_NAMESPACE_START(core)
         we need to make sure that we have this sorted properly first!
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
-    class NumericalData : private Array1D<T, Size>, 
+    struct NumericalData : private Array1D<T, Size>, 
                           public NumericalFunctions<NumericalData<T, Size>>
     {
-        public:
-            using BaseEigenArray = Array1D<T, Size>;
+            using value_type = T;
+
+            using BaseEigenArray = Array1D<value_type, Size>;
 
             // typedef Array1Dd Base;
             using BaseEigenArray::BaseEigenArray;
@@ -80,11 +81,11 @@ PEAKINGDUCK_NAMESPACE_START(core)
             // this aims to fix it
             explicit NumericalData()
             { 
-                from_vector(std::vector<T>());
+                from_vector(std::vector<value_type>());
             }
 
             // This constructor allows you to construct from a std::vector
-            explicit NumericalData(const std::vector<T>& other)
+            explicit NumericalData(const std::vector<value_type>& other)
             { 
                 from_vector(other);
             }
@@ -165,12 +166,12 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using BaseEigenArray::end;
             using BaseEigenArray::segment;
 
-            inline void from_vector(const std::vector<T>& raw){
+            inline void from_vector(const std::vector<value_type>& raw){
                 this->BaseEigenArray::operator=(BaseEigenArray::Map(raw.data(), raw.size()));
             }
 
-            inline std::vector<T> to_vector() const{
-                return std::vector<T>(this->data(), this->data() + this->size());
+            inline std::vector<value_type> to_vector() const{
+                return std::vector<value_type>(this->data(), this->data() + this->size());
             }
 
             // some useful predefined methods 
@@ -200,7 +201,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
             //
             // can we add templates when sindex and eindex are known
             // at compile time?
-            NumericalData<T> slice(int sindex, int eindex) const
+            NumericalData<value_type> slice(int sindex, int eindex) const
             {
                 if(eindex >= 0){
                     return this->segment(sindex, eindex - sindex);
@@ -211,10 +212,14 @@ PEAKINGDUCK_NAMESPACE_START(core)
             // uses the () operator with two indicies to do the slice
             // no way (overload comma operator?) to do this with square []
             // braces
-            NumericalData<T> operator()(int sindex, int eindex) const
+            NumericalData<value_type> operator()(int sindex, int eindex) const
             {
                 return slice(sindex, eindex);
             }
+
+            // TODO: These really belong in the numerical functions
+            // interface, but I am getting compilation problems due to template 
+            // parameter of derived. To not waste anymore time, we leave it here for now.
 
             /*!
                 @brief A simple function for filtering values above a certain
@@ -223,9 +228,9 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
                 Returns a new array
             */
-            NumericalData<T, Size> ramp(const T& threshold) const
+            NumericalData ramp(const value_type& threshold) const
             {
-                std::function<T(T)> imp = [&](const T& x){
+                std::function<value_type(value_type)> imp = [&](const value_type& x){
                     return (x >= threshold) ? x : 0;
                 };
                 return this->unaryExpr(imp);
@@ -238,7 +243,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
 
                 Mutates underlying array
             */
-            NumericalData& rampInPlace(const T& threshold)
+            NumericalData& rampInPlace(const value_type& threshold)
             {
                 this->BaseEigenArray::operator=(this->ramp(threshold));
                 return *this;

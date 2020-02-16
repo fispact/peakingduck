@@ -30,6 +30,8 @@ PEAKINGDUCK_NAMESPACE_START(core)
     template <class Derived>
     struct NumericalFunctions : public crtp<Derived, NumericalFunctions>
     {
+        // using typename Derived::value_type numerical_type;
+        
         /*!
             @brief log(log(sqrt(value + 1) + 1) + 1)
             Returns a new array
@@ -241,6 +243,34 @@ PEAKINGDUCK_NAMESPACE_START(core)
             this->underlying() = this->underlying().snip(niterations);
             return this->underlying();
         }
+
+        /*!
+            @brief A simple function for filtering values above a certain
+            threshold (>=). This is useful to remove entries that are negative 
+            for example.
+
+            Returns a new array
+        */
+        // Derived ramp(const numerical_type& threshold) const
+        // {
+        //     std::function<numerical_type(numerical_type)> imp = [&](const tnumerical_type& x){
+        //         return (x >= threshold) ? x : 0;
+        //     };
+        //     return this->underlying().unaryExpr(imp);
+        // }
+
+        // /*!
+        //     @brief A simple function for filtering values above a certain
+        //     threshold (>=). This is useful to remove entries that are negative 
+        //     for example.
+
+        //     Mutates underlying array
+        // */
+        // Derived& rampInPlace(const numerical_type& threshold)
+        // {
+        //     this->underlying() = this->underlying().ramp(threshold);
+        //     return this->underlying();
+        // }
     };
 
 PEAKINGDUCK_NAMESPACE_END
