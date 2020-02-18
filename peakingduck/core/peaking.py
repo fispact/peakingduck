@@ -1,10 +1,12 @@
 import numpy as np
+from scipy import signal
 import os
 import math
 import array
 
 # raw C++ bindings library
 from PEAKINGDUCK.core import IPeakFinder, PeakInfo, NumericalData
+from .smoothing import SavitzkyGolaySmoother
 
 """
     Add custom peak finders here.
@@ -73,5 +75,29 @@ class ChunkedSimplePeakFinder(IPeakFinder):
                 peaks.append(PeakInfo(k, peak.value))
 
             last_index += len(sv)
+
+        return peaks
+
+
+class ScipyPeakFinder(IPeakFinder):  
+    """
+        Wrapper for scipy peak finder
+
+        TODO: pass smoother to constructor not just window size
+    """   
+    def __init__(self, threshold=2.0, smoothsize=1001):
+        self.threshold = threshold
+        self.smoothsize = smoothsize
+
+    def find(self, data, *args, **kwargs):
+        smoother = SavitzkyGolaySmoother(self.smoothsize)
+        lowerThreshold = smoother.go(data)*self.threshold
+
+        # scipy uses lower and upper array thresholds - no upper threshold
+        indices, _ = signal.find_peaks(data, *args, height=(np.array(lowerThreshold.to_list()), None), **kwargs)
+
+        peaks = []
+        for i in indices:
+            peaks.append(PeakInfo(i, data[i]))
 
         return peaks
