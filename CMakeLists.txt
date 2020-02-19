@@ -58,6 +58,29 @@ if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 endif (CMAKE_BUILD_TYPE EQUAL "DEBUG")
 
+set(PEAKINGDUCK_CPP_SOURCES
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/common.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/constants.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/exceptions.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/io.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/core.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/peakingduck.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/io/spectralio.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/core/process.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/core/numericalfunctions.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/core/smoothing.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/core/numerical.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/core/peaking.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/core/spectral.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/core/crtp.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/util/range.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/util/string.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/util/file.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/util/window.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/util/stream.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/util.hpp
+  )
+
 # header-only library target. To use this project as a subdirectory,
 # add the following to your code:
 #

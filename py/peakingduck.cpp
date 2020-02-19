@@ -15,6 +15,7 @@
 
 #include "common.hpp"
 #include "peakingduck.hpp"
+#include "docstrings.hpp"
 
 namespace py = pybind11;
 
@@ -51,6 +52,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
     py::module m_io = m.def_submodule("io");
 
     m_util.def("get_window", &util::get_window<double>,
+	    __doc_peakingduck_util_get_window,
             py::arg("values"),
             py::arg("centerindex"),
             py::arg("nouter") = 5,
@@ -66,7 +68,8 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
     // can swap between numpy if need be
     using NumericalDataCoreType = double;
     using NumericalDataPyType = core::NumericalData<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<NumericalDataPyType>(m_core, "NumericalData")
+    py::class_<NumericalDataPyType>(m_core, "NumericalData",
+				    __doc_peakingduck_core_NumericalData)
         .def(py::init<>())
         .def(py::init<const std::vector<NumericalDataCoreType>&>())
         .def(py::init<const Eigen::Ref<core::Array1Dd>&>())
@@ -144,19 +147,26 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
         })
         .def("from_list", &NumericalDataPyType::from_vector)
         .def("to_list", &NumericalDataPyType::to_vector)
-        .def("slice", &NumericalDataPyType::slice)
-        .def("LLS", &NumericalDataPyType::LLS)
-        .def("LLSInPlace", &NumericalDataPyType::LLSInPlace)
-        .def("inverseLLS", &NumericalDataPyType::inverseLLS)
-        .def("inverseLLSInPlace", &NumericalDataPyType::inverseLLSInPlace)
-        .def("gradient", &NumericalDataPyType::gradient)
-        .def("gradientInPlace", &NumericalDataPyType::gradientInPlace)
-        .def("midpoint", &NumericalDataPyType::midpoint)
-        .def("midpointInPlace", &NumericalDataPyType::midpointInPlace)
+        .def("slice", &NumericalDataPyType::slice,
+	     __doc_peakingduck_core_NumericalData_slice)
+        .def("LLS", &NumericalDataPyType::LLS, __doc_peakingduck_core_NumericalFunctions_LLS)
+        .def("LLSInPlace", &NumericalDataPyType::LLSInPlace,
+	     __doc_peakingduck_core_NumericalFunctions_LLSInPlace)
+        .def("inverseLLS", &NumericalDataPyType::inverseLLS,
+             __doc_peakingduck_core_NumericalFunctions_inverseLLS)
+        .def("inverseLLSInPlace", &NumericalDataPyType::inverseLLSInPlace,
+             __doc_peakingduck_core_NumericalFunctions_inverseLLSInPlace)
+        .def("midpoint", &NumericalDataPyType::midpoint,
+	     __doc_peakingduck_core_NumericalFunctions_midpoint)
+        .def("midpointInPlace", &NumericalDataPyType::midpointInPlace,
+	     __doc_peakingduck_core_NumericalFunctions_midpointInPlace)
         .def("snip", [](const NumericalDataPyType& data, const std::vector<int>& iteration_list){
             return data.snip(iteration_list.begin(), iteration_list.end());
-        })
+	}, __doc_peakingduck_core_NumericalFunctions_snip)
+      // FIXME: Pretty sure these are different overloads, so I should
+      // make sure I'm using the right docstring for each.
         .def("snip", (NumericalDataPyType (NumericalDataPyType::*)(int) const)&NumericalDataPyType::snip,
+	    __doc_peakingduck_core_NumericalFunctions_snip,
             py::arg("niterations") = 20)
 
         /* pybind cannot deduce types so we need to use old style function pointers */
@@ -164,13 +174,15 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
         // .def("snip", py::overload_cast<int>(&NumericalDataPyType::snip),
         //     py::arg("niterations") = 20)
 
-        .def("ramp", &NumericalDataPyType::ramp)
-        .def("rampInPlace", &NumericalDataPyType::rampInPlace);
+        .def("ramp", &NumericalDataPyType::ramp, __doc_peakingduck_core_NumericalData_ramp)
+        .def("rampInPlace", &NumericalDataPyType::rampInPlace,
+	   __doc_peakingduck_core_NumericalData_rampInPlace);
 
     // integral type
     using IntegerDataCoreType = int;
     using IntegerDataPyType = core::NumericalData<IntegerDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<IntegerDataPyType>(m_core, "IntegerData")
+    py::class_<IntegerDataPyType>(m_core, "IntegerData",
+				  __doc_peakingduck_core_NumericalData)
         .def(py::init<>())
         .def(py::init<const std::vector<IntegerDataCoreType>&>())
         .def(py::init<const Eigen::Ref<core::Array1Di>&>())
@@ -231,8 +243,9 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
         .def("slice", &IntegerDataPyType::slice)
         .def("from_list", &IntegerDataPyType::from_vector)
         .def("to_list", &IntegerDataPyType::to_vector)
-        .def("ramp", &IntegerDataPyType::ramp)
-        .def("rampInPlace", &IntegerDataPyType::rampInPlace);
+      .def("ramp", &IntegerDataPyType::ramp, __doc_peakingduck_core_NumericalData_ramp)
+      .def("rampInPlace", &IntegerDataPyType::rampInPlace,
+	   __doc_peakingduck_core_NumericalData_rampInPlace);
 
     // core process object
     using IProcessPyType = core::IProcess<NumericalDataCoreType,core::ArrayTypeDynamic>;
@@ -254,7 +267,8 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
             }
     };
 
-    py::class_<IProcessPyType, PyProcess, std::shared_ptr<IProcessPyType>>(m_core, "IProcess")
+    py::class_<IProcessPyType, PyProcess, std::shared_ptr<IProcessPyType>>(m_core, "IProcess",
+							       __doc_peakingduck_core_IProcess)
         .def(py::init_alias<>())
         .def("go", &IProcessPyType::go);
 
@@ -306,7 +320,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
             }
     };
 
-    py::class_<IProcessManagerPyType, PyProcessManager, std::shared_ptr<IProcessManagerPyType>>(m_core, "IProcessManager")
+    py::class_<IProcessManagerPyType, PyProcessManager, std::shared_ptr<IProcessManagerPyType>>(m_core, "IProcessManager", __doc_peakingduck_core_IProcessManager)
         .def(py::init_alias<>())
         .def("append", &IProcessManagerPyType::append)
         .def("run", &IProcessManagerPyType::run)
@@ -315,7 +329,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
 
     // simple process manager
     using SimpleProcessManagerPyType = core::SimpleProcessManager<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<SimpleProcessManagerPyType, IProcessManagerPyType, std::shared_ptr<SimpleProcessManagerPyType>>(m_core, "SimpleProcessManager")
+    py::class_<SimpleProcessManagerPyType, IProcessManagerPyType, std::shared_ptr<SimpleProcessManagerPyType>>(m_core, "SimpleProcessManager", __doc_peakingduck_core_SimpleProcessManager)
         .def(py::init<>())
         .def("append", &SimpleProcessManagerPyType::append)
         .def("run", &SimpleProcessManagerPyType::run)
@@ -324,26 +338,26 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
 
     // smoothing objects
     using MovingAverageSmootherPyType = core::MovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<MovingAverageSmootherPyType, IProcessPyType, std::shared_ptr<MovingAverageSmootherPyType>>(m_core, "MovingAverageSmoother")
+    py::class_<MovingAverageSmootherPyType, IProcessPyType, std::shared_ptr<MovingAverageSmootherPyType>>(m_core, "MovingAverageSmoother", __doc_peakingduck_core_MovingAverageSmoother)
         .def(py::init<int>());
 
     using WeightedMovingAverageSmootherPyType = core::WeightedMovingAverageSmoother<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<WeightedMovingAverageSmootherPyType, IProcessPyType, std::shared_ptr<WeightedMovingAverageSmootherPyType>>(m_core, "WeightedMovingAverageSmoother")
+    py::class_<WeightedMovingAverageSmootherPyType, IProcessPyType, std::shared_ptr<WeightedMovingAverageSmootherPyType>>(m_core, "WeightedMovingAverageSmoother", __doc_peakingduck_core_WeightedMovingAverageSmoother)
         .def(py::init<int>());
 
     // peak filter objects
     using GlobalThresholdPeakFilterPyType = core::GlobalThresholdPeakFilter<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<GlobalThresholdPeakFilterPyType, IProcessPyType, std::shared_ptr<GlobalThresholdPeakFilterPyType>>(m_core, "GlobalThresholdPeakFilter")
+    py::class_<GlobalThresholdPeakFilterPyType, IProcessPyType, std::shared_ptr<GlobalThresholdPeakFilterPyType>>(m_core, "GlobalThresholdPeakFilter", __doc_peakingduck_core_ChunkedThresholdPeakFilter)
         .def(py::init<NumericalDataCoreType>());
 
     using ChunkedThresholdPeakFilterPyType = core::ChunkedThresholdPeakFilter<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<ChunkedThresholdPeakFilterPyType, IProcessPyType, std::shared_ptr<ChunkedThresholdPeakFilterPyType>>(m_core, "ChunkedThresholdPeakFilter")
+    py::class_<ChunkedThresholdPeakFilterPyType, IProcessPyType, std::shared_ptr<ChunkedThresholdPeakFilterPyType>>(m_core, "ChunkedThresholdPeakFilter", __doc_peakingduck_core_ChunkedThresholdPeakFilter)
         .def(py::init<NumericalDataCoreType, size_t>(), 
             py::arg("percentThreshold"), 
             py::arg("chunkSize") = 10);
 
     using MovingAveragePeakFilterPyType = core::MovingAveragePeakFilter<NumericalDataCoreType,core::ArrayTypeDynamic>;
-    py::class_<MovingAveragePeakFilterPyType, IProcessPyType, std::shared_ptr<MovingAveragePeakFilterPyType>>(m_core, "MovingAveragePeakFilter")
+    py::class_<MovingAveragePeakFilterPyType, IProcessPyType, std::shared_ptr<MovingAveragePeakFilterPyType>>(m_core, "MovingAveragePeakFilter", __doc_peakingduck_core_MovingAveragePeakFilter)
         .def(py::init<int>());
 
     // peak info struct
@@ -387,14 +401,14 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
     using HistPyType = core::Histogram<double,double>;
     using HistChannelPyType = core::Histogram<int,double>;
 
-    py::class_<HistPyType>(m_core, "Histogram")
+    py::class_<HistPyType>(m_core, "Histogram", __doc_peakingduck_core_Histogram)
         .def(py::init<>())
         .def(py::init<const core::NumericalData<double>&, const core::NumericalData<double>&>())
         .def(py::init<const HistPyType&>())
         .def_property_readonly("X", &HistPyType::X)
         .def_property_readonly("Y", &HistPyType::Y);
 
-    py::class_<HistChannelPyType>(m_core, "HistogramChannelBased")
+    py::class_<HistChannelPyType>(m_core, "HistogramChannelBased", __doc_peakingduck_core_Histogram)
         .def(py::init<>())
         .def(py::init<const core::NumericalData<int>&, const core::NumericalData<double>&>())
         .def(py::init<const HistChannelPyType&>())
@@ -403,7 +417,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
 
     // spectrum objects
     using SpectrumChannelBasedPyType = core::Spectrum<int,double>;
-    py::class_<SpectrumChannelBasedPyType, HistChannelPyType>(m_core, "SpectrumChannelBased")
+    py::class_<SpectrumChannelBasedPyType, HistChannelPyType>(m_core, "SpectrumChannelBased", __doc_peakingduck_core_Spectrum)
         .def(py::init<>())
         .def(py::init<const core::NumericalData<int>&, const core::NumericalData<double>&>())
         .def(py::init<const SpectrumChannelBasedPyType&>())
@@ -415,7 +429,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
         });
 
     using SpectrumEnergyBasedPyType = core::Spectrum<double,double>;
-    py::class_<SpectrumEnergyBasedPyType, HistPyType>(m_core, "SpectrumEnergyBased")
+    py::class_<SpectrumEnergyBasedPyType, HistPyType>(m_core, "SpectrumEnergyBased", __doc_peakingduck_core_Spectrum)
         .def(py::init<>())
         .def(py::init<const core::NumericalData<double>&, const core::NumericalData<double>&>())
         .def(py::init<const SpectrumEnergyBasedPyType&>())
@@ -433,5 +447,5 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
                 //file >> m;
                 io::Deserialize<double, double, ','>(file, hist);
                 file.close();
-            });
+            }, __doc_peakingduck_io_Deserialize);
 }
