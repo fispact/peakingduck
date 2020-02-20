@@ -27,8 +27,8 @@ jobs:
     - os: osx
       compiler: gcc
       env:
-        CC: gcc-6
-        CXX: g++-6
+#        CC: gcc-6
+#        CXX: g++-6
         BUILD_TYPE: Release
     - os: osx
       compiler: clang
@@ -50,7 +50,6 @@ branches:
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-  - if [ ${TRAVIS_OS_NAME} == "osx" ]; then eval "CC=gcc-6 && CXX=g++-6"; fi
   - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
@@ -79,6 +78,8 @@ install:
   - $PY_CMD -m pip install --user -r requirements.txt
 
 script:
+  - if [ ${TRAVIS_OS_NAME} == "linux" ]; then exit 0; fi
+  - ${CXX} --version
   - cd ${TRAVIS_BUILD_DIR}
   - ./.travis_script.sh
 
