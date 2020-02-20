@@ -25,16 +25,19 @@ env:
 jobs:
   include:
     - os: osx
+      osx_image: xcode11
       compiler: gcc
       env:
-#        CC: gcc-6
-#        CXX: g++-6
+        CC: gcc-9
+        CXX: g++-9
         BUILD_TYPE: Release
     - os: osx
+      osx_image: xcode11
       compiler: clang
       env:
         BUILD_TYPE: Release
     - os: osx
+      osx_image: xcode11
       compiler: clang
       env:
         BUILD_TYPE: Install
@@ -70,7 +73,6 @@ addons:
       - libclang-3.8-dev
   homebrew:
     packages:
-      - gcc6
       - python@3.7.6
 
 install:
@@ -95,5 +97,6 @@ after_success:
   - lcov --remove coverage.info '${TRAVIS_BUILD_DIR}/thirdparty/*' --output-file coverage.info
   # Print coverage stats to the screen, for debug purposes
   - lcov --list coverage.info
+  - $PY_CMD -m coverage report
   # Upload report to CodeCov
   - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
