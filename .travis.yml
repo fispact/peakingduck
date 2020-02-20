@@ -9,8 +9,6 @@ compiler:
 
 os:
   - linux
-  - osx - #not working, fix later :(
-
 
 env:
   jobs:
@@ -22,7 +20,24 @@ env:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python${PYTHON}
     LD_LIBRARY_PATH: /usr/lib/llvm-3.8/lib/
-    
+
+# Define some additional jobs building on MacOS
+jobs:
+  include:
+    - os: osx
+      compiler: gcc
+      env:
+        CC: gcc-6
+        CXX: g++-6
+        BUILD_TYPE: Release
+    - os: osx
+      compiler: clang
+      env:
+        BUILD_TYPE: Release
+    - os: osx
+      compiler: clang
+      env:
+        BUILD_TYPE: Install
 
 # Handle git submodules yourself
 git:
@@ -56,7 +71,7 @@ addons:
       - libclang-3.8-dev
   homebrew:
     packages:
-      - gcc@6
+      - gcc6
       - python@3.7.6
 
 install:
