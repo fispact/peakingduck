@@ -2,17 +2,7 @@ language: cpp
 sudo: true
 dist: xenial
 
-# Handle git submodules yourself
-git:
-  submodules: false
-
-# Use sed to replace the SSH URL with the public URL, then initialize submodules
-before_install:
-  - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
-  - git submodule update --init --recursive
-  - PY_CMD=python3.7
-  - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
-
+# Define the build matrix
 compiler:
   - gcc
   - clang
@@ -20,6 +10,32 @@ compiler:
 os:
   - linux
   # - osx - #not working, fix later :(
+
+env:
+  jobs:
+    - BUILD_TYPE=Debug
+    - BUILD_TYPE=Release
+    - BUILD_TYPE=Install
+  global:
+    PYTHON: 3.7
+    PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
+    PY_CMD: python${PYTHON}
+    LD_LIBRARY_PATH: /usr/lib/llvm-3.8/lib/
+
+# Handle git submodules yourself
+git:
+  submodules: false
+
+# Only run on master  
+branches:
+  only:
+  - master
+
+# Use sed to replace the SSH URL with the public URL, then initialize submodules
+before_install:
+  - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+  - git submodule update --init --recursive
+  - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
 addons:
   apt:
@@ -36,36 +52,12 @@ addons:
       - clang-3.8
       - libclang-3.8-dev
 
-branches:
-  only:
-  - master
-
 install:
-#  - "[ $CXX = g++ ] && export CXX=g++-6 || true"
-#  - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
 
-env:
-  global:
-    PYTHON: 3.7
-    PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
-    LD_LIBRARY_PATH: /usr/lib/llvm-3.8/lib/
-  jobs:
-    - BUILD_TYPE=Debug
-    - BUILD_TYPE=Release
-    - BUILD_TYPE=Install
-
-# we should break this up into 3 separate builds
-# release, code coverage, and pip install
-# how to do stages in travis CI???
-
-#
-
-
 script:
   - cd ${TRAVIS_BUILD_DIR}
-  # Build the Python module and the tests
   - ./.travis_script.sh
 
 after_success:
