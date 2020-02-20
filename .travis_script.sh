@@ -9,7 +9,7 @@ then
     cd ${TRAVIS_BUILD_DIR}
     # Run c++ and python unit tests
     ./build/bin/peakingduckcpptests
-    coverage run --source ./peakingduck -m pytest --tb=long ./tests/py/testsuite.py
+    $PY_CMD -m coverage run --source ./peakingduck -m pytest --tb=long ./tests/py/testsuite.py
 else
     unset PYTHONPATH
     $PY_CMD -m pip install --user .
