@@ -58,6 +58,7 @@ branches:
 before_install:
   - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
+  - $PY_CMD --version
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
 addons:
@@ -74,9 +75,9 @@ addons:
 #      - g++-6
 #      - clang-3.8
       - libclang-7-dev
+      - python3-pip
 
 install:
-  - $PY_CMD --version
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
 
