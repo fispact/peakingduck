@@ -1,4 +1,4 @@
-language: python
+language: cpp
 sudo: true
 dist: bionic
 

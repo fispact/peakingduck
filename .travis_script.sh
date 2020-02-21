@@ -20,6 +20,6 @@ then
 else
     unset PYTHONPATH
     $PY_CMD -m pip install --user . || exit -1
-    pytest ./tests/py/testsuite.py || -1
+    $PY_CMD -m pytest ./tests/py/testsuite.py || exit -1
     # TODO: Test CMake installation
 fi
