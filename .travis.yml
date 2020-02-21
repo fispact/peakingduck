@@ -50,11 +50,10 @@ env:
   global:
     PYTHON: 3.7
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
-    LD_LIBRARY_PATH: /usr/lib/llvm-3.8/lib/
   jobs:
-    - BUILD_TYPE=Debug
-    - BUILD_TYPE=Release
-    - BUILD_TYPE=Install
+    BUILD_TYPE: Debug
+    BUILD_TYPE: Release
+    BUILD_TYPE: Install
 
 # we should break this up into 3 separate builds
 # release, code coverage, and pip install
@@ -66,7 +65,19 @@ env:
 script:
   - cd ${TRAVIS_BUILD_DIR}
   # Build the Python module and the tests
-  - ./.travis_script.sh
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON ..
+  - make -j4
+  - cd ${TRAVIS_BUILD_DIR}
+  # Run c++ and python unit tests
+  - ./build/bin/peakingduckcpptests
+  - coverage run --source ./peakingduck -m pytest --tb=long ./tests/py/testsuite.py
+  # just try with pip install now
+  #- unset PYTHONPATH
+  #- $PY_CMD -m pip install --user .
+  #- pytest ./tests/py/testsuite.py
+  # - $PY_CMD setup.py test
 
 after_success:
   # Skip this unless on a debug build
