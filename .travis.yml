@@ -9,8 +9,7 @@ compiler:
 
 os:
   - linux
-  - osx - #not working, fix later :(
-
+  # - osx - #not working, fix later :(
 
 env:
   jobs:
@@ -22,7 +21,6 @@ env:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python${PYTHON}
     LD_LIBRARY_PATH: /usr/lib/llvm-3.8/lib/
-    
 
 # Handle git submodules yourself
 git:
@@ -35,7 +33,6 @@ branches:
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-  - if [ ${TRAVIS_OS_NAME} == "osx" ]; then eval "CC=gcc-6 && CXX=g++-6"; fi
   - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
@@ -54,10 +51,6 @@ addons:
       - g++-6
       - clang-3.8
       - libclang-3.8-dev
-  homebrew:
-    packages:
-      - gcc@6
-      - python@3.7.6
 
 install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
@@ -70,7 +63,6 @@ script:
 after_success:
   # Skip this unless on a debug build
   - if [ ${BUILD_TYPE} != "Debug" ]; then exit 0; fi
-  - if [ ${TRAVIS_OS_NAME} != "linux" ]; then exit 0; fi
   - cd ${TRAVIS_BUILD_DIR}/build_coverage
   # Capture coverage info
   - lcov --directory . --capture --output-file coverage.info
