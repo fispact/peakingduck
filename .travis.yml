@@ -27,7 +27,9 @@ jobs:
       osx_image: xcode11
       compiler: gcc
       env:
-        - MATRIX_EVAL="brew install gcc7 export CC=gcc-7 && export CXX=g++-7 && export BUILD_TYPE=Release"
+        CC: gcc-7
+        CXX: g++-7
+        BUILD_TYPE: Release
       
 #    - os: osx
 #      osx_image: xcode11
@@ -52,7 +54,6 @@ branches:
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-  - eval "${MATRIX_EVAL}"
   - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
   - $PY_CMD --version
