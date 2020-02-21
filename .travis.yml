@@ -20,7 +20,7 @@ env:
   global:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python3
-    LD_LIBRARY_PATH: /usr/lib/llvm-3.8/lib/
+    LD_LIBRARY_PATH: /usr/lib/llvm-7/lib/
 
 # Define some additional jobs building on MacOS
 jobs:
