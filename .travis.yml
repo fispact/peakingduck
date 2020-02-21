@@ -3,20 +3,18 @@ sudo: true
 dist: bionic
 
 # Define the build matrix
-compiler:
-  - gcc
-  - clang
+#compiler:
+#  - gcc
+#  - clang
 
-python: 3.7
-
-os:
-  - linux
+#os:
+#  - linux
 
 env:
-  jobs:
-    - BUILD_TYPE=Debug
-    - BUILD_TYPE=Release
-    - BUILD_TYPE=Install
+#  jobs:
+#    - BUILD_TYPE=Debug
+#    - BUILD_TYPE=Release
+#    - BUILD_TYPE=Install
   global:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python3
@@ -29,19 +27,19 @@ jobs:
       osx_image: xcode11
       compiler: gcc
       env:
-        CC: gcc-9
-        CXX: g++-9
+        CC: gcc-7
+        CXX: g++-7
         BUILD_TYPE: Release
-    - os: osx
-      osx_image: xcode11
-      compiler: clang
-      env:
-        BUILD_TYPE: Release
-    - os: osx
-      osx_image: xcode11
-      compiler: clang
-      env:
-        BUILD_TYPE: Install
+#    - os: osx
+#      osx_image: xcode11
+#      compiler: clang
+#      env:
+#        BUILD_TYPE: Release
+#    - os: osx
+#      osx_image: xcode11
+#      compiler: clang
+#      env:
+#        BUILD_TYPE: Install
 
 # Handle git submodules yourself
 git:
@@ -74,6 +72,10 @@ addons:
 #      - g++-6
 #      - clang-3.8
       - libclang-7-dev
+  homebrew:
+    packages:
+      - gcc@7
+ 
 
 install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
