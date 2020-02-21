@@ -59,24 +59,28 @@ before_install:
 
 addons:
   apt:
-#    sources:
-#      - deadsnakes
-#      - ubuntu-toolchain-r-test
-#      - llvm-toolchain-precise-3.8
+    sources:
+      - deadsnakes
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.8
     packages:
-#      - python3.7-dev
-#      - python3-pip
-#      - python3-setuptools
+      - python3.7-dev
+      - python3-pip
+      - python3-setuptools
       - lcov
-#      - g++-6
-#      - clang-3.8
-      - libclang-dev
+      - g++-6
+      - clang-3.8
+      - libclang-3.8-dev
+  homebrew:
+    packages:
+      - python@3.7.6
 
 install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
 
 script:
+  - if [ ${TRAVIS_OS_NAME} == "linux" ]; then exit 0; fi
   - ${CXX} --version
   - cd ${TRAVIS_BUILD_DIR}
   - ./.travis_script.sh
