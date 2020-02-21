@@ -34,61 +34,54 @@ addons:
       - lcov
       - g++-6
       - clang-3.8
-      - libclang3.8-dev
 
 branches:
   only:
   - master
 
 install:
-#  - "[ $CXX = g++ ] && export CXX=g++-6 || true"
-#  - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
+  - "[ $CXX = g++ ] && export CXX=g++-6 || true"
+  - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
 
-env:
-  global:
-    PYTHON: 3.7
-    PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
-  jobs:
-    BUILD_TYPE: Debug
-    BUILD_TYPE: Release
-    BUILD_TYPE: Install
+env: PYTHON=3.7 PYTHONPATH=${TRAVIS_BUILD_DIR}/build/py
 
 # we should break this up into 3 separate builds
 # release, code coverage, and pip install
 # how to do stages in travis CI???
-
-#
-
-
 script:
   - cd ${TRAVIS_BUILD_DIR}
-  # Build the Python module and the tests
+  # do a release build first
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON ..
+  - cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON ..
   - make -j4
   - cd ${TRAVIS_BUILD_DIR}
-  # Run c++ and python unit tests
+  # run c++ and python unit tests
   - ./build/bin/peakingduckcpptests
-  - coverage run --source ./peakingduck -m pytest --tb=long ./tests/py/testsuite.py
+  - pytest ./tests/py/testsuite.py
+  # clean the release build
+  - rm -rf ${TRAVIS_BUILD_DIR}/build
+  # build the code coverage version
+  - export PYTHONPATH=${TRAVIS_BUILD_DIR}/build_coverage/py
+  - mkdir build_coverage
+  - cd build_coverage
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON ..
+  - make -j4
+  - cd ${TRAVIS_BUILD_DIR}
+  - ./build_coverage/bin/peakingduckcpptests
+  - pytest --tb=long ./tests/py/testsuite.py
   # just try with pip install now
-  #- unset PYTHONPATH
-  #- $PY_CMD -m pip install --user .
-  #- pytest ./tests/py/testsuite.py
+  - unset PYTHONPATH
+  - $PY_CMD -m pip install --user .
+  - pytest ./tests/py/testsuite.py
   # - $PY_CMD setup.py test
 
 after_success:
-  # Skip this unless on a debug build
-  - if [ ${BUILD_TYPE} != "Debug" ]; then exit 0; fi
   - cd ${TRAVIS_BUILD_DIR}/build_coverage
-  # Capture coverage info
-  - lcov --directory . --capture --output-file coverage.info
-  # Filter out system libraries and dependencies
-  - lcov --remove coverage.info '/usr/*' --output-file coverage.info
-  - lcov --remove coverage.info '${TRAVIS_BUILD_DIR}/thirdparty/*' --output-file coverage.info
-  # Print coverage stats to the screen, for debug purposes
-  - lcov --list coverage.info
-  # Upload report to CodeCov
+  - lcov --directory . --capture --output-file coverage.info # capture coverage info
+  - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
+  - lcov --list coverage.info #debug info
+  # Uploading report to CodeCov
   - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
