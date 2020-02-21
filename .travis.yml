@@ -1,6 +1,6 @@
 language: cpp
 sudo: true
-dist: xenial
+dist: bionic
 
 # Define the build matrix
 compiler:
@@ -50,6 +50,7 @@ git:
 branches:
   only:
   - master
+  - develop
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
@@ -70,7 +71,7 @@ addons:
       - lcov
 #      - g++-6
 #      - clang-3.8
-      - libclang-dev
+      - libclang-7-dev
 
 install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
