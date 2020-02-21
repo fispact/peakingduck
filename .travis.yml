@@ -20,7 +20,7 @@ env:
   global:
     PYTHON: 3.7
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
-    PY_CMD: python${PYTHON}
+    PY_CMD: python3
     LD_LIBRARY_PATH: /usr/lib/llvm-3.8/lib/
 
 # Define some additional jobs building on MacOS
@@ -76,6 +76,7 @@ addons:
       - libclang-7-dev
 
 install:
+  - $PY_CMD --version
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
 
