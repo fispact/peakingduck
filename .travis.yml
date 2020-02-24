@@ -49,7 +49,7 @@ env:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python3
     LD_LIBRARY_PATH: /usr/lib/llvm-7/lib/
-    PATH: /c/Python37:/c/Python37/Scripts:$PATH
+    PATH: c/ProgramData/chocolatey/bin:/c/Python37:/c/Python37/Scripts:$PATH
 
 jobs:
   # Exclude some jobs on Mac and Windows to reduce total number of builds
@@ -182,8 +182,8 @@ before_install:
     then
       choco install python
     fi
-  - git submodule update --init --recursive
   - $PY_CMD --version
+  - git submodule update --init --recursive
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
 install:
