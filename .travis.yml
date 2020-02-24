@@ -2,6 +2,27 @@ language: cpp
 sudo: true
 dist: bionic
 
+# Handle git submodules yourself
+git:
+  submodules: false
+
+# Only run on master  
+branches:
+  only:
+  - master
+  - develop
+
+addons:
+  apt:
+    sources:
+      - sourceline: "ppa:ubuntu-toolchain-r/test"
+    packages:
+      - python3-dev
+      - python3-pip
+      - python3-setuptools
+      - lcov
+      - libclang-7-dev
+
 # Define the build matrix
 compiler:
   - gcc
@@ -28,8 +49,8 @@ env:
     PY_CMD: python3
     LD_LIBRARY_PATH: /usr/lib/llvm-7/lib/
 
-# Define some additional jobs building on MacOS
 jobs:
+  # Exclude some jobs on Mac and Windows to reduce total number of builds
   exclude:
     - os: mac
       osx_image: xcode9.4
@@ -58,6 +79,7 @@ jobs:
       osx_image: xcode11
       env: BUILD_TYPE=Install
 
+  # Include some additional Mac jobs
   include:
     - os: osx
       osx_image: xcode11.3
@@ -79,6 +101,7 @@ jobs:
       env:
         BUILD_TYPE: Install
 
+ # Test other versions of GCC and clang
     - os: linux
       compiler: gcc
       env:
@@ -146,15 +169,6 @@ jobs:
         CXX: clang++-9
         BUILD_TYPE: Release
 
-# Handle git submodules yourself
-git:
-  submodules: false
-
-# Only run on master  
-branches:
-  only:
-  - master
-  - develop
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
@@ -163,23 +177,11 @@ before_install:
   - $PY_CMD --version
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
-addons:
-  apt:
-    sources:
-      - sourceline: "ppa:ubuntu-toolchain-r/test"
-    packages:
-      - python3-dev
-      - python3-pip
-      - python3-setuptools
-      - lcov
-      - libclang-7-dev
- 
-
 install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
   - |
-    if ${GCC} --version
+    if ${CXX} --version
     then
       sudo apt-get install ${CXX}
     fi
