@@ -80,13 +80,10 @@ jobs:
         CC: g++-9
         CXX: g++-9
         BUILD_TYPE: Release
-#   - os: linux
-#      compiler: clang
-#      addons:
-#        apt:
-#          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6']
-#          packages: ['clang-3.4']
-#      env: COMPILER=clang++-3.6
+      env:
+        CC: clang-3.6
+        CXX: clang++-3.6
+        BUILD_TYPE: Release
         
 # Handle git submodules yourself
 git:
