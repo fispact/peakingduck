@@ -181,7 +181,7 @@ before_install:
     if [ ${TRAVIS_OS_NAME} == "windows" ]
     then
       choco install python
-      export PY_CMD=python
+      export PY_CMD=py
     fi
   - $PY_CMD --version
   - git submodule update --init --recursive
