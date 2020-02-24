@@ -42,40 +42,40 @@ jobs:
 #        BUILD_TYPE: Install
     - os: linux
       compiler: gcc
-      addons:
-        apt:
+#      addons:
+#        apt:
 #          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5']
+#          packages: ['g++-5']
       env:
         CC: g++-5
         CXX: g++-5
         BUILD_TYPE: Release
     - os: linux
       compiler: gcc
-      addons:
-        apt:
+#      addons:
+#        apt:
 #          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-6']
+#          packages: ['g++-6']
       env:
         CC: g++-6
         CXX: g++-6
         BUILD_TYPE: Release
     - os: linux
       compiler: gcc
-      addons:
-        apt:
+#      addons:
+#        apt:
 #          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-8']
+#          packages: ['g++-8']
       env:
         CC: g++-8
         CXX: g++-8
         BUILD_TYPE: Release
     - os: linux
       compiler: gcc
-      addons:
-        apt:
+#      addons:
+#        apt:
 #          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-9']
+#          packages: ['g++-9']
       env:
         CC: g++-9
         CXX: g++-9
@@ -118,6 +118,7 @@ addons:
 install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
+  - apt-get install ${CXX}
 
 script:
   - ${CXX} --version
