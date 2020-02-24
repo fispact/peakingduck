@@ -24,7 +24,7 @@ env:
 jobs:
   include:
     - os: osx
-      osx_image: xcode11
+      osx_image: xcode10.3
       compiler: gcc
       env:
         CC: gcc-9
@@ -58,11 +58,17 @@ jobs:
 #        CC: gcc-8
 #        CXX: g++-8
 #        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: gcc
+#      env:
+#        CC: gcc-9
+#        CXX: g++-9
+#        BUILD_TYPE: Release
     - os: linux
-      compiler: gcc
+      compiler: clang
       env:
-        CC: gcc-9
-        CXX: g++-9
+        CC: clang-3.8
+        CXX: clang++-3.8
         BUILD_TYPE: Release
 #    - os: linux
 #      compiler: clang
@@ -122,6 +128,7 @@ addons:
   apt:
     sources:
       - sourceline: "ppa:ubuntu-toolchain-r/test"
+      - llvm-toolchain-precise-3.8
     packages:
       - python3-dev
       - python3-pip
