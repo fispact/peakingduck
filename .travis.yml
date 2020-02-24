@@ -182,6 +182,7 @@ before_install:
     then
       choco install python
       export PY_CMD=py
+      export PY_PATH=c/ProgramData/chocolatey/bin
     fi
   - $PY_CMD --version
   - git submodule update --init --recursive
