@@ -32,10 +32,28 @@ env:
 jobs:
   exclude:
     - os: mac
+      osx_image: xcode9.4
       compiler: gcc
     - os: mac
+      osx_image: xcode10
+      compiler: gcc
+    - os: mac
+      osx_image: xcode10.3
+      compiler: gcc
+    - os: mac
+      osx_image: xcode11
+      compiler: gcc
+    - os: mac
+      osx_image: xcode9.4
       env: BUILD_TYPE=Debug
     - os: mac
+      osx_image: xcode10
+      env: BUILD_TYPE=Install
+    - os: mac
+      osx_image: xcode10.3
+      env: BUILD_TYPE=Install
+    - os: mac
+      osx_image: xcode11
       env: BUILD_TYPE=Install
 
   include:
@@ -54,10 +72,11 @@ jobs:
         CXX: g++-9
         BUILD_TYPE: Install
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode11.3
       compiler: clang
       env:
         BUILD_TYPE: Install
+
     - os: linux
       compiler: gcc
       env:
@@ -158,13 +177,12 @@ install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
   - |
-    if [ ${TRAVIS_OS_NAME} == "linux" ]
+    if ${GCC} --version
     then
       sudo apt-get install ${CXX}
     fi
 
 script:
-  - ${CXX} --version
   - cd ${TRAVIS_BUILD_DIR}
   - ./.travis_script.sh
 
