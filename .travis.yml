@@ -27,10 +27,9 @@ jobs:
       osx_image: xcode11
       compiler: gcc
       env:
-        CC: gcc-7
-        CXX: g++-7
+        CC: gcc-9
+        CXX: g++-9
         BUILD_TYPE: Release
-      
 #    - os: osx
 #      osx_image: xcode11
 #      compiler: clang
@@ -41,7 +40,54 @@ jobs:
 #      compiler: clang
 #      env:
 #        BUILD_TYPE: Install
-
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+#          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
+      env:
+        CC: g++-5
+        CXX: g++-5
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+#          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-6']
+      env:
+        CC: g++-6
+        CXX: g++-6
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+#          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-8']
+      env:
+        CC: g++-8
+        CXX: g++-8
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+#          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-9']
+      env:
+        CC: g++-9
+        CXX: g++-9
+        BUILD_TYPE: Release
+#   - os: linux
+#      compiler: clang
+#      addons:
+#        apt:
+#          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6']
+#          packages: ['clang-3.4']
+#      env: COMPILER=clang++-3.6
+        
 # Handle git submodules yourself
 git:
   submodules: false
@@ -67,10 +113,6 @@ addons:
       - python3-setuptools
       - lcov
       - libclang-7-dev
-  homebrew:
-    packages:
-      - gcc@7
-    update: true
  
 
 install:
