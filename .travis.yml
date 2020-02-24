@@ -118,7 +118,7 @@ addons:
 install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
-  - apt-get install ${CXX}
+  - sudo apt-get install ${CXX}
 
 script:
   - ${CXX} --version
