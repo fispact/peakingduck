@@ -40,66 +40,76 @@ jobs:
 #      compiler: clang
 #      env:
 #        BUILD_TYPE: Install
-    - os: linux
-      compiler: gcc
-      env:
-        CC: gcc-5
-        CXX: g++-5
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: gcc
-      env:
-        CC: gcc-6
-        CXX: g++-6
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: gcc
-      env:
-        CC: gcc-8
-        CXX: g++-8
-        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: gcc
+#      env:
+#        CC: gcc-5
+#        CXX: g++-5
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: gcc
+#      env:
+#        CC: gcc-6
+#        CXX: g++-6
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: gcc
+#      env:
+#        CC: gcc-8
+#        CXX: g++-8
+#        BUILD_TYPE: Release
     - os: linux
       compiler: gcc
       env:
         CC: gcc-9
         CXX: g++-9
         BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-3.9
-        CXX: clang++-3.9
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-4.0
-        CXX: clang++-4.0
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-5.0
-        CXX: clang++-5.0
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-6.0
-        CXX: clang++-6.0
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-8
-        CXX: clang++-8
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-9
-        CXX: clang++-9
-        BUILD_TYPE: Release
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - python3-dev
+          - python3-pip
+          - python3-setuptools
+          - lcov
+          - libclang-7-dev
+          - gcc-9
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-3.9
+#        CXX: clang++-3.9
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-4.0
+#        CXX: clang++-4.0
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-5.0
+#        CXX: clang++-5.0
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-6.0
+#        CXX: clang++-6.0
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-8
+#        CXX: clang++-8
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-9
+#        CXX: clang++-9
+#        BUILD_TYPE: Release
 
 # Handle git submodules yourself
 git:
@@ -120,7 +130,7 @@ before_install:
 
 addons:
   apt:
-   packages:
+    packages:
       - python3-dev
       - python3-pip
       - python3-setuptools
@@ -134,7 +144,6 @@ install:
   - |
     if [ ${TRAVIS_OS_NAME} == "linux" ]
     then
-      sudo apt-get update
       sudo apt-get install ${CXX}
     fi
 
