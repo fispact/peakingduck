@@ -131,7 +131,12 @@ addons:
 install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
-  - sudo apt-get install ${CXX}
+  - |
+    if [ ${TRAVIS_OS_NAME} != "linux" ]
+    then
+      sudo apt-get update
+      sudo apt-get install ${CXX}
+    fi
 
 script:
   - ${CXX} --version
