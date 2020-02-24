@@ -29,8 +29,9 @@ compiler:
   - clang
 
 os:
-  - linux
-  - mac
+#  - linux
+#  - mac
+  - windows
 
 osx_image:
   - xcode9.4
@@ -48,6 +49,7 @@ env:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python3
     LD_LIBRARY_PATH: /usr/lib/llvm-7/lib/
+    PATH: /c/Python37:/c/Python37/Scripts:$PATH
 
 jobs:
   # Exclude some jobs on Mac and Windows to reduce total number of builds
@@ -78,101 +80,109 @@ jobs:
     - os: mac
       osx_image: xcode11
       env: BUILD_TYPE=Install
+    - os: windows
+      env: BUILD_TYPE=Debug
 
   # Include some additional Mac jobs
-  include:
-    - os: osx
-      osx_image: xcode11.3
-      compiler: gcc
-      env:
-        CC: gcc-9
-        CXX: g++-9
-        BUILD_TYPE: Release
-    - os: osx
-      osx_image: xcode11.3
-      compiler: gcc
-      env:
-        CC: gcc-9
-        CXX: g++-9
-        BUILD_TYPE: Install
-    - os: osx
-      osx_image: xcode11.3
-      compiler: clang
-      env:
-        BUILD_TYPE: Install
-
- # Test other versions of GCC and clang
-    - os: linux
-      compiler: gcc
-      env:
-        CC: gcc-5
-        CXX: g++-5
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: gcc
-      env:
-        CC: gcc-6
-        CXX: g++-6
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: gcc
-      env:
-        CC: gcc-8
-        CXX: g++-8
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: gcc
-      env:
-        CC: gcc-9
-        CXX: g++-9
-        BUILD_TYPE: Release
-##    - os: linux
-##      compiler: clang
-##      env:
-##        CC: clang-3.8
-##        CXX: clang++-3.8
-##        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-3.9
-        CXX: clang++-3.9
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-4.0
-        CXX: clang++-4.0
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-5.0
-        CXX: clang++-5.0
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-6.0
-        CXX: clang++-6.0
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-8
-        CXX: clang++-8
-        BUILD_TYPE: Release
-    - os: linux
-      compiler: clang
-      env:
-        CC: clang-9
-        CXX: clang++-9
-        BUILD_TYPE: Release
+#  include:
+#    - os: osx
+#      osx_image: xcode11.3
+#      compiler: gcc
+#      env:
+#        CC: gcc-9
+#        CXX: g++-9
+#        BUILD_TYPE: Release
+#    - os: osx
+#      osx_image: xcode11.3
+#      compiler: gcc
+#      env:
+#        CC: gcc-9
+#        CXX: g++-9
+#        BUILD_TYPE: Install
+#    - os: osx
+#      osx_image: xcode11.3
+#      compiler: clang
+#      env:
+#        BUILD_TYPE: Install
+#
+# # Test other versions of GCC and clang
+#    - os: linux
+#      compiler: gcc
+#      env:
+#        CC: gcc-5
+#        CXX: g++-5
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: gcc
+#      env:
+#        CC: gcc-6
+#        CXX: g++-6
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: gcc
+#      env:
+#        CC: gcc-8
+#        CXX: g++-8
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: gcc
+#      env:
+#        CC: gcc-9
+#        CXX: g++-9
+#        BUILD_TYPE: Release
+###    - os: linux
+###      compiler: clang
+###      env:
+###        CC: clang-3.8
+###        CXX: clang++-3.8
+###        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-3.9
+#        CXX: clang++-3.9
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-4.0
+#        CXX: clang++-4.0
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-5.0
+#        CXX: clang++-5.0
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-6.0
+#        CXX: clang++-6.0
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-8
+#        CXX: clang++-8
+#        BUILD_TYPE: Release
+#    - os: linux
+#      compiler: clang
+#      env:
+#        CC: clang-9
+#        CXX: clang++-9
+#        BUILD_TYPE: Release
 
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
   - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+  - |
+    if [ ${TRAVIS_OS_NAME} == "windows" ]
+    then
+      choco install python
+      export PY_CMD=python
+    fi
   - git submodule update --init --recursive
   - $PY_CMD --version
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
