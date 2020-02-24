@@ -180,11 +180,7 @@ before_install:
 install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
-  - |
-    if ${CXX} --version
-    then
-      sudo apt-get install ${CXX}
-    fi
+  - ${CXX} --version || sudo apt-get install ${CXX}
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
