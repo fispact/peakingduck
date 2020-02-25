@@ -186,7 +186,8 @@ before_install:
       export MK_CMD=mingw32-make
       export PY_EXE_PATH=c/ProgramData/chocolatey/bin/
       export PY_LIB_PATH=c/Python38/
-      export WINDOWS_CMAKE_ARGS="-G \"MinGW Makefiles\" -DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH}"
+      export PY_INC_PATH=c/Python38/include
+      export WINDOWS_CMAKE_ARGS="-G \"MinGW\\ Makefiles\" -DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE=${PY_INC_PATH}"
     fi
   - $PY_CMD --version
   - git submodule update --init --recursive
@@ -200,8 +201,9 @@ install:
   - which g++
   - which ${MK_CMD}
   - which clang++
-  - ls C:/Program\ Files/LLVM
-  - ls C:/Program\ Files/LLVM/lib
+  - ls C:/Program\ Files/LLVM/libexec
+  - ls C:/Program\ Files/LLVM/lib/site-packages
+  - ls C:/Python38/libs
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
