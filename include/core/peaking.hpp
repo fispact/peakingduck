@@ -186,6 +186,85 @@ PEAKINGDUCK_NAMESPACE_START(core)
         // nrofpeaks? getstored?
     };    
 
+    /*!
+       @brief Interface for peak finding algorithms
+
+       Operates on numerical data (filtered or unfiltered)
+       Never mutates the input (always const process)
+       returns a list of peaks - PeakList
+    */
+    template<typename ValueType=DefaultType, 
+             int Size=ArrayTypeDynamic>
+    struct SimplePeakFinder : public IPeakFinder<ValueType, Size>
+    {
+        SimplePeakFinder(ValueType percentThreshold) :
+            _percentThreshold(percentThreshold)
+        {
+        };
+
+        virtual ~SimplePeakFinder()
+        {
+        };
+        
+        /*!
+           @brief Identifies potential peaks in the data based on a simple
+           global threshold of max coefficient
+        */
+        virtual PeakList<ValueType>
+        find(const NumericalData<ValueType, Size>& data) const override{
+
+            const ValueType relativeThreshold = data.maxCoeff()*_percentThreshold;
+            
+            // find consecutive bins for a peak group (indices)
+            using PeakGroup = std::vector<size_t>;
+
+            // identify values greater than the threshold
+            // and store their consecutive indices
+            PeakGroup local_peak;
+            std::vector<PeakGroup> peak_groups;
+
+            // can we use the STL instead - maybe std::partition?
+            int last_index = -1;
+            for(auto i=0; i<data.size(); ++i){
+                if(data[i] > relativeThreshold){
+                    if((last_index + 1 < i) && (last_index >=0)){
+                        peak_groups.emplace_back(local_peak);
+                        local_peak.resize(0);
+                    }
+                    local_peak.emplace_back(i);
+                    last_index = i;
+                }
+            }
+
+            if(local_peak.size() > 0){
+                peak_groups.emplace_back(local_peak);
+            }
+
+            PeakList<ValueType> peaks;
+
+            // find maximum in each group
+            size_t max_index = -1;
+            ValueType max_value = -1;
+            for(auto& group: peak_groups){
+                max_value = -1.0;
+                max_index = -1;
+                for(auto i: group){
+                    if(data[i] > max_value){
+                        max_value = data[i];
+                        max_index = i;
+                    }
+                }
+
+                peaks.emplace_back(PeakInfo<ValueType>(max_index, data[max_index]));
+            }
+
+            return peaks;
+        }
+        
+      private:
+        const ValueType _percentThreshold;
+    };    
+
 PEAKINGDUCK_NAMESPACE_END
 PEAKINGDUCK_NAMESPACE_END
 
