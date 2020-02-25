@@ -188,8 +188,8 @@ before_install:
       export PY_LIB_PATH=c/Python38/lib/
       export WINDOWS_CMAKE_ARGS='-G "MinGW Makefiles" -DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH}'
     fi
-  - ls c/Python38/
-  - ls c/Python38/lib
+  - ls C:/Python38/
+  - ls C:/Python38/lib
   - $PY_CMD --version
   - git submodule update --init --recursive
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
