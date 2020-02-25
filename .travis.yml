@@ -51,6 +51,7 @@ env:
     MK_CMD: make
     LD_LIBRARY_PATH: /usr/lib/llvm-7/lib/
     PATH: c/ProgramData/chocolatey/bin:/c/Python37:/c/Python37/Scripts:$PATH
+    CMAKE_GENERATOR: "Unix Makefiles"
 
 jobs:
   # Exclude some jobs on Mac and Windows to reduce total number of builds
@@ -187,7 +188,8 @@ before_install:
       export PY_EXE_PATH=c/ProgramData/chocolatey/bin/
       export PY_LIB_PATH=c/Python38/
       export PY_INC_PATH=c/Python38/include
-      export WINDOWS_CMAKE_ARGS="-G \"MinGW\\ Makefiles\" -DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE=${PY_INC_PATH}"
+      export CMAKE_GENERATOR="MinGW Makefiles"
+      export WINDOWS_CMAKE_ARGS="-DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE=${PY_INC_PATH}"
     fi
   - $PY_CMD --version
   - git submodule update --init --recursive
