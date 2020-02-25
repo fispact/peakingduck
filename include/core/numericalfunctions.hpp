@@ -32,6 +32,12 @@ PEAKINGDUCK_NAMESPACE_START(core)
     {
         // using typename Derived::value_type numerical_type;
         
+        // standard deviation - not in Eigen but is needed
+        decltype(auto) stddev(int ddof=0) const{
+            assert(this->underlying().size() > 1);
+            return std::sqrt((this->underlying() - this->underlying().mean()).square().sum()/(this->underlying().size()-ddof));
+        }
+
         /*!
             @brief log(log(sqrt(value + 1) + 1) + 1)
             Returns a new array
