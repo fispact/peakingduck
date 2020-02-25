@@ -4,7 +4,6 @@ if [ ${BUILD_TYPE} != "Install" ]
 then
     mkdir build
     cd build
-    echo cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON ${WINDOWS_CMAKE_ARGS} ..
     cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON -G "${CMAKE_GENERATOR}" ${WINDOWS_CMAKE_ARGS} .. || exit -1
     ${MK_CMD} -j4 || exit -1
     cd ${TRAVIS_BUILD_DIR} || exit -1
