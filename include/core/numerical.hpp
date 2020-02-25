@@ -63,7 +63,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
     struct NumericalData : private Array1D<T, Size>, 
-                          public NumericalFunctions<NumericalData<T, Size>>
+                           public NumericalFunctions<NumericalData<T, Size>>
     {
             using value_type = T;
 
@@ -191,12 +191,6 @@ PEAKINGDUCK_NAMESPACE_START(core)
             using BaseEigenArray::sum;
             using BaseEigenArray::maxCoeff;
             using BaseEigenArray::minCoeff;
-
-            // standard deviation - not in Eigen but is needed
-            value_type stddev(int ddof=0) const{
-                assert(this->size() > 1);
-                return std::sqrt((this->BaseEigenArray::operator-(this->mean())).square().sum()/(this->size()-ddof));
-            }
 
             // custom unary operations
             using BaseEigenArray::unaryExpr;
