@@ -598,6 +598,13 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
     .def("find", &IPeakFinderPyType::find,
 	 "Identifies potential peaks in the data");
 
+    // peak finder objects
+    using SimplePeakFinderPyType = core::SimplePeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<SimplePeakFinderPyType, IPeakFinderPyType, std::shared_ptr<SimplePeakFinderPyType>>(m_core, "SimplePeakFinder")
+        .def(py::init<NumericalDataCoreType>(), 
+            py::arg("threshold") = 0)
+        .def("find", &SimplePeakFinderPyType::find);
+
     // histogram objects
     using HistPyType = core::Histogram<double,double>;
     using HistChannelPyType = core::Histogram<int,double>;
