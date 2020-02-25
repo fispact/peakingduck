@@ -4,8 +4,8 @@ if [ ${BUILD_TYPE} != "Install" ]
 then
     mkdir build
     cd build
-    cmake -DPYTHON_EXECUTABLE:FILEPATH=${PY_PATH} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON .. || exit -1
-    make -j4 || exit -1
+    cmake -DPython_ROOT_DIR=${PY_PATH} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON .. || exit -1
+    ${MK_CMD} -j4 || exit -1
     cd ${TRAVIS_BUILD_DIR} || exit -1
     # Run c++ and python unit tests
     ./build/bin/peakingduckcpptests

@@ -48,6 +48,7 @@ env:
   global:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python3
+    MK_CMD: make
     LD_LIBRARY_PATH: /usr/lib/llvm-7/lib/
     PATH: c/ProgramData/chocolatey/bin:/c/Python37:/c/Python37/Scripts:$PATH
 
@@ -182,6 +183,7 @@ before_install:
     then
       choco install python
       export PY_CMD=py
+      export MK_CMD=mingw32-make
       export PY_PATH=c/ProgramData/chocolatey/
     fi
   - $PY_CMD --version
