@@ -188,7 +188,7 @@ before_install:
       PY_EXE_PATH=c/ProgramData/chocolatey/bin/
       PY_LIB_PATH=c/Python38/
       PY_INC_PATH=c/Python38/include
-      export CMAKE_GENERATOR=MSYS Makefiles"
+      export CMAKE_GENERATOR="MSYS Makefiles"
       export WINDOWS_CMAKE_ARGS="-DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE=${PY_INC_PATH}"
     fi
   - git submodule update --init --recursive
