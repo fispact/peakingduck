@@ -82,6 +82,8 @@ jobs:
       env: BUILD_TYPE=Install
     - os: windows
       env: BUILD_TYPE=Debug
+    - os: windows
+      compiler: clang
 
   # Include some additional Mac jobs
 #  include:
@@ -130,12 +132,6 @@ jobs:
 #        CC: gcc-9
 #        CXX: g++-9
 #        BUILD_TYPE: Release
-###    - os: linux
-###      compiler: clang
-###      env:
-###        CC: clang-3.8
-###        CXX: clang++-3.8
-###        BUILD_TYPE: Release
 #    - os: linux
 #      compiler: clang
 #      env:
