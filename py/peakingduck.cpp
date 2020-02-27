@@ -522,7 +522,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
                      - if N=3, weights=[1,2,1] -> [1/4, 2/4, 1/4]
                      - if N=4, weights=[1,2,2,1] -> [1/6, 2/6, 2/6, 1/6]
                      - if N=5, weights=[1,2,3,2,1] -> [1/9, 2/9, 3/9, 2/9, 1/9]
-                     - ....)pbdoc")
+                     - ...)pbdoc")
         .def(py::init<int>());
 
     // peak filter objects
