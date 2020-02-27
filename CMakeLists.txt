@@ -104,6 +104,7 @@ endif()
 
 # python bindings
 if(BUILD_PY_BINDINGS)
+        add_subdirectory(${THIRD_PARTY_DIR}/pybind11)
 	add_subdirectory(${PYTHON_PROJECT_DIR_BASE})
 endif(BUILD_PY_BINDINGS)
 

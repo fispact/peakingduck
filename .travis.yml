@@ -191,8 +191,6 @@ before_install:
       export CMAKE_GENERATOR="MSYS Makefiles"
       export WINDOWS_CMAKE_ARGS="-DCMAKE_MAKE_PROGRAM=${MK_CMD} -DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE_DIR=${PY_INC_PATH}"
     fi
-  - echo ${MK_CMD} --version
-  - ${MK_CMD} --version
   - git submodule update --init --recursive
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
@@ -200,9 +198,6 @@ install:
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
   - ${CXX} --version || sudo apt-get install ${CXX}
-  - which clang++
-  - ls C:/Program\ Files/LLVM/libexec
-  - ls C:/Program\ Files/LLVM/lib/site-packages
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
