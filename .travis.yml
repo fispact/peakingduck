@@ -21,7 +21,6 @@ addons:
       - python3-pip
       - python3-setuptools
       - lcov
-      - libclang-7-dev
 
 # Define the build matrix
 compiler:
@@ -48,10 +47,7 @@ env:
   global:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python3
-    MK_CMD: make
-    LD_LIBRARY_PATH: /usr/lib/llvm-7/lib/
     PATH: c/ProgramData/chocolatey/bin:/c/Python37:/c/Python37/Scripts:$PATH
-    CMAKE_GENERATOR: "Unix Makefiles"
 
 jobs:
   # Exclude some jobs on Mac and Windows to reduce total number of builds
@@ -84,6 +80,8 @@ jobs:
       env: BUILD_TYPE=Install
     - os: windows
       env: BUILD_TYPE=Debug
+    - os: windows
+      compiler: clang
 
   # Include some additional Mac jobs
 #  include:
@@ -184,11 +182,9 @@ before_install:
     then
       choco install python
       export PY_CMD=py
-      export MK_CMD=mingw32-make
       PY_EXE_PATH=c/ProgramData/chocolatey/bin/
       PY_LIB_PATH=c/Python38/
       PY_INC_PATH=c/Python38/include
-      export CMAKE_GENERATOR="MSYS Makefiles"
       export WINDOWS_CMAKE_ARGS="-DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE=${PY_INC_PATH}"
     fi
   - git submodule update --init --recursive
