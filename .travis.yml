@@ -185,12 +185,13 @@ before_install:
       choco install python
       export PY_CMD=py
       export MK_CMD=mingw32-make
-      PY_EXE_PATH=c/ProgramData/chocolatey/bin/
+      PY_EXE_PATH=c/ProgramData/chocolatey/bin/py
       PY_LIB_PATH=c/Python38/
       PY_INC_PATH=c/Python38/include
       export CMAKE_GENERATOR="MSYS Makefiles"
       export WINDOWS_CMAKE_ARGS="-DCMAKE_MAKE_PROGRAM=${MK_CMD} -DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE_DIR=${PY_INC_PATH}"
     fi
+  - which ${PY_CMD}
   - ${PY_CMD} -c "from distutils import sysconfig as s;import sys;import struct;print('.'.join(str(v) for v in sys.version_info));print(sys.prefix);print(s.get_python_inc(plat_specific=True));print(s.get_python_lib(plat_specific=True));print(s.get_config_var('SO'));print(hasattr(sys, 'gettotalrefcount')+0);print(struct.calcsize('@P'));print(s.get_config_var('LDVERSION') or s.get_config_var('VERSION'));print(s.get_config_var('LIBDIR') or '');print(s.get_config_var('MULTIARCH') or '');"
   - git submodule update --init --recursive
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
