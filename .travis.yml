@@ -185,7 +185,8 @@ before_install:
       choco install python
       export PY_CMD=py
       export MK_CMD=mingw32-make
-      PY_EXE_PATH=/c/ProgramData/chocolatey/bin/py
+      PY_EXE_PATH=/c/Windows/py
+      #PY_EXE_PATH=/c/ProgramData/chocolatey/bin/py
       PY_LIB_PATH=/c/Python38/
       PY_INC_PATH=/c/Python38/include
       export CMAKE_GENERATOR="MSYS Makefiles"
