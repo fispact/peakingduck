@@ -48,6 +48,8 @@ env:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python3
     PATH: c/ProgramData/chocolatey/bin:/c/Python37:/c/Python37/Scripts:$PATH
+    CMAKE_GENERATOR: "Unix Makefiles"
+    MK_CMD: make
 
 jobs:
   # Exclude some jobs on Mac and Windows to reduce total number of builds
@@ -182,11 +184,14 @@ before_install:
     then
       choco install python
       export PY_CMD=py
+      export MK_CMD=mingw32-make
       PY_EXE_PATH=c/ProgramData/chocolatey/bin/
       PY_LIB_PATH=c/Python38/
       PY_INC_PATH=c/Python38/include
+      export CMAKE_GENERATOR="MSYS Makefiles"
       export WINDOWS_CMAKE_ARGS="-DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE_DIR=${PY_INC_PATH}"
     fi
+  - ${MK_COMMAND} --version
   - git submodule update --init --recursive
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
