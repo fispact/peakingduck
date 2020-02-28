@@ -13,7 +13,9 @@ then
     $PY_CMD -m coverage run --source ./peakingduck -m pytest --tb=long ./tests/py/testsuite.py
     pystat=$?
     mv ./build/py/PEAKINGDUCK.cp38-win_amd64.pyd ./build/py/PEAKINGDUCK.pyd
-    echo $PYTHONPATH
+#    cp ./build/py/PEAKINGDUCK.cp38-win_amd64.pyd . || exit -1
+#    cp ./build/py/PEAKINGDUCK.cp38-win_amd64.pyd peakingduck/util/ || exit -1
+    echo "Python path is: $PYTHONPATH"
     if [ $cppstat != 0 -o $pystat != 0 ]
     then
 	exit -1
