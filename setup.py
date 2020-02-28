@@ -9,6 +9,7 @@ from shutil import copy
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
+from distutils import sysconfig
 
 
 VERSION = ""
@@ -76,13 +77,15 @@ class CMakeBuild(build_ext):
             os.makedirs(extdir)
 
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
-                      '-DPYTHON_EXECUTABLE=' + sys.executable]
+                      '-DPYTHON_EXECUTABLE=' + sys.executable,
+                      '-DPYTHON_INCLUDE_DIR=' + sysconfig.get_python_inc()]
 
         cfg = 'Debug' if self.debug else 'Release'
         build_args = ['--config', cfg]
 
         if platform.system() == "Windows":
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), extdir)]
+            cmake_args.append('-DCMAKE_MAKE_PROGRAM=mingw32-make')
             if sys.maxsize > 2**32:
                 cmake_args += ['-A', 'x64']
             build_args += ['--', '/m']
