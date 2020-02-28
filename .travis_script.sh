@@ -12,10 +12,7 @@ then
     cppstat=$?
     $PY_CMD -m coverage run --source ./peakingduck -m pytest --tb=long ./tests/py/testsuite.py
     pystat=$?
-    ls ./build/
-    ls ./build/bin/
-    ls ./build/py/
-    realpath ./build/py/
+    mv ./build/py/PEAKINGDUCK.cp38-win_amd64.pyd ./build/py/PEAKINGDUCK.pyd
     echo $PYTHONPATH
     if [ $cppstat != 0 -o $pystat != 0 ]
     then
