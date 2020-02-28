@@ -3,9 +3,6 @@
 if [ ${BUILD_TYPE} != "Install" ]
 then
     mkdir build
-    mkdir build/py
-    mv pypath_test_lib.py build/py
-    ${PY_CMD} pypath_test.py
     cd build
     cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON ${WINDOWS_CMAKE_ARGS} .. || exit -1
     ${MK_CMD} -j4 || exit -1
@@ -13,8 +10,6 @@ then
     # Run c++ and python unit tests
     ./build/bin/peakingduckcpptests
     cppstat=$?
-    cp ./build/py/PEAKINGDUCK.cp38-win_amd64.pyd . || exit -1
-    cp ./build/py/PEAKINGDUCK.cp38-win_amd64.pyd peakingduck/util/ || exit -1
     echo "Python path is: $PYTHONPATH"
     $PY_CMD -m coverage run --source ./peakingduck -m pytest --tb=long ./tests/py/testsuite.py
     pystat=$?

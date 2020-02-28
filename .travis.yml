@@ -176,9 +176,9 @@ before_install:
     if [ ${TRAVIS_OS_NAME} == "windows" ]
     then
       choco install python
-      export PY_CMD=/c/Windows/py
+      export PY_CMD=/c/Python38/python.exe
       export MK_CMD=mingw32-make
-      PY_EXE_PATH=/c/Windows/py
+      PY_EXE_PATH=${PY_CMD}
       PY_LIB_PATH=/c/Python38/python38.dll
       PY_INC_PATH=/c/Python38/include
       export CMAKE_GENERATOR="MSYS Makefiles"
