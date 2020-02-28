@@ -186,7 +186,6 @@ before_install:
     fi
   - ls /c/Python38/
   - ls /c/Python38/Scripts
-  - ls /c/Python38/bin
   - git submodule update --init --recursive
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
