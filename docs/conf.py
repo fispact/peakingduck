@@ -15,6 +15,8 @@
 import os
 import sys
 import subprocess
+from sysconfig import get_path
+
 sys.path.insert(0, os.path.abspath('../'))
 
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
@@ -24,7 +26,7 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 if read_the_docs_build:
     subprocess.run(['g++', '-DPEAKINGDUCK_EXPORTS',
                     '-I../thirdparty/pybind11/include',
-                    '-I/usr/include/python3.7m',
+                    '-I' + get_path('include'),
                     '-I../thirdparty/units/include', '-I../thirdparty/eigen',
                     '-I../include', '-fPIC', '-fvisibility=hidden', '-shared',
                     '-o', '../PEAKINGDUCK.so', '../py/peakingduck.cpp'])
