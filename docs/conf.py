@@ -31,15 +31,15 @@ if read_the_docs_build:
                     '-I../thirdparty/units/include', '-I../thirdparty/eigen',
                     '-I../include', '-fPIC', '-fvisibility=hidden', '-shared',
                     '-o', '../PEAKINGDUCK.so', '../py/peakingduck.cpp']))
-    complete = subprocess.run(['g++', '-DPEAKINGDUCK_EXPORTS',
-                               '-I../thirdparty/pybind11/include',
-                               '-I' + get_path('include'),
-                               '-I../thirdparty/units/include',
-                               '-I../thirdparty/eigen', '-I../include',
-                               '-fPIC', '-fvisibility=hidden', '-shared',
-                               '-o', '../PEAKINGDUCK.so',
-                               '../py/peakingduck.cpp'])
-    assert complete.returncode == 0, "Failed to build PyBind extension"
+    # complete = subprocess.run(['g++', '-DPEAKINGDUCK_EXPORTS',
+    #                            '-I../thirdparty/pybind11/include',
+    #                            '-I' + get_path('include'),
+    #                            '-I../thirdparty/units/include',
+    #                            '-I../thirdparty/eigen', '-I../include',
+    #                            '-fPIC', '-fvisibility=hidden', '-shared',
+    #                            '-o', '../PEAKINGDUCK.so',
+    #                            '../py/peakingduck.cpp'])
+    # assert complete.returncode == 0, "Failed to build PyBind extension"
 
 
 # -- Project information -----------------------------------------------------
