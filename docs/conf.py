@@ -23,6 +23,9 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 # -- Build extension --------------------------------------------------------
 
+print("Is printing going to work?")
+print(get_path('include'))
+exit(-1)
 if read_the_docs_build:
     print(get_path('include'))
     print(" ".join(['g++', '-DPEAKINGDUCK_EXPORTS',
