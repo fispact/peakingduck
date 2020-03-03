@@ -31,10 +31,6 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
             - Entry 1
             - Entry 2
 
-        .. currentmodule:: peakingduck
-        .. autosummary::
-           :toctree: _generate
-
     )pbdoc"; // optional module docstring
 
     // version
