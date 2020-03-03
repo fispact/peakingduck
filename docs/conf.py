@@ -24,6 +24,12 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 # -- Build extension --------------------------------------------------------
 
 if read_the_docs_build:
+    print(" ".join(['g++', '-DPEAKINGDUCK_EXPORTS',
+                    '-I../thirdparty/pybind11/include',
+                    '-I' + get_path('include'),
+                    '-I../thirdparty/units/include', '-I../thirdparty/eigen',
+                    '-I../include', '-fPIC', '-fvisibility=hidden', '-shared',
+                    '-o', '../PEAKINGDUCK.so', '../py/peakingduck.cpp']))
     subprocess.run(['g++', '-DPEAKINGDUCK_EXPORTS',
                     '-I../thirdparty/pybind11/include',
                     '-I' + get_path('include'),
