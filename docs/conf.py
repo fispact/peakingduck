@@ -25,7 +25,13 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 print("Is printing going to work?")
 print(get_path('include'))
-exit(-1)
+print(" ".join(['g++', '-DPEAKINGDUCK_EXPORTS',
+                    '-I../thirdparty/pybind11/include',
+                    '-I' + get_path('include'),
+                    '-I../thirdparty/units/include', '-I../thirdparty/eigen',
+                    '-I../include', '-fPIC', '-fvisibility=hidden', '-shared',
+                    '-o', '../PEAKINGDUCK.so', '../py/peakingduck.cpp']))
+print(read_the_docs_build)
 if read_the_docs_build:
     print(get_path('include'))
     print(" ".join(['g++', '-DPEAKINGDUCK_EXPORTS',
@@ -43,6 +49,7 @@ if read_the_docs_build:
     #                            '-o', '../PEAKINGDUCK.so',
     #                            '../py/peakingduck.cpp'])
     # assert complete.returncode == 0, "Failed to build PyBind extension"
+exit(-1)
 
 
 # -- Project information -----------------------------------------------------
