@@ -49,7 +49,6 @@ if read_the_docs_build:
     #                            '-o', '../PEAKINGDUCK.so',
     #                            '../py/peakingduck.cpp'])
     # assert complete.returncode == 0, "Failed to build PyBind extension"
-exit(-1)
 
 
 # -- Project information -----------------------------------------------------
