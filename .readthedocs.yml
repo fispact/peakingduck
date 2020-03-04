@@ -11,14 +11,16 @@ sphinx:
 
 formats: all
 
-#python:
-#  version: 3.7
-#  install:
-#    - requirements: docs/requirements.txt
-#  system_packages: true
+python:
+  version: 3.7
+  install:
+    - requirements: docs/requirements.txt
+    - method: pip
+      path: .
+  system_packages: true
 
-conda:
-  environment: docs/environment.yml
+# conda:
+#   environment: docs/environment.yml
 
 submodules:
   include: all
