@@ -18,7 +18,7 @@ formats: all
 #  system_packages: true
 
 conda:
-  file: doc/environment.yml
+  file: docs/environment.yml
 
 submodules:
   include: all
