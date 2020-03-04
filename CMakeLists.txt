@@ -15,9 +15,13 @@ set (TESTS_DIR_BASE ${CMAKE_CURRENT_LIST_DIR}/tests)
 set (THIRD_PARTY_DIR ${CMAKE_CURRENT_LIST_DIR}/thirdparty)
 set (PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
 
-find_package( PythonInterp 3.6 REQUIRED )
-find_package( PythonLibs 3.6 REQUIRED )
-#find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} VERSION_LESS 3.12)
+  find_package(PythonInterp 3.6 REQUIRED)
+  find_package(PythonLibs 3.6 REQUIRED)
+else()
+  find_package (Python 3.6 COMPONENTS Interpreter Development)
+endif()
+
 
 # Eigen3 is header only
 set (EIGEN_INCLUDES ${THIRD_PARTY_DIR}/eigen)

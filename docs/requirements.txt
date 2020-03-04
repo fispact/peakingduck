@@ -1,2 +1,2 @@
 breathe
-cmake
+cmake>=3.12
