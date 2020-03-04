@@ -17,22 +17,27 @@ import sys
 import subprocess
 from sysconfig import get_path
 
-sys.path.insert(0, os.path.abspath('../'))
-
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+
+if read_the_docs_build:
+    import site
+    p = site.getsitepackages()[0]
+    sys.path.insert(0, p)
+else:
+    sys.path.insert(0, os.path.abspath('../'))
 
 # -- Build extension --------------------------------------------------------
 
-if read_the_docs_build:
-    complete = subprocess.run(['g++', '-DPEAKINGDUCK_EXPORTS',
-                               '-I../thirdparty/pybind11/include',
-                               '-I' + get_path('include'),
-                               '-I../thirdparty/units/include',
-                               '-I../thirdparty/eigen', '-I../include',
-                               '-fPIC', '-fvisibility=hidden', '-shared',
-                               '-o', '../PEAKINGDUCK.so',
-                               '../py/peakingduck.cpp'])
-    assert complete.returncode == 0, "Failed to build PyBind extension"
+#if read_the_docs_build:
+#    complete = subprocess.run(['g++', '-DPEAKINGDUCK_EXPORTS',
+#                               '-I../thirdparty/pybind11/include',
+#                               '-I' + get_path('include'),
+#                               '-I../thirdparty/units/include',
+#                               '-I../thirdparty/eigen', '-I../include',
+#                               '-fPIC', '-fvisibility=hidden', '-shared',
+#                               '-o', '../PEAKINGDUCK.so',
+#                               '../py/peakingduck.cpp'])
+#    assert complete.returncode == 0, "Failed to build PyBind extension"
 
 
 # -- Project information -----------------------------------------------------
@@ -197,6 +202,11 @@ epub_title = project
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
+
+
+# -- Autodoc configuration ---------------------------------------------------
+
+autodoc_mock_imports = ['numpy', 'scipy']
 
 
 # -- Extension configuration -------------------------------------------------

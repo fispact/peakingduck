@@ -1,0 +1,12 @@
+name: peakingduck_doc
+
+channels:
+  - defaults
+  - conda-forge
+
+dependencies:
+  - python==3.7
+  - gcc
+  - sphinx_rtd_theme
+  - sphinx
+  - breathe

@@ -9,15 +9,16 @@ version: 2
 sphinx:
   configuration: docs/conf.py
 
-formats:
-  - pdf
+formats: all
 
-python:
-  version: 3.7
-  install:
-    - requirements: requirements.txt
-    - requirements: docs/requirements.txt
-  system_packages: true
+#python:
+#  version: 3.7
+#  install:
+#    - requirements: docs/requirements.txt
+#  system_packages: true
+
+conda:
+  file: doc/environment.yml
 
 submodules:
   include: all
