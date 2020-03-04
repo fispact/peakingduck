@@ -97,8 +97,8 @@ class CMakeBuild(build_ext):
 
         # limit gcc's memory consumption on Read the Docs build-server
         if os.environ.get('READTHEDOCS', None) == 'True':
-            cmake_args += ['-DCMAKE_CXX_FLAGS="--param ggc-min-expand=20 '
-                           '--param ggc-min-heapsize=32768"']
+            cmake_args += ['-DCMAKE_CXX_FLAGS=--param ggc-min-expand=10 '
+                           '--param ggc-min-heapsize=16384']
 
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),

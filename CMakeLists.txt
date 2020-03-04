@@ -54,7 +54,7 @@ message ( STATUS "CMake build configuration for PEAKING DUCK ${PEAKINGDUCK_VERSI
 SET(CMAKE_CXX_STANDARD 14)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra" CACHE)
+set(CMAKE_CXX_FLAGS "-Wall -Wextra" CACHE STRING "Compiler flags")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 --coverage -fprofile-arcs -ftest-coverage -fno-inline -fno-inline-small-functions -fno-default-inline")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
