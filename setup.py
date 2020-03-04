@@ -95,6 +95,11 @@ class CMakeBuild(build_ext):
         # do not build tests for python install
         cmake_args += ['-DBUILD_TESTS=OFF']
 
+        # limit gcc's memory consumption on Read the Docs build-server
+        if os.environ.get('READTHEDOCS', None) == 'True':
+            cmake_args += ['-DCMAKE_CXX_FLAGS="--param ggc-min-expand=20 '
+                           '--param ggc-min-heapsize=32768"']
+
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),
                                                               self.distribution.get_version())
