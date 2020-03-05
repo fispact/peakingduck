@@ -10,12 +10,14 @@ then
     # Run c++ and python unit tests
     ./build/bin/peakingduckcpptests
     echo "Getting dependencies on C++ tests"
-    depends.exe /c /pf:1 /pb /ot:dependencies_cpp.txt build/bin/peakingduckcpptests
-    echo "Getting dependencies on Python module"
-    depends.exe /c /pf:1 /pb /ot:dependencies_python.txt build/py/PEAKINGDUCK.cp38-win_amd64.pyd
-    echo "============================= C++ Dependencies ============================"
-    cat dependencies_cpp.txt
-    echo "=========================== Python Dependencies ==========================="
+    dumpbin /DEPENDENTS build/bin/peakingduckcpptests
+    #depends.exe /c /pf:1 /pb /ot:dependencies_cpp.txt build/bin/peakingduckcpptests
+    echo /DEPENDENTS "Getting dependencies on Python module"
+    dumpbin build/py/PEAKINGDUCK.cp38-win_amd64.pyd
+    #depends.exe /c /pf:1 /pb /ot:dependencies_python.txt build/py/PEAKINGDUCK.cp38-win_amd64.pyd
+    #echo "============================= C++ Dependencies ============================"
+    #cat dependencies_cpp.txt
+    #echo "=========================== Python Dependencies ==========================="
     cat dependencies_python.txt
     cppstat=$?
     echo "Python path is: $PYTHONPATH"

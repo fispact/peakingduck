@@ -82,9 +82,9 @@ jobs:
     - os: windows
       env: BUILD_TYPE=Debug
     - os: windows
-      compiler: clang
+      env: BUILD_TYPE=Install
     - os: windows
-      compiler: Install
+      compiler: clang
 
   # Include some additional Mac jobs
 #  include:
