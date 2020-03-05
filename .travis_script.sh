@@ -9,6 +9,14 @@ then
     cd ${TRAVIS_BUILD_DIR} || exit -1
     # Run c++ and python unit tests
     ./build/bin/peakingduckcpptests
+    echo "Getting dependencies on C++ tests"
+    depends.exe /c /pf:1 /pb /ot:dependencies_cpp.txt build/bin/peakingduckcpptests
+    echo "Getting dependencies on Python module"
+    depends.exe /c /pf:1 /pb /ot:dependencies_python.txt build/py/PEAKINGDUCK.cp38-win_amd64.pyd
+    echo "============================= C++ Dependencies ============================"
+    cat dependencies_cpp.txt
+    echo "=========================== Python Dependencies ==========================="
+    cat dependencies_python.txt
     cppstat=$?
     echo "Python path is: $PYTHONPATH"
     $PY_CMD -m coverage run --source ./peakingduck -m pytest --tb=long ./tests/py/testsuite.py
