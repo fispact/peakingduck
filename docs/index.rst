@@ -32,11 +32,18 @@ Building
 
 It is header only C++ so nothing to build (only unit tests) if using
 it in C++.  If you want python bindings enabled then it needs building
-(default will build them), as below.  ```bash git
-clone --recursive -j8 https://github.com/thomasms/peakingduck cd
-peakingduck mkdir build cd build cmake -DCMAKE_BUILD_TYPE=Release
--DBUILD_PY_BINDINGS=ON ..  make -j4 ``` Note: Project uses cmake (>
-3.2) to build peaking duck.
+(default will build them), as below.
+
+::
+
+    git clone --recursive -j8 https://github.com/thomasms/peakingduck
+    cd peakingduck
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PY_BINDINGS=ON ..
+    make -j4 ```
+  
+Note: Project uses cmake (> 3.2) to build peaking duck.
 
 
 .. toctree::
