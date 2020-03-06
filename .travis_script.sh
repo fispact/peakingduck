@@ -14,7 +14,7 @@ then
 #    deps/Dependencies.exe -chain build/bin/peakingduckcpptests
     echo "Getting dependencies on Python module"
     #dumpbin /DEPENDENTS build/py/PEAKINGDUCK.cp38-win_amd64.pyd
-    deps/Dependencies.exe -imports build/py/PEAKINGDUCK.cp38-win_amd64.pyd
+    deps/Dependencies.exe -chain build/py/PEAKINGDUCK.cp38-win_amd64.pyd
     #echo "============================= C++ Dependencies ============================"
     #cat dependencies_cpp.txt
     #echo "=========================== Python Dependencies ==========================="
