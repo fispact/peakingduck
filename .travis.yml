@@ -178,7 +178,7 @@ before_install:
       curl -L https://github.com/lucasg/Dependencies/releases/download/v1.10/Dependencies_x64_Release.zip --output dependencies.zip
       mkdir deps
       cd deps
-      unzip dependencies.zip
+      unzip ../dependencies.zip
       cd ..
       find /c | grep dumpbin
       choco install python
