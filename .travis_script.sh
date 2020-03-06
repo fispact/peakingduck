@@ -14,11 +14,11 @@ then
 #    deps/Dependencies.exe -chain build/bin/peakingduckcpptests
     echo "Getting dependencies on Python module"
     #dumpbin /DEPENDENTS build/py/PEAKINGDUCK.cp38-win_amd64.pyd
-    deps/Dependencies.exe -imports build/py/PEAKINGDUCK.cp38-win_amd64.pyd | grep NOT_FOUND
+    deps/Dependencies.exe -imports build/py/PEAKINGDUCK.cp38-win_amd64.pyd
     #echo "============================= C++ Dependencies ============================"
     #cat dependencies_cpp.txt
     #echo "=========================== Python Dependencies ==========================="
-    cat dependencies_python.txt
+    #cat dependencies_python.txt
     cppstat=$?
     echo "Python path is: $PYTHONPATH"
     $PY_CMD -m coverage run --source ./peakingduck -m pytest --tb=long ./tests/py/testsuite.py
