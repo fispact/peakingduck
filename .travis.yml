@@ -180,7 +180,7 @@ before_install:
       cd deps
       unzip ../dependencies.zip
       cd ..
-      find /c | grep dumpbin
+      ls "/c/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Tools/MSVC/14.16.27023/bin/Hostx64/x86/*.exe"
       choco install python
       export PY_CMD=/c/Python38/python.exe
       export MK_CMD=mingw32-make

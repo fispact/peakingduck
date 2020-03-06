@@ -10,11 +10,11 @@ then
     # Run c++ and python unit tests
     ./build/bin/peakingduckcpptests
     echo "Getting dependencies on C++ tests"
-    dumpbin /DEPENDENTS build/bin/peakingduckcpptests
-    #depends.exe /c /pf:1 /pb /ot:dependencies_cpp.txt build/bin/peakingduckcpptests
+    #dumpbin /DEPENDENTS build/bin/peakingduckcpptests
+    deps/Dependencies.exe /c /pf:1 /pb /ot:dependencies_cpp.txt build/bin/peakingduckcpptests
     echo /DEPENDENTS "Getting dependencies on Python module"
-    dumpbin build/py/PEAKINGDUCK.cp38-win_amd64.pyd
-    #depends.exe /c /pf:1 /pb /ot:dependencies_python.txt build/py/PEAKINGDUCK.cp38-win_amd64.pyd
+    #dumpbin /DEPENDENTS build/py/PEAKINGDUCK.cp38-win_amd64.pyd
+    deps/Dependencies.exe /c /pf:1 /pb /ot:dependencies_python.txt build/py/PEAKINGDUCK.cp38-win_amd64.pyd
     #echo "============================= C++ Dependencies ============================"
     #cat dependencies_cpp.txt
     #echo "=========================== Python Dependencies ==========================="
