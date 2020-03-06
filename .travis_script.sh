@@ -9,12 +9,12 @@ then
     cd ${TRAVIS_BUILD_DIR} || exit -1
     # Run c++ and python unit tests
     ./build/bin/peakingduckcpptests
-    echo "Getting dependencies on C++ tests"
+#    echo "Getting dependencies on C++ tests"
     #dumpbin /DEPENDENTS build/bin/peakingduckcpptests
-    deps/Dependencies.exe -chain build/bin/peakingduckcpptests
+#    deps/Dependencies.exe -chain build/bin/peakingduckcpptests
     echo "Getting dependencies on Python module"
     #dumpbin /DEPENDENTS build/py/PEAKINGDUCK.cp38-win_amd64.pyd
-    deps/Dependencies.exe -chain build/py/PEAKINGDUCK.cp38-win_amd64.pyd
+    deps/Dependencies.exe -chain build/py/PEAKINGDUCK.cp38-win_amd64.pyd | grep NOT_FOUND
     #echo "============================= C++ Dependencies ============================"
     #cat dependencies_cpp.txt
     #echo "=========================== Python Dependencies ==========================="
