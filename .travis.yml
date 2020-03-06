@@ -82,8 +82,6 @@ jobs:
     - os: windows
       env: BUILD_TYPE=Debug
     - os: windows
-      env: BUILD_TYPE=Install
-    - os: windows
       compiler: clang
 
   # Include some additional Mac jobs
@@ -177,6 +175,12 @@ before_install:
   - |
     if [ ${TRAVIS_OS_NAME} == "windows" ]
     then
+      curl -L https://github.com/lucasg/Dependencies/releases/download/v1.10/Dependencies_x64_Release.zip --output dependencies.zip
+      mkdir deps
+      cd deps
+      unzip dependencies.zip
+      cd ..
+      find /c | grep dumpbin
       choco install python
       export PY_CMD=/c/Python38/python.exe
       export MK_CMD=mingw32-make
