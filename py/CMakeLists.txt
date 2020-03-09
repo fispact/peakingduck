@@ -33,3 +33,9 @@ set_target_properties(${PEAKINGDUCK_PY_NAME}
                       LIBRARY_OUTPUT_DIRECTORY ${PY_OUTPUT_DIR}
                       ARCHIVE_OUTPUT_DIRECTORY ${PY_OUTPUT_DIR}
                       RUNTIME_OUTPUT_DIRECTORY ${PY_OUTPUT_DIR})
+
+if(MINGW)
+  target_compile_options(${PEAKINGDUCK_PY_NAME} PRIVATE -fno-lto)
+  target_link_libraries(${PEAKINGDUCK_PY_NAME} PRIVATE -fno-lto
+    -static -static-libstdc++ -static-libgcc)
+endif()
