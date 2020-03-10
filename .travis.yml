@@ -184,6 +184,7 @@ before_install:
       export CMAKE_GENERATOR="MSYS Makefiles"
       export WINDOWS_CMAKE_ARGS="-DCMAKE_MAKE_PROGRAM=${MK_CMD} -DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE_DIR=${PY_INC_PATH}"
     fi
+  - if [ ${TRAVIS_OS_NAME} == "linux" ]; then pyenv global 3.8.1; fi
   - git submodule update --init --recursive
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 

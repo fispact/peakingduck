@@ -29,7 +29,7 @@ target_include_directories(${PEAKINGDUCK_PY_NAME} PRIVATE
 # Set the exe properties
 set_target_properties(${PEAKINGDUCK_PY_NAME}
                       PROPERTIES #OUTPUT_NAME ${PEAKINGDUCK_PY_NAME}
-                      VERSION ${PEAKINGDUCK_VERSION}
+#                      VERSION ${PEAKINGDUCK_VERSION}
                       LIBRARY_OUTPUT_DIRECTORY ${PY_OUTPUT_DIR}
                       ARCHIVE_OUTPUT_DIRECTORY ${PY_OUTPUT_DIR}
                       RUNTIME_OUTPUT_DIRECTORY ${PY_OUTPUT_DIR})
