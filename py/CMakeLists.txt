@@ -35,6 +35,8 @@ set_target_properties(${PEAKINGDUCK_PY_NAME}
                       RUNTIME_OUTPUT_DIRECTORY ${PY_OUTPUT_DIR})
 
 if(MINGW)
+  message(STATUS "Using static linking with MinGW")
+  message(STATUS "Disabling LTO with static linking")
   target_compile_options(${PEAKINGDUCK_PY_NAME} PRIVATE -fno-lto)
   target_link_libraries(${PEAKINGDUCK_PY_NAME} PRIVATE -fno-lto
     -static -static-libstdc++ -static-libgcc)

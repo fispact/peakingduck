@@ -28,8 +28,8 @@ compiler:
   - clang
 
 os:
-#  - linux
-#  - mac
+  - linux
+  - mac
   - windows
 
 osx_image:
@@ -85,88 +85,88 @@ jobs:
       compiler: clang
 
   # Include some additional Mac jobs
-#  include:
-#    - os: osx
-#      osx_image: xcode11.3
-#      compiler: gcc
-#      env:
-#        CC: gcc-9
-#        CXX: g++-9
-#        BUILD_TYPE: Release
-#    - os: osx
-#      osx_image: xcode11.3
-#      compiler: gcc
-#      env:
-#        CC: gcc-9
-#        CXX: g++-9
-#        BUILD_TYPE: Install
-#    - os: osx
-#      osx_image: xcode11.3
-#      compiler: clang
-#      env:
-#        BUILD_TYPE: Install
-#
-# # Test other versions of GCC and clang
-#    - os: linux
-#      compiler: gcc
-#      env:
-#        CC: gcc-5
-#        CXX: g++-5
-#        BUILD_TYPE: Release
-#    - os: linux
-#      compiler: gcc
-#      env:
-#        CC: gcc-6
-#        CXX: g++-6
-#        BUILD_TYPE: Release
-#    - os: linux
-#      compiler: gcc
-#      env:
-#        CC: gcc-8
-#        CXX: g++-8
-#        BUILD_TYPE: Release
-#    - os: linux
-#      compiler: gcc
-#      env:
-#        CC: gcc-9
-#        CXX: g++-9
-#        BUILD_TYPE: Release
-#    - os: linux
-#      compiler: clang
-#      env:
-#        CC: clang-3.9
-#        CXX: clang++-3.9
-#        BUILD_TYPE: Release
-#    - os: linux
-#      compiler: clang
-#      env:
-#        CC: clang-4.0
-#        CXX: clang++-4.0
-#        BUILD_TYPE: Release
-#    - os: linux
-#      compiler: clang
-#      env:
-#        CC: clang-5.0
-#        CXX: clang++-5.0
-#        BUILD_TYPE: Release
-#    - os: linux
-#      compiler: clang
-#      env:
-#        CC: clang-6.0
-#        CXX: clang++-6.0
-#        BUILD_TYPE: Release
-#    - os: linux
-#      compiler: clang
-#      env:
-#        CC: clang-8
-#        CXX: clang++-8
-#        BUILD_TYPE: Release
-#    - os: linux
-#      compiler: clang
-#      env:
-#        CC: clang-9
-#        CXX: clang++-9
-#        BUILD_TYPE: Release
+  include:
+    - os: osx
+      osx_image: xcode11.3
+      compiler: gcc
+      env:
+        CC: gcc-9
+        CXX: g++-9
+        BUILD_TYPE: Release
+    - os: osx
+      osx_image: xcode11.3
+      compiler: gcc
+      env:
+        CC: gcc-9
+        CXX: g++-9
+        BUILD_TYPE: Install
+    - os: osx
+      osx_image: xcode11.3
+      compiler: clang
+      env:
+        BUILD_TYPE: Install
+
+ # Test other versions of GCC and clang
+    - os: linux
+      compiler: gcc
+      env:
+        CC: gcc-5
+        CXX: g++-5
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: gcc
+      env:
+        CC: gcc-6
+        CXX: g++-6
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: gcc
+      env:
+        CC: gcc-8
+        CXX: g++-8
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: gcc
+      env:
+        CC: gcc-9
+        CXX: g++-9
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-3.9
+        CXX: clang++-3.9
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-4.0
+        CXX: clang++-4.0
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-5.0
+        CXX: clang++-5.0
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-6.0
+        CXX: clang++-6.0
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-8
+        CXX: clang++-8
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-9
+        CXX: clang++-9
+        BUILD_TYPE: Release
 
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
