@@ -1,7 +1,7 @@
 # Find default python libraries and interpreter
-set(Python_ADDITIONAL_VERSIONS 3.6)
-find_package(PythonInterp 3 REQUIRED)
-find_package(PythonLibs 3 REQUIRED)
+#set(Python_ADDITIONAL_VERSIONS 3.6)
+#find_package(PythonInterp 3 REQUIRED)
+#find_package(PythonLibs 3 REQUIRED)
 
 # we use uppercase to dictate the raw c++ bindings
 # lowercase is the python wrapper that uses the bindings

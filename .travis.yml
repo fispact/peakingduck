@@ -47,7 +47,6 @@ env:
   global:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python3
-    PATH: /c/Users/travis/AppData/Roaming/Python/Python38/Scripts:/c/ProgramData/chocolatey/bin:/c/Python38:/c/Python38/Scripts:$PATH
     MK_CMD: make
 
 jobs:
@@ -176,6 +175,7 @@ before_install:
     if [ ${TRAVIS_OS_NAME} == "windows" ]
     then
       choco install python
+      export PATH=/c/Users/travis/AppData/Roaming/Python/Python38/Scripts:/c/ProgramData/chocolatey/bin:/c/Python38:/c/Python38/Scripts:$PATH
       export PY_CMD=/c/Python38/python.exe
       export MK_CMD=mingw32-make
       PY_EXE_PATH=${PY_CMD}
