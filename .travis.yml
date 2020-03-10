@@ -47,7 +47,7 @@ env:
   global:
     PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
     PY_CMD: python3
-    PATH: /c/ProgramData/chocolatey/bin:/c/Python38:/c/Python38/Scripts:$PATH
+    PATH: /c/Users/travis/AppData/Roaming/Python/Python38/Scripts:/c/ProgramData/chocolatey/bin:/c/Python38:/c/Python38/Scripts:$PATH
     MK_CMD: make
 
 jobs:
@@ -181,7 +181,7 @@ before_install:
       PY_EXE_PATH=${PY_CMD}
       PY_LIB_PATH=/c/Python38/python38.dll
       PY_INC_PATH=/c/Python38/include
-      export CMAKE_GENERATOR="MinGW Makefiles"
+      export CMAKE_GENERATOR="MSYS Makefiles"
       export WINDOWS_CMAKE_ARGS="-DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE_DIR=${PY_INC_PATH}"
     fi
   - git submodule update --init --recursive
