@@ -15,9 +15,13 @@ set (TESTS_DIR_BASE ${CMAKE_CURRENT_LIST_DIR}/tests)
 set (THIRD_PARTY_DIR ${CMAKE_CURRENT_LIST_DIR}/thirdparty)
 set (PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
 
-find_package( PythonInterp 3.7 REQUIRED )
-find_package( PythonLibs 3.7 REQUIRED )
-#find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+#if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} VERSION_LESS 3.12)
+#  find_package(PythonInterp 3.6 REQUIRED)
+#  find_package(PythonLibs 3.6 REQUIRED)
+#else()
+#  find_package (Python 3.6 COMPONENTS Interpreter Development)
+#endif()
+
 
 # Eigen3 is header only
 set (EIGEN_INCLUDES ${THIRD_PARTY_DIR}/eigen)
@@ -50,8 +54,8 @@ message ( STATUS "CMake build configuration for PEAKING DUCK ${PEAKINGDUCK_VERSI
 SET(CMAKE_CXX_STANDARD 14)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 --coverage -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra" CACHE STRING "Compiler flags")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 --coverage -fprofile-arcs -ftest-coverage -fno-inline -fno-inline-small-functions -fno-default-inline")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
@@ -81,6 +85,7 @@ endif()
 
 # python bindings
 if(BUILD_PY_BINDINGS)
+        add_subdirectory(${THIRD_PARTY_DIR}/pybind11)
 	add_subdirectory(${PYTHON_PROJECT_DIR_BASE})
 endif(BUILD_PY_BINDINGS)
 

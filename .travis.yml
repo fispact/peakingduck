@@ -1,49 +1,200 @@
 language: cpp
 sudo: true
-dist: xenial
+dist: bionic
 
 # Handle git submodules yourself
 git:
   submodules: false
 
-# Use sed to replace the SSH URL with the public URL, then initialize submodules
-before_install:
-  - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
-  - git submodule update --init --recursive
-  - PY_CMD=python3.7
-  - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
+# Only run on master  
+branches:
+  only:
+  - master
+  - develop
 
+addons:
+  apt:
+    sources:
+      - sourceline: "ppa:ubuntu-toolchain-r/test"
+    packages:
+      - python3-dev
+      - python3-pip
+      - python3-setuptools
+      - lcov
+
+# Define the build matrix
 compiler:
   - gcc
   - clang
 
 os:
   - linux
-  # - osx - #not working, fix later :(
+  - mac
+  - windows
 
-addons:
-  apt:
-    sources:
-      - deadsnakes
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.8
-    packages:
-      - python3.7-dev
-      - python3-pip
-      - python3-setuptools
-      - lcov
-      - g++-6
-      - clang-3.8
+osx_image:
+  - xcode9.4
+  - xcode10
+  - xcode10.3
+  - xcode11
+  - xcode11.3
 
-branches:
-  only:
-  - master
+env:
+  jobs:
+    - BUILD_TYPE=Debug
+    - BUILD_TYPE=Release
+    - BUILD_TYPE=Install
+  global:
+    PYTHONPATH: ${TRAVIS_BUILD_DIR}/build/py
+    PY_CMD: python3
+    MK_CMD: make
+
+jobs:
+  # Exclude some jobs on Mac and Windows to reduce total number of builds
+  exclude:
+    - os: mac
+      osx_image: xcode9.4
+      compiler: gcc
+    - os: mac
+      osx_image: xcode10
+      compiler: gcc
+    - os: mac
+      osx_image: xcode10.3
+      compiler: gcc
+    - os: mac
+      osx_image: xcode11
+      compiler: gcc
+    - os: mac
+      env: BUILD_TYPE=Debug
+    - os: mac
+      osx_image: xcode9.4
+      env: BUILD_TYPE=Install
+    - os: mac
+      osx_image: xcode10
+      env: BUILD_TYPE=Install
+    - os: mac
+      osx_image: xcode10.3
+      env: BUILD_TYPE=Install
+    - os: mac
+      osx_image: xcode11
+      env: BUILD_TYPE=Install
+    - os: windows
+      env: BUILD_TYPE=Debug
+    - os: windows
+      compiler: clang
+
+  # Include some additional Mac jobs
+  include:
+    - os: osx
+      osx_image: xcode11.3
+      compiler: gcc
+      env:
+        CC: gcc-9
+        CXX: g++-9
+        BUILD_TYPE: Release
+    - os: osx
+      osx_image: xcode11.3
+      compiler: gcc
+      env:
+        CC: gcc-9
+        CXX: g++-9
+        BUILD_TYPE: Install
+    - os: osx
+      osx_image: xcode11.3
+      compiler: clang
+      env:
+        BUILD_TYPE: Install
+
+ # Test other versions of GCC and clang
+    - os: linux
+      compiler: gcc
+      env:
+        CC: gcc-5
+        CXX: g++-5
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: gcc
+      env:
+        CC: gcc-6
+        CXX: g++-6
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: gcc
+      env:
+        CC: gcc-8
+        CXX: g++-8
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: gcc
+      env:
+        CC: gcc-9
+        CXX: g++-9
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-3.9
+        CXX: clang++-3.9
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-4.0
+        CXX: clang++-4.0
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-5.0
+        CXX: clang++-5.0
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-6.0
+        CXX: clang++-6.0
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-8
+        CXX: clang++-8
+        BUILD_TYPE: Release
+    - os: linux
+      compiler: clang
+      env:
+        CC: clang-9
+        CXX: clang++-9
+        BUILD_TYPE: Release
+
+
+# Use sed to replace the SSH URL with the public URL, then initialize submodules
+before_install:
+  - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+  - |
+    if [ ${TRAVIS_OS_NAME} == "windows" ]
+    then
+      choco install python
+      export PATH=/c/Users/travis/AppData/Roaming/Python/Python38/Scripts:/c/ProgramData/chocolatey/bin:/c/Python38:/c/Python38/Scripts:$PATH
+      export PY_CMD=/c/Python38/python.exe
+      export MK_CMD=mingw32-make
+      PY_EXE_PATH=${PY_CMD}
+      PY_LIB_PATH=/c/Python38/python38.dll
+      PY_INC_PATH=/c/Python38/include
+      export CMAKE_GENERATOR="MSYS Makefiles"
+      export WINDOWS_CMAKE_ARGS="-DCMAKE_MAKE_PROGRAM=${MK_CMD} -DPYTHON_EXECUTABLE=${PY_EXE_PATH} -DPYTHON_LIBRARY=${PY_LIB_PATH} -DPYTHON_INCLUDE_DIR=${PY_INC_PATH}"
+    fi
+  - if [ ${TRAVIS_OS_NAME} == "linux" ]; then pyenv global 3.8.1; fi
+  - git submodule update --init --recursive
+  - PY_CMD=python3.7
+  - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
 install:
   - "[ $CXX = g++ ] && export CXX=g++-6 || true"
   - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
+  - ${CXX} --version || sudo apt-get install ${CXX}
 
 env: PYTHON=3.7 PYTHONPATH=${TRAVIS_BUILD_DIR}/build/py
 

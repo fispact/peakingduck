@@ -48,3 +48,10 @@ build*/**
 .eggs
 dist/
 *.egg-info/
+
+# Documentation
+docs/_build
+docs/_doxygen
+
+# Editor backups
+*~
