@@ -13,7 +13,6 @@
 #ifndef UTIL_WINDOW_HPP
 #define UTIL_WINDOW_HPP
 
-#include <cassert>
 #include <vector>
 
 #include "common.hpp"

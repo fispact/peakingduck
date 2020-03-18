@@ -76,7 +76,6 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
             py::arg("ninner") = 0,
             py::arg("includeindex") = true);
 
-
     // core numerical object - tries to be like numpy array
     // but why you ask?
     // well this is a custom type specific for custom operations
@@ -169,6 +168,9 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
         .def("mean", [](const NumericalDataPyType& data){
             return data.mean();
         })
+        .def("stddev", [](const NumericalDataPyType& data, int ddof){
+            return data.stddev(ddof);
+        }, py::arg("ddof") = 0)
         .def("sum", [](const NumericalDataPyType& data){
             return data.sum();
         })
@@ -291,6 +293,14 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
 
               Mutates underlyindg data.)pbdoc");
 
+    m_core.def("combine", &core::combine<NumericalDataCoreType,core::ArrayTypeDynamic>);
+    m_core.def("window", &core::window<NumericalDataCoreType,core::ArrayTypeDynamic>,
+            py::arg("values"),
+            py::arg("centerindex"),
+            py::arg("nouter") = 5,
+            py::arg("ninner") = 0,
+            py::arg("includeindex") = true);
+            
     // integral type
     using IntegerDataCoreType = int;
     using IntegerDataPyType = core::NumericalData<IntegerDataCoreType,core::ArrayTypeDynamic>;
@@ -587,6 +597,13 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
         .def(py::init_alias<>())
     .def("find", &IPeakFinderPyType::find,
 	 "Identifies potential peaks in the data");
+
+    // peak finder objects
+    using SimplePeakFinderPyType = core::SimplePeakFinder<NumericalDataCoreType,core::ArrayTypeDynamic>;
+    py::class_<SimplePeakFinderPyType, IPeakFinderPyType, std::shared_ptr<SimplePeakFinderPyType>>(m_core, "SimplePeakFinder")
+        .def(py::init<NumericalDataCoreType>(), 
+            py::arg("threshold") = 0)
+        .def("find", &SimplePeakFinderPyType::find);
 
     // histogram objects
     using HistPyType = core::Histogram<double,double>;

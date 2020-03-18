@@ -186,29 +186,53 @@ before_install:
     fi
   - if [ ${TRAVIS_OS_NAME} == "linux" ]; then pyenv global 3.8.1; fi
   - git submodule update --init --recursive
+  - PY_CMD=python3.7
   - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
 
 install:
+  - "[ $CXX = g++ ] && export CXX=g++-6 || true"
+  - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
   - $PY_CMD -m pip install --user -r requirements.dev.txt
   - $PY_CMD -m pip install --user -r requirements.txt
   - ${CXX} --version || sudo apt-get install ${CXX}
 
+env: PYTHON=3.7 PYTHONPATH=${TRAVIS_BUILD_DIR}/build/py
+
+# we should break this up into 3 separate builds
+# release, code coverage, and pip install
+# how to do stages in travis CI???
 script:
   - cd ${TRAVIS_BUILD_DIR}
-  - ./.travis_script.sh
+  # do a release build first
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DBUILD_PY_BINDINGS=ON ..
+  - make -j4
+  - cd ${TRAVIS_BUILD_DIR}
+  # run c++ and python unit tests
+  - ./build/bin/peakingduckcpptests
+  - pytest ./tests/py/testsuite.py
+  # clean the release build
+  - rm -rf ${TRAVIS_BUILD_DIR}/build
+  # build the code coverage version
+  - export PYTHONPATH=${TRAVIS_BUILD_DIR}/build_coverage/py
+  - mkdir build_coverage
+  - cd build_coverage
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON ..
+  - make -j4
+  - cd ${TRAVIS_BUILD_DIR}
+  - ./build_coverage/bin/peakingduckcpptests
+  - pytest --tb=long ./tests/py/testsuite.py
+  # just try with pip install now
+  - unset PYTHONPATH
+  - $PY_CMD -m pip install --user .
+  - pytest ./tests/py/testsuite.py
+  # - $PY_CMD setup.py test
 
 after_success:
-  # Skip this unless on a debug build
-  - if [ ${BUILD_TYPE} != "Debug" ]; then exit 0; fi
-  - if [ ${TRAVIS_OS_NAME} != "linux" ]; then exit 0; fi
   - cd ${TRAVIS_BUILD_DIR}/build_coverage
-  # Capture coverage info
-  - lcov --directory . --capture --output-file coverage.info
-  # Filter out system libraries and dependencies
-  - lcov --remove coverage.info '/usr/*' --output-file coverage.info
-  - lcov --remove coverage.info '${TRAVIS_BUILD_DIR}/thirdparty/*' --output-file coverage.info
-  # Print coverage stats to the screen, for debug purposes
-  - lcov --list coverage.info
-  - $PY_CMD -m coverage report
-  # Upload report to CodeCov
+  - lcov --directory . --capture --output-file coverage.info # capture coverage info
+  - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
+  - lcov --list coverage.info #debug info
+  # Uploading report to CodeCov
   - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
