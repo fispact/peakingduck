@@ -3,7 +3,7 @@ import peakingduck as pd
 
 
 filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                        '..', 'reference', 'spectrum0.csv')
+                        '..', '..', 'reference', 'spectrum0.csv')
 
 # read in from csv file
 hist_raw = pd.core.SpectrumEnergyBased()
