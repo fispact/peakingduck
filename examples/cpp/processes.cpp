@@ -57,7 +57,7 @@ int main() {
   pm.append(std::dynamic_pointer_cast<IProcess<double> >(std::make_shared<ThresholdCut>(1e3)));
   pm.append(std::dynamic_pointer_cast<IProcess<double> >(std::make_shared<MovingAverageSmoother<double> >(3)));
 
-  std::ifstream file("../../reference/spectrum0.csv");
+  std::ifstream file("../../../reference/spectrum0.csv");
   Spectrum<double, double> hist_raw;
   Deserialize<double, double, ','>(file, hist_raw);
   NumericalData<double> energies = hist_raw.X(), data = hist_raw.Y();
