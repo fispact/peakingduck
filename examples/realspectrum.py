@@ -22,13 +22,12 @@ snippedCounts = hist_raw.Y
 
 # process manager
 pm = pkd.core.PySimpleProcessManager(processes=[
-    pkd.core.SavitzkyGolaySmoother(3),
-    # pkd.core.GlobalThresholdPeakFilter(0.005),
-    # pkd.core.ChunkedThresholdPeakFilter(0.05, 5000)
+    pkd.core.SavitzkyGolaySmoother(3)
 ])
 
 # peak finder
-pf = pkd.core.ChunkedSimplePeakFinder(threshold=0.01, nchunks=100)
+# pf = pkd.core.ChunkedSimplePeakFinder(threshold=0.01, nchunks=100)
+pf = pkd.core.WindowPeakFinder(threshold=2.0, nouter=80, ninner=3, enforce_maximum=True)
 
 # process
 try:
@@ -40,7 +39,6 @@ except:
 
 # plot the histogram and peaks
 import peakingduck.plotting as pkdplot
-# import matplotlib.patches as patches
 
 f, ax = pkdplot.PLT.subplots(1, figsize=(10,7))
 

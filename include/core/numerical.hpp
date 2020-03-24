@@ -13,6 +13,7 @@
 #ifndef CORE_NUMERICAL_HPP
 #define CORE_NUMERICAL_HPP
 
+#include <cmath>
 #include <vector>
 
 #include <Eigen/Core>
@@ -62,7 +63,7 @@ PEAKINGDUCK_NAMESPACE_START(core)
     */
     template<typename T=DefaultType, int Size=ArrayTypeDynamic>
     struct NumericalData : private Array1D<T, Size>, 
-                          public NumericalFunctions<NumericalData<T, Size>>
+                           public NumericalFunctions<NumericalData<T, Size>>
     {
             using value_type = T;
 
@@ -257,6 +258,79 @@ PEAKINGDUCK_NAMESPACE_START(core)
     NumericalData<T, Size> combine(const NumericalData<T, ArrayTypeDynamic>& one, const NumericalData<T, ArrayTypeDynamic>& two){
         NumericalData<T, Size> combined(one.size() + two.size());
         combined << one.eval(), two.eval();
+        return combined;
+    }
+
+    /*!
+       @brief Given a list of values take nouter points either side of 
+        the index given and ignore ninner points.
+
+            Examples:
+
+            1. 
+                values = [8, 2, 5, 2, 6, 6, 9, 23, 12]
+                index = 4
+                nouter = 3
+                ninner = 0
+                includeindex = True
+
+                => [2, 5, 2, 6, 6, 9, 23]
+            2. 
+                values = [8, 2, 5, 2, 6, 6, 9, 23, 12]
+                index = 4
+                nouter = 3
+                ninner = 0
+                includeindex = False
+
+                => [2, 5, 2, 6, 9, 23]
+            3. 
+                values = [8, 2, 5, 2, 6, 6, 9, 23, 12]
+                index = 4
+                nouter = 3
+                ninner = 1
+                includeindex = True
+
+                => [2, 5, 6, 9, 23]
+            4. 
+                values = [8, 2, 5, 2, 6, 6, 9, 23, 12]
+                index = 4
+                nouter = 3
+                ninner = 1
+                includeindex = False
+
+                => [2, 5, 9, 23]
+
+        Therefore:
+            - ninner >= 0
+            - ninner <= nouter
+            - index >= nouter
+            - index < values.size()
+
+        It will clip at (0, len(values))
+
+    */
+    template<typename T=DefaultType, int InputSize=ArrayTypeDynamic, int WindowSize=ArrayTypeDynamic>
+    NumericalData<T, WindowSize> window(const NumericalData<T, InputSize>& data, 
+        int centerindex, int nouter=5, int ninner=0, bool includeindex=true){
+
+        // no funny business
+        assert(ninner <= nouter);
+        assert((centerindex >= 0) && (centerindex < static_cast<int>(data.size())));
+        assert(data.size() > 0);
+
+        const NumericalData<T, ArrayTypeDynamic> slicelower = data.slice(std::max(0, centerindex-nouter), 
+                                                                         std::max(0, centerindex-ninner));
+        const NumericalData<T, ArrayTypeDynamic> sliceupper = data.slice(std::min(static_cast<int>(data.size()), centerindex+1+ninner), 
+                                                                         std::min(static_cast<int>(data.size()), centerindex+1+nouter));
+
+        const size_t data_size = includeindex ? slicelower.size() + sliceupper.size() + 1 : slicelower.size() + sliceupper.size();
+        NumericalData<T, WindowSize> combined(data_size);
+        if(includeindex){
+            combined << slicelower.eval(), data[centerindex], sliceupper.eval();
+        }
+        else{
+            combined << slicelower.eval(), sliceupper.eval();
+        }
         return combined;
     }
 

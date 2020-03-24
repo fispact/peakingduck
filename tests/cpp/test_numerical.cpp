@@ -800,5 +800,55 @@ PEAKINGDUCK_NAMESPACE_START(unittests)
         }
     }
 
+    SCENARIO( "numerical data window - int" ) {
+        constexpr int value_size = 9;
+        core::NumericalData<int, value_size> values = {45, 2, 78, 23, 23, 89, 27, 23, 67};
+        
+        int nouter = 1;
+        int ninner = 0;
+        THEN( "check nouter=1, ninner=0" ) {
+            REQUIRE_NUMERICS_THE_SAME<int>(core::NumericalData<int,2>(45, 78), core::window<int,value_size,2>(values, 1, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>(core::NumericalData<int,3>(45, 2, 78), core::window<int,value_size,3>(values, 1, nouter, ninner, true));
+            REQUIRE_NUMERICS_THE_SAME<int>(core::NumericalData<int,1>(2), core::window<int,value_size,1>(values, 0, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>(core::NumericalData<int,2>(45, 2), core::window<int,value_size,2>(values, 0, nouter, ninner, true));
+            REQUIRE_NUMERICS_THE_SAME<int>(core::NumericalData<int,1>(23), core::window<int,value_size,1>(values, 8, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>(core::NumericalData<int,2>(23, 67), core::window<int,value_size,2>(values, 8, nouter, ninner, true));
+        }      
+        
+        nouter = 0;
+        ninner = 0;
+        THEN( "check nouter=0, ninner=0" ) {
+            const core::NumericalData<int,0> empty;
+            REQUIRE_NUMERICS_THE_SAME<int>(empty, core::window<int,value_size,0>(values, 1, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>(core::NumericalData<int,1>(2), core::window<int,value_size,1>(values, 1, nouter, ninner, true));
+            REQUIRE_NUMERICS_THE_SAME<int>(empty, core::window<int,value_size,0>(values, 0, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>(core::NumericalData<int,1>(45), core::window<int,value_size,1>(values, 0, nouter, ninner, true));
+            REQUIRE_NUMERICS_THE_SAME<int>(empty, core::window<int,value_size,0>(values, 8, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>(core::NumericalData<int,1>(67), core::window<int,value_size,1>(values, 8, nouter, ninner, true));
+        }    
+        
+        nouter = 4;
+        ninner = 0;
+        THEN( "check nouter=4, ninner=0" ) {
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,5>(45, 78, 23, 23, 89), core::window<int,value_size,5>(values, 1, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,6>(45, 2, 78, 23, 23, 89), core::window<int,value_size,6>(values, 1, nouter, ninner, true));
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,4>(2, 78, 23, 23), core::window<int,value_size,4>(values, 0, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,5>(45, 2, 78, 23, 23), core::window<int,value_size,5>(values, 0, nouter, ninner, true));
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,4>(23, 89, 27, 23), core::window<int,value_size,4>(values, 8, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,5>(23, 89, 27, 23, 67), core::window<int,value_size,5>(values, 8, nouter, ninner, true));
+        }      
+        
+        nouter = 4;
+        ninner = 2;
+        THEN( "check nouter=4, ninner=2" ) {
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,4>(45, 2, 23, 67), core::window<int,value_size,4>(values, 4, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,5>(45, 2, 23, 23, 67), core::window<int,value_size,5>(values, 4, nouter, ninner, true));
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,2>(23, 23), core::window<int,value_size,2>(values, 0, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,3>(45, 23, 23), core::window<int,value_size,3>(values, 0, nouter, ninner, true));
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,2>(23, 89), core::window<int,value_size,2>(values, 8, nouter, ninner, false));
+            REQUIRE_NUMERICS_THE_SAME<int>( core::NumericalData<int,3>(23, 89, 67), core::window<int,value_size,3>(values, 8, nouter, ninner, true));
+        }          
+    }
+
 PEAKINGDUCK_NAMESPACE_END // unittests
 PEAKINGDUCK_NAMESPACE_END // peakingduck
