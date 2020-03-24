@@ -300,7 +300,7 @@ PYBIND11_MODULE(PEAKINGDUCK, m) {
             py::arg("nouter") = 5,
             py::arg("ninner") = 0,
             py::arg("includeindex") = true);
-            
+
     // integral type
     using IntegerDataCoreType = int;
     using IntegerDataPyType = core::NumericalData<IntegerDataCoreType,core::ArrayTypeDynamic>;

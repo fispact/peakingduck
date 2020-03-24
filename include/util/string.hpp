@@ -13,6 +13,7 @@
 #ifndef UTIL_STRING_HPP
 #define UTIL_STRING_HPP
 
+#include <algorithm>
 #include <string>
 #include <sstream>
 #include <iostream>

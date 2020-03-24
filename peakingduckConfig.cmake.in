@@ -1,0 +1,8 @@
+find_package(Eigen3 REQUIRED NO_MODULE)
+find_package(units REQUIRED)
+
+@PACKAGE_INIT@
+set_and_check(PACKAGE_CMAKE_FILE @PACKAGE_CONFIG_INSTALL_DIR@/@PROJECT_NAME@.cmake)
+include(${PACKAGE_CMAKE_FILE})
+
+check_required_components(@PROJECT_NAME@)
