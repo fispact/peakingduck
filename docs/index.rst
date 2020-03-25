@@ -36,7 +36,7 @@ it in C++.  If you want python bindings enabled then it needs building
 
 ::
 
-    git clone --recursive -j8 https://github.com/thomasms/peakingduck
+    git clone --recursive -j8 https://github.com/fispact/peakingduck
     cd peakingduck
     mkdir build
     cd build

@@ -3,9 +3,9 @@
 
 ### A peak finding library leveraging AI written in C++14 with python bindings
 
-[![Build Status](https://api.travis-ci.com/thomasms/peakingduck.svg?branch=master)](https://travis-ci.com/thomasms/peakingduck)
-[![codecov](https://codecov.io/gh/thomasms/peakingduck/branch/master/graph/badge.svg)](https://codecov.io/gh/thomasms/peakingduck)
-[![HitCount](http://hits.dwyl.io/thomasms/peakingduck.svg)](http://hits.dwyl.io/thomasms/peakingduck)
+[![Build Status](https://api.travis-ci.com/fispact/peakingduck.svg?branch=master)](https://travis-ci.com/fispact/peakingduck)
+[![codecov](https://codecov.io/gh/fispact/peakingduck/branch/master/graph/badge.svg)](https://codecov.io/gh/fispact/peakingduck)
+[![HitCount](http://hits.dwyl.io/fispact/peakingduck.svg)](http://hits.dwyl.io/fispact/peakingduck)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 - [About](#about)
@@ -19,7 +19,7 @@ About
 Peaking identification is crucial for gamma spectroscopy and nuclear analysis. Conventional methods (although included) are not great at finding peaks in areas of low statistics and often fail for multiplet identification (overlapping peaks). A new method involving deep learning methods has been developed to improve both precision and recall of peaks. This library contains some traditional algorithms for peak identification and some neural networks used for more modern approaches. The intention is to provide further analysis in the future (peak fitting, background subtraction, etc) but for the minute just focuses on peak identification. This can also be extended (in theory) to any 1 dimension data set containing labelled peaks.
 
 ##### Example - SNIP estimation
-![SNIP](https://github.com/thomasms/peakingduck/blob/master/figures/sample.png)
+![SNIP](https://github.com/fispact/peakingduck/blob/master/figures/sample.png)
 
 Motivation
 ------
@@ -37,7 +37,7 @@ Building
 It is header only C++ so nothing to build (only unit tests) if using it in C++. 
 If you want python bindings enabled (which I hope you do) then it needs building (default will build them), as below.
 ```bash
-git clone --recursive -j8 https://github.com/thomasms/peakingduck
+git clone --recursive -j8 https://github.com/fispact/peakingduck
 cd peakingduck
 mkdir build
 cd build
@@ -46,7 +46,7 @@ make -j4
 ```
 Or pip should work too:
 ```bash
-git clone --recursive -j8 https://github.com/thomasms/peakingduck
+git clone --recursive -j8 https://github.com/fispact/peakingduck
 cd peakingduck
 pip3 install --user .
 ```

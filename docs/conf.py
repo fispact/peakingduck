@@ -109,7 +109,7 @@ html_theme = 'default'
 #
 if (os.environ.get('READTHEDOCS') == "True") is True:
     html_theme_options = {
-        'github_user': 'thomasms',
+        'github_user': 'fispact',
         'github_repo': 'peakingduck',
         'github_button': True,
         # 'github_banner':True,
