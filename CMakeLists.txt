@@ -10,7 +10,6 @@ include(GNUInstallDirs)
 # cmake options
 option(BUILD_TESTS "Build unit tests" ON)
 option(BUILD_PY_BINDINGS "Build python bindings" ON)
-#option(BUILD_DOCS "Build the documentation" OFF)
 
 option(USE_SYSTEM_PYBIND "Use a pre-installed version of PyBind" OFF)
 option(USE_SYSTEM_EIGEN "Use a pre-installed version of Eigen" OFF)
@@ -131,19 +130,6 @@ endif(BUILD_PY_BINDINGS)
 if(BUILD_TESTS)
   add_subdirectory(${TESTS_DIR_BASE}/cpp)
 endif(BUILD_TESTS)
-
-# documentation
-if(BUILD_DOCS)
-  find_package(Doxygen)
-  if(DOXYGEN_FOUND)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
-    add_custom_target(doc ALL
-      ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
-      COMMENT "Generating API documentation with Doxygen" VERBATIM
-      )
-  endif(DOXYGEN_FOUND)
-endif()
 
 
 # install the header-only library
