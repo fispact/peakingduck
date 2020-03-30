@@ -111,16 +111,6 @@ target_include_directories(${HEADER_LIB_NAME}
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}> 
 )
 
-# Why is this here? The compile flags set above don't support VS compilers...
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-  # enable parallel build
-  set( ENV{CL} /MP )
-  target_compile_definitions(${PROJECT_NAME} INTERFACE "/permissive-")
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  # Increase warning levels
-  add_compile_options(-Wall -Wextra -pedantic)
-endif()
-
 # python bindings
 if(BUILD_PY_BINDINGS)
   add_subdirectory(${PYTHON_PROJECT_DIR_BASE})
