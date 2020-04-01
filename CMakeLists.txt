@@ -83,14 +83,17 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra" CACHE STRING "Compiler flags")
-set(CMAKE_CXX_FLAGS_DEBUG -g -O0 --coverage -fprofile-arcs
-  -ftest-coverage -fno-inline -fno-inline-small-functions
-  -fno-default-inline)
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 --coverage -fprofile-arcs -ftest-coverage -fno-inline -fno-inline-small-functions -fno-default-inline")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 endif (CMAKE_BUILD_TYPE EQUAL "DEBUG")
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  # Increase warning levels
+  add_compile_options(-Wall -Wextra -pedantic)
+endif()
 
 # header-only library target. To use this project as a subdirectory,
 # add the following to your code:
