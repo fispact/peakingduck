@@ -15,14 +15,11 @@ filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 df = pd.read_csv(filename)
 
 # get the counts
-counts = pkd.core.NumericalData(df['count'].to_list())
-energies = (pkd.core.NumericalData(df['lenergy'].to_list()) + pkd.core.NumericalData(df['uenergy'].to_list()))/2.0
+counts = NumericalData(df['count'].to_list())
+energies = (NumericalData(df['lenergy'].to_list()) + NumericalData(df['uenergy'].to_list()))/2.0
 
 # we don't trust anything less than 10 counts
 class MyFilter(pkd.core.IProcess):      
-    def __init__(self):
-        pkd.core.IProcess.__init__(self)
-
     def go(self, data):
         newdata = [d if d > 10.0 else 0. for d in data]  
         return NumericalData(newdata)
