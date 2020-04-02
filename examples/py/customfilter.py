@@ -9,7 +9,7 @@ import actigamma as ag
 
 # change the filename here for a given spectrum
 filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                        '..', 'reference', 'spectrum0.csv')
+                        '..', '..', 'reference', 'spectrum0.csv')
 
 # read in from csv file
 df = pd.read_csv(filename)
